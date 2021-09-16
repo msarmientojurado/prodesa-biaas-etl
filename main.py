@@ -8,7 +8,8 @@ __copyright__   = "Copyright 2021, ProCibernetica"
 
 # External Libraries
 
-from staging_area import staging
+from libraries.parametrization import parametrization
+from libraries.staging_area import staging
 from libraries.settings import ORIGIN_FILE
 import pandas as pd
 import numpy as np
@@ -26,7 +27,9 @@ def main():
     #Executing Staging Area
     stg_consolidado_corte = staging(esp_consolidado_corte);
 
-    
+    #Executing Parametrization Script
+    tbl_proyectos=parametrization();
+
 
 if __name__ == "__main__":
     main()
