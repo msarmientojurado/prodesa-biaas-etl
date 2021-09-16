@@ -8,6 +8,7 @@ __copyright__   = "Copyright 2021, ProCibernetica"
 
 # External Libraries
 
+from staging_area import staging
 from libraries.settings import ORIGIN_FILE
 import pandas as pd
 import numpy as np
@@ -20,7 +21,12 @@ def main():
     
     # Executing Mirror Area
     esp_consolidado_corte=mirror(ORIGIN_FILE);
-    print("Uploaded rows: {}".format(len(esp_consolidado_corte.index)))
+    print("Uploaded rows: {}".format(len(esp_consolidado_corte.index)));
+
+    #Executing Staging Area
+    stg_consolidado_corte = staging(esp_consolidado_corte);
+
+    
 
 if __name__ == "__main__":
     main()
