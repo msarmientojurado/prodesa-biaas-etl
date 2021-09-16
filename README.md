@@ -1,0 +1,2 @@
+# Prodesa BIaaS ETL
+This repository aims to guide technical staff during the setting up of the prodesa's ETL configuration. ETL is implemented as a series of python scripts, which takes the information stored into an .xlsx file and transform accordingly, to finally persist as a BigQuery table set.
