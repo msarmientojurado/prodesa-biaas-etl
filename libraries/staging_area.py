@@ -4,7 +4,7 @@ import pandas as pd
 
 def staging(esp_consolidado_corte):
 
-    print("Staging Area Starting...");
+    print(" *Staging Area Starting...");
     
     # *stg_consolidado_corte* will be the result of the staging area.
     stg_consolidado_corte=pd.DataFrame([],columns=['stg_project_id']);
@@ -285,6 +285,6 @@ def staging(esp_consolidado_corte):
 
 
 
-    print("Staging Area ending...");
+    print(" -Staging Area ending...");
 
     return stg_consolidado_corte

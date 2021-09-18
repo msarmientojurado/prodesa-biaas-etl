@@ -9,15 +9,15 @@ This repository aims to guide technical staff during the setting up of the prode
 ```
 pip3 install --upgrade pip
 ```
-First, we have to install 'python3-venv' using the following command
+3. First, we have to install 'python3-venv' using the following command
 ```
 sudo apt install python3-venv
 ```
-To activate Viertual Environment run the command bellow
+4. To activate Virtual Environment run the command bellow
 ```
 source venv/bin/activate
 ```
-IN order to add new packages to our new virtual environment we create a file called 'requirements.txt' and excecute the following command
+5. In order to add new packages to our new virtual environment we create a file called 'requirements.txt' and excecute the following command
 ```
 pip3 install -r requirements.txt
 ```
