@@ -8,6 +8,7 @@ __copyright__   = "Copyright 2021, ProCibernetica"
 
 # External Libraries
 
+from libraries.model import model
 from libraries.temporary import temporary
 from libraries.staging_area import staging
 from libraries.settings import ORIGIN_FILE
@@ -20,14 +21,18 @@ from libraries.mirror import mirror
 def main():
     print("Starting ETL process...");
     
-    # Executing Mirror Area
+    # Running Mirror Area
     esp_consolidado_corte=mirror(ORIGIN_FILE);
     #print(" * Uploaded rows: {}".format(len(esp_consolidado_corte.index)));
 
-    #Executing Staging Area
+    #Running Staging Area
     stg_consolidado_corte = staging(esp_consolidado_corte);
 
+    #Running Temporary Area
     tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial = temporary(stg_consolidado_corte);
+
+    #TODO Implementation of Model Area
+    model(tmp_proyectos_construccion)
 
     print("Ending ETL process...");
 

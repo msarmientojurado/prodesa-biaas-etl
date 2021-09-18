@@ -2,3 +2,5 @@ functions-framework
 pandas
 numpy
 openpyxl
+google-cloud-storage
+google-cloud-bigquery
