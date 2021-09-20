@@ -19,7 +19,40 @@ def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos):
     tbl_inicio_construccion=pd.merge(tbl_inicio_construccion,milestones_dataset.loc[:, ('key','stg_codigo_proyecto','stg_etapa_proyecto')].groupby(by=["key"]).first().reset_index(), on='key', how="left",)
     tbl_inicio_construccion = tbl_inicio_construccion.rename(columns={'stg_codigo_proyecto': 'tpr_codigo_proyecto'})
     tbl_inicio_construccion=pd.merge(tbl_inicio_construccion,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
-    tbl_inicio_construccion = tbl_inicio_construccion.rename(columns={'tpr_codigo_proyecto' : 'tic_codigo_proyecto','tpr_regional' : 'tic_regional','tpr_macroproyecto' : 'tic_macroproyecto', 'stg_etapa_proyecto' : 'tic_etapa', 'tpr_proyecto' : 'tic_proyecto'})
+    tbl_inicio_construccion = pd.merge(tbl_inicio_construccion, milestones_dataset.loc[:,('key', 'stg_fecha_corte')], on='key', how="left",)
+    tbl_inicio_construccion = tbl_inicio_construccion.rename(columns={'tpr_codigo_proyecto' : 'tic_codigo_proyecto','tpr_regional' : 'tic_regional','tpr_macroproyecto' : 'tic_macroproyecto', 'stg_etapa_proyecto' : 'tic_etapa', 'tpr_proyecto' : 'tic_proyecto', 'stg_fecha_corte' : 'tic_fecha_corte'})
+
+    tbl_inicio_construccion = pd.merge(tbl_inicio_construccion, milestones_dataset.loc[:,('key','stg_fecha_corte')], on='key', how="left",)
+    tbl_inicio_construccion['tic_fecha_proceso']=pd.to_datetime("today")
+    tbl_inicio_construccion['tic_lote_proceso']=1
+
+    tbl_inicio_construccion=tbl_inicio_construccion.reindex(columns=['tic_regional',
+                                                    'tic_codigo_proyecto',
+                                                    'tic_macroproyecto',
+                                                    'tic_proyecto',
+                                                    'tic_etapa',
+                                                    'tic_dias_atraso',
+                                                    'tic_inicio_construccion_proyectado',
+                                                    'tic_inicio_construccion_programado',
+                                                    'tic_proc_contratacion_proyectado',
+                                                    'tic_proc_contratacion_programado',
+                                                    'tic_entrega_kit2_proyectado',
+                                                    'tic_entrega_kit2_programado',
+                                                    'tic_entrega_kit1_proyectado',
+                                                    'tic_entrega_kit1_programado',
+                                                    'tic_factib_inic_constru_proyectado',
+                                                    'tic_factib_inic_constru_programado',
+                                                    'tic_ppto_definitivo_proyectado',
+                                                    'tic_ppto_definitivo_programado',
+                                                    'tic_ppto_sipro_proyectado',
+                                                    'tic_ppto_sipro_programado',
+                                                    'tic_docs_inic_constru_proyectado',
+                                                    'tic_docs_inic_constru_programado',
+                                                    'tic_diseno_inic_constru_proyectado',
+                                                    'tic_diseno_inic_constru_programado',
+                                                    'tic_fecha_corte',
+                                                    'tic_fecha_proceso',
+                                                    'tic_lote_proceso'])
 
     print("   -Inicio Construccion ending")
 
