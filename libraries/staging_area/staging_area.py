@@ -73,10 +73,11 @@ def staging_area(esp_consolidado_corte):
     #    |stg_fecha_inicial_actual|date|
     #    |stg_fecha_final_actual|date|
     
-    auxCol=esp_consolidado_corte['ACTUAL_START_DATE'].str.split(" ", n=2,expand=True)
-    stg_consolidado_corte['stg_fecha_inicial_actual']=pd.to_datetime(auxCol[1], dayfirst=True)
-    auxCol=esp_consolidado_corte['ACTUAL_FINISH_DATE'].str.split(" ", n=2,expand=True)
-    stg_consolidado_corte['stg_fecha_final_actual']=pd.to_datetime(auxCol[1], dayfirst=True)
+    esp_consolidado_corte['ACTUAL_START_DATE']=esp_consolidado_corte['ACTUAL_START_DATE'].replace("NOD", "")
+    esp_consolidado_corte['ACTUAL_FINISH_DATE']=esp_consolidado_corte['ACTUAL_FINISH_DATE'].replace("NOD", "")
+
+    stg_consolidado_corte['stg_fecha_inicial_actual']=pd.to_datetime(esp_consolidado_corte['ACTUAL_START_DATE'], dayfirst=True)
+    stg_consolidado_corte['stg_fecha_final_actual']=pd.to_datetime(esp_consolidado_corte['ACTUAL_FINISH_DATE'], dayfirst=True)
     
     #Now continue with the columns
     #    |Column|Data Type|
@@ -84,7 +85,7 @@ def staging_area(esp_consolidado_corte):
     #    |stg_duracion_real_cantidad|float|
     #    |stg_duracion_real_unidad|string|
 
-    auxCol=esp_consolidado_corte['Duración_real'].str.split(" ", n=2,expand=True)
+    auxCol=esp_consolidado_corte['DURATION_REMAINED'].str.split(" ", n=2,expand=True)
     auxCol[0] = auxCol[0].str.replace(',','.')
     stg_consolidado_corte['stg_duracion_real_cantidad']=pd.to_numeric(auxCol[0])
     stg_consolidado_corte['stg_duracion_real_unidad']=auxCol[1]
@@ -94,8 +95,8 @@ def staging_area(esp_consolidado_corte):
     #    |-----|----|
     #    |stg_fecha_inicio_planeada|date|
 
-    auxCol=esp_consolidado_corte['LIKELY_START_DATE'].str.split(" ", n=2,expand=True)
-    stg_consolidado_corte['stg_fecha_inicio_planeada']=pd.to_datetime(auxCol[1], dayfirst=True)
+    esp_consolidado_corte['LIKELY_START_DATE']=esp_consolidado_corte['LIKELY_START_DATE'].replace("NOD", "")
+    stg_consolidado_corte['stg_fecha_inicio_planeada']=pd.to_datetime(esp_consolidado_corte['LIKELY_START_DATE'], dayfirst=True)
     
     #Now continue with the column
     #    |Column|Data Type|
@@ -196,8 +197,9 @@ def staging_area(esp_consolidado_corte):
     #    |-----|----|
     #    |stg_fecha_fin_planeada|date|
     
-    auxCol=esp_consolidado_corte['LIKELY_FINISH_DATE'].str.split(" ", n=2,expand=True)
-    stg_consolidado_corte['stg_fecha_fin_planeada']=pd.to_datetime(auxCol[1], dayfirst=True)
+    esp_consolidado_corte['LIKELY_FINISH_DATE']=esp_consolidado_corte['LIKELY_FINISH_DATE'].replace("NOD", "")
+    stg_consolidado_corte['stg_fecha_fin_planeada']=pd.to_datetime(esp_consolidado_corte['LIKELY_FINISH_DATE'], dayfirst=True)
+
     
     #Now continue with the column
     #    |Column|Data Type|
@@ -265,7 +267,7 @@ def staging_area(esp_consolidado_corte):
     #    |stg_duracion_restante_cantidad|integer|
     #    |stg_duracion_restante_unidad|string|
 
-    auxCol=esp_consolidado_corte['DURATION_RESTANTE'].str.split(" ", n=2,expand=True)
+    auxCol=esp_consolidado_corte['DURACION_RESTANTE'].str.split(" ", n=2,expand=True)
     auxCol[0] = auxCol[0].str.replace(',','.')
     stg_consolidado_corte['stg_duracion_restante_cantidad']=pd.to_numeric(auxCol[0])
     stg_consolidado_corte['stg_duracion_restante_unidad']=auxCol[1]
@@ -276,8 +278,8 @@ def staging_area(esp_consolidado_corte):
     #    |-----|----|
     #    |stg_fin_linea_base_estimado|date|
 
-    auxCol=esp_consolidado_corte['FIN_LINEA_BASE_EST'].str.split(" ", n=2,expand=True)
-    stg_consolidado_corte['stg_fin_linea_base_estimado']=pd.to_datetime(auxCol[1], dayfirst=True)
+    esp_consolidado_corte['FIN_LINEA_BASE_EST']=esp_consolidado_corte['FIN_LINEA_BASE_EST'].replace("NOD", "")
+    stg_consolidado_corte['stg_fin_linea_base_estimado']=pd.to_datetime(esp_consolidado_corte['FIN_LINEA_BASE_EST'], dayfirst=True)
 
     # Indexing columns that will be used to generate reports, so it can be used faster.
 
