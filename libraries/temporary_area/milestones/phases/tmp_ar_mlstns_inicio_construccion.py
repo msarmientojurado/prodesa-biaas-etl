@@ -50,8 +50,7 @@ def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos):
                                                                 'tic_diseno_inic_constru_proyectado',
                                                                 'tic_diseno_inic_constru_programado',
                                                                 'tic_fecha_corte',
-                                                                'tic_fecha_proceso',
-                                                                'tic_lote_proceso'])
+                                                                'tic_fecha_proceso'])
 
     print("   -Inicio Construccion ending")
 
