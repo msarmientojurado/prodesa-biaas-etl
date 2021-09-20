@@ -1,7 +1,7 @@
 
+
 from libraries.settings import TBL_INICIO_VENTA
 from google.cloud import bigquery
-
 
 def mdl_ar_mlstns_inicio_venta(tbl_inicio_venta):
     print("  *Model -tbl_inicio_venta- Starting")
@@ -52,7 +52,7 @@ def mdl_ar_mlstns_inicio_venta(tbl_inicio_venta):
     ])
 
     job = client.load_table_from_dataframe(
-        tbl_inicio_venta, TBL_INICIO_VENTA_, job_config=job_config
+        tbl_inicio_venta, TBL_INICIO_VENTA, job_config=job_config
     )
     # Wait for the load job to complete.
     job.result()
