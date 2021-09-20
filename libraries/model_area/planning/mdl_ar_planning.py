@@ -1,8 +1,7 @@
-
 from libraries.settings import TBL_PROYECTOS_PLANEACION
 from google.cloud import bigquery
 
-def mdl_ar_mlstns_planning(tmp_proyectos_planeacion):
+def mdl_ar_planning(tmp_proyectos_planeacion):
     print("  *Model -tmp_proyectos_planeacion- Starting")
     client = bigquery.Client()
     # Since string columns use the "object" dtype, pass in a (partial) schema
@@ -12,7 +11,7 @@ def mdl_ar_mlstns_planning(tmp_proyectos_planeacion):
         bigquery.SchemaField("tpp_codigo_proyecto",             "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpp_macroproyecto",               "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpp_proyecto",                    "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tpp_hito",                "STRING",   mode="NULLABLE"),
+        bigquery.SchemaField("tpp_hito",                        "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpp_etapa",                       "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpp_tarea_consume_buffer",        "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpp_avance_cc",                   "FLOAT64",  mode="NULLABLE"),

@@ -28,6 +28,49 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos):
     tbl_inicio_venta=pd.merge(tbl_inicio_venta,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
     tbl_inicio_venta = tbl_inicio_venta.rename(columns={'tpr_codigo_proyecto' : 'tiv_codigo_proyecto','tpr_regional' : 'tiv_regional','tpr_macroproyecto' : 'tiv_macroproyecto', 'stg_etapa_proyecto' : 'tiv_etapa', 'tpr_proyecto' : 'tiv_proyecto'})
 
+    tbl_inicio_venta['tiv_fecha_proceso']=pd.to_datetime("today")
+    tbl_inicio_venta['tiv_lote_proceso']=1
+
+    tbl_inicio_venta=tbl_inicio_venta.reindex(columns=['tiv_regional',
+                                                    'tiv_codigo_proyecto',
+                                                    'tiv_macroproyecto',
+                                                    'tiv_proyecto',
+                                                    'tiv_etapa',
+                                                    'tiv_dias_atraso',
+                                                    'tiv_inicio_ventas_proyectado',
+                                                    'tiv_inicio_ventas_programado',
+                                                    'tiv_fiv_proyectado',
+                                                    'tiv_fiv_programado',
+                                                    'tiv_ppto_revisado_proyectado',
+                                                    'tiv_ppto_revisado_programado',
+                                                    'tiv_docs_ppto_proyectado',
+                                                    'tiv_docs_ppto_programado',
+                                                    'tiv_encargo_fiduc_proyectado',
+                                                    'tiv_encargo_fiduc_programado',
+                                                    'tiv_kit_comercial_proyectado',
+                                                    'tiv_kit_comercial_programado',
+                                                    'tiv_val_sv_model_proyectado',
+                                                    'tiv_val_sv_model_programado',
+                                                    'tiv_const_sv_model_proyectado',
+                                                    'tiv_const_sv_model_programado',
+                                                    'tiv_aprobac_lc_proyectado',
+                                                    'tiv_aprobacion_lc_programado',
+                                                    'tiv_radicacion_lc_programado',
+                                                    'tiv_salida_ventas_proyectado',
+                                                    'tiv_salida_ventas_programado',
+                                                    'tiv_acta_constituc_proyectado',
+                                                    'tiv_acta_constituc_programado',
+                                                    'tiv_visto_bueno_proyectado',
+                                                    'tiv_visto_bueno_programado',
+                                                    'tiv_elab_alternativ_proyectado',
+                                                    'tiv_elab_alternativ_programado',
+                                                    'tiv_prod_objetivo_proyectado',
+                                                    'tiv_prod_objetivo_programado',
+                                                    'tiv_lluvia_ideas_proyectado',
+                                                    'tiv_lluvia_ideas_programado',
+                                                    'tiv_fecha_corte',
+                                                    'tiv_fecha_proceso',
+                                                    'tiv_lote_proceso'])
     print("   -Inicio Ventas Ending")
 
     return tbl_inicio_venta

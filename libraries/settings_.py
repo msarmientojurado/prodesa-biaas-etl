@@ -14,4 +14,5 @@ BLOB_NAME = "Consolidado_Excel_13-08-2021.xlsx"
 
 #BigQuery parammeters
 TBL_PROYECTOS_CONSTRUCCION = 'modelo_biaas_python_test.tbl_proyectos_construccion_test2'
-
+TBL_PROYECTOS_PLANEACION = 'modelo_biaas_python_test.tbl_proyectos_planeacion_test2'
+TBL_INICIO_VENTA = 'modelo_biaas_python_test.tbl_inicio_venta_test2'

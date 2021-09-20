@@ -35,7 +35,7 @@ def main():
     tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial = temporary_area(stg_consolidado_corte);
 
     #TODO Implementation of Model Area
-    model(tmp_proyectos_construccion, tmp_proyectos_planeacion)
+    model(tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion)
 
     print("Ending ETL process...");
 
