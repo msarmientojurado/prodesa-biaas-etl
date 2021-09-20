@@ -68,7 +68,7 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos):
                                                     'tiv_prod_objetivo_programado',
                                                     'tiv_lluvia_ideas_proyectado',
                                                     'tiv_lluvia_ideas_programado',
-                                                    'tiv_fecha_corte',
+                                                    #'tiv_fecha_corte',
                                                     'tiv_fecha_proceso',
                                                     'tiv_lote_proceso'])
     print("   -Inicio Ventas Ending")
