@@ -26,8 +26,10 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos):
     tbl_inicio_venta=pd.merge(tbl_inicio_venta,milestones_dataset.loc[:, ('key','stg_codigo_proyecto','stg_etapa_proyecto')].groupby(by=["key"]).first().reset_index(), on='key', how="left",)
     tbl_inicio_venta = tbl_inicio_venta.rename(columns={'stg_codigo_proyecto': 'tpr_codigo_proyecto'})
     tbl_inicio_venta=pd.merge(tbl_inicio_venta,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
-    tbl_inicio_venta = tbl_inicio_venta.rename(columns={'tpr_codigo_proyecto' : 'tiv_codigo_proyecto','tpr_regional' : 'tiv_regional','tpr_macroproyecto' : 'tiv_macroproyecto', 'stg_etapa_proyecto' : 'tiv_etapa', 'tpr_proyecto' : 'tiv_proyecto'})
+    tbl_inicio_venta = pd.merge(tbl_inicio_venta, milestones_dataset.loc[:,('key', 'stg_fecha_corte')], on='key', how="left",)
+    tbl_inicio_venta = tbl_inicio_venta.rename(columns={'tpr_codigo_proyecto' : 'tiv_codigo_proyecto','tpr_regional' : 'tiv_regional','tpr_macroproyecto' : 'tiv_macroproyecto', 'stg_etapa_proyecto' : 'tiv_etapa', 'tpr_proyecto' : 'tiv_proyecto', 'stg_fecha_corte' : 'tiv_fecha_corte'})
 
+    tbl_inicio_venta = pd.merge(tbl_inicio_venta, milestones_dataset.loc[:,('key','stg_fecha_corte')], on='key', how="left",)
     tbl_inicio_venta['tiv_fecha_proceso']=pd.to_datetime("today")
     tbl_inicio_venta['tiv_lote_proceso']=1
 
@@ -68,7 +70,7 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos):
                                                     'tiv_prod_objetivo_programado',
                                                     'tiv_lluvia_ideas_proyectado',
                                                     'tiv_lluvia_ideas_programado',
-                                                    #'tiv_fecha_corte',
+                                                    'tiv_fecha_corte',
                                                     'tiv_fecha_proceso',
                                                     'tiv_lote_proceso'])
     print("   -Inicio Ventas Ending")
