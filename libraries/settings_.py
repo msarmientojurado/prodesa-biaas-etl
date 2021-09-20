@@ -4,4 +4,14 @@ ENVIRONMENT = "Development"
 #       Production
 #       Development
 
+#File name when application is in development environment
 ORIGIN_FILE = "Consolidado_Excel.xlsx"
+
+#Bucket Name when application is in production (GCP) environment
+BUCKET_NAME = "prodesa-biaas-bucket"
+#File name when application is in Production (GCP) environment
+BLOB_NAME = "Consolidado_Excel_13-08-2021.xlsx"
+
+#BigQuery parammeters
+TBL_PROYECTOS_CONSTRUCCION = 'modelo_biaas_python_test.tbl_proyectos_construccion_test2'
+
