@@ -22,7 +22,6 @@ def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
     tbl_inicio_promesa = pd.merge(tbl_inicio_promesa, milestones_dataset.loc[:,('key', 'stg_fecha_corte')], on='key', how="left",)
     tbl_inicio_promesa = tbl_inicio_promesa.rename(columns={'tpr_codigo_proyecto' : 'tip_codigo_proyecto','tpr_regional' : 'tip_regional','tpr_macroproyecto' : 'tip_macroproyecto', 'stg_etapa_proyecto' : 'tip_etapa', 'tpr_proyecto' : 'tip_proyecto', 'stg_fecha_corte' : 'tip_fecha_corte'})
 
-    tbl_inicio_promesa = pd.merge(tbl_inicio_promesa, milestones_dataset.loc[:,('key','stg_fecha_corte')], on='key', how="left",)
     tbl_inicio_promesa['tip_fecha_proceso']=pd.to_datetime("today")
     tbl_inicio_promesa['tip_lote_proceso']=1
 
