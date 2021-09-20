@@ -19,7 +19,40 @@ def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
     tbl_inicio_promesa=pd.merge(tbl_inicio_promesa,milestones_dataset.loc[:, ('key','stg_codigo_proyecto','stg_etapa_proyecto')].groupby(by=["key"]).first().reset_index(), on='key', how="left",)
     tbl_inicio_promesa = tbl_inicio_promesa.rename(columns={'stg_codigo_proyecto': 'tpr_codigo_proyecto'})
     tbl_inicio_promesa=pd.merge(tbl_inicio_promesa,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
-    tbl_inicio_promesa = tbl_inicio_promesa.rename(columns={'tpr_codigo_proyecto' : 'tip_codigo_proyecto','tpr_regional' : 'tip_regional','tpr_macroproyecto' : 'tip_macroproyecto', 'stg_etapa_proyecto' : 'tip_etapa', 'tpr_proyecto' : 'tip_proyecto'})
+    tbl_inicio_promesa = pd.merge(tbl_inicio_promesa, milestones_dataset.loc[:,('key', 'stg_fecha_corte')], on='key', how="left",)
+    tbl_inicio_promesa = tbl_inicio_promesa.rename(columns={'tpr_codigo_proyecto' : 'tip_codigo_proyecto','tpr_regional' : 'tip_regional','tpr_macroproyecto' : 'tip_macroproyecto', 'stg_etapa_proyecto' : 'tip_etapa', 'tpr_proyecto' : 'tip_proyecto', 'stg_fecha_corte' : 'tip_fecha_corte'})
+
+    tbl_inicio_promesa = pd.merge(tbl_inicio_promesa, milestones_dataset.loc[:,('key','stg_fecha_corte')], on='key', how="left",)
+    tbl_inicio_promesa['tip_fecha_proceso']=pd.to_datetime("today")
+    tbl_inicio_promesa['tip_lote_proceso']=1
+
+    tbl_inicio_promesa=tbl_inicio_promesa.reindex(columns=['tip_regional',
+                                                    'tip_codigo_proyecto',
+                                                    'tip_macroproyecto',
+                                                    'tip_proyecto',
+                                                    'tip_etapa',
+                                                    'tip_dias_atraso',
+                                                    'tip_inicio_promesas_proyectado',
+                                                    'tip_inicio_promesas_programado',
+                                                    'tip_ent_kit_prom_proyectado',
+                                                    'tip_ent_kit_prom_programado',
+                                                    'tip_permiso_ventas_proyectado',
+                                                    'tip_permiso_ventas_programado',
+                                                    'tip_min_hipo_reg_proyectado',
+                                                    'tip_min_hipo_reg_programado',
+                                                    'tip_rad_min_hipo_reg_proyectado',
+                                                    'tip_rad_min_hipo_reg_programado',
+                                                    'tip_cred_construct_proyectado',
+                                                    'tip_cred_construct_programado',
+                                                    'tip_linderos_proyectado',
+                                                    'tip_linderos_programado',
+                                                    'tip_fai_proyectado',
+                                                    'tip_fai_programado',
+                                                    'tip_constitut_urban_proyectado',
+                                                    'tip_constitut_urban_programado',
+                                                    'tip_fecha_corte',
+                                                    'tip_fecha_proceso',
+                                                    'tip_lote_proceso'])
 
     print("   -Inicio Ventas ending")
 
