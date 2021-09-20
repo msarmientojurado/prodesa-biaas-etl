@@ -1,4 +1,4 @@
-from libraries.settings import TBL_PROYECTOS_PLANEACION
+from libraries.settings import TBL_PROYECTOS_CONSTRUCCION
 from google.cloud import bigquery
 
 def mdl_ar_building(tmp_proyectos_construccion):
@@ -30,7 +30,7 @@ def mdl_ar_building(tmp_proyectos_construccion):
     ])
 
     job = client.load_table_from_dataframe(
-        tmp_proyectos_construccion, TBL_PROYECTOS_PLANEACION, job_config=job_config
+        tmp_proyectos_construccion, TBL_PROYECTOS_CONSTRUCCION, job_config=job_config
     )
     # Wait for the load job to complete.
     job.result()
