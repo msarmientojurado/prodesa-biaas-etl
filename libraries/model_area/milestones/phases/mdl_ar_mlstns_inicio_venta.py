@@ -47,8 +47,8 @@ def mdl_ar_mlstns_inicio_venta(tbl_inicio_venta):
         bigquery.SchemaField("tiv_lluvia_ideas_proyectado",     "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tiv_lluvia_ideas_programado",     "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tiv_fecha_corte",                 "DATE",     mode="NULLABLE"),
-        bigquery.SchemaField("tpp_fecha_proceso",               "DATETIME", mode="NULLABLE"),
-        bigquery.SchemaField("tpp_lote_proceso",                "INT64",    mode="NULLABLE"),
+        bigquery.SchemaField("tiv_fecha_proceso",               "DATETIME", mode="NULLABLE"),
+        bigquery.SchemaField("tiv_lote_proceso",                "INT64",    mode="NULLABLE"),
     ])
 
     job = client.load_table_from_dataframe(
