@@ -2,8 +2,6 @@
 from libraries.model_area.building.mdl_ar_building import mdl_ar_building
 from libraries.model_area.planning.mdl_ar_planning import mdl_ar_planning
 from libraries.model_area.milestones.mdl_ar_milestones import model_milestones
-
-from libraries.model_area.milestones.phases.mdl_ar_mlstns_inicio_construccion import mdl_ar_mlstns_inicio_construccion
 from libraries.settings import ENVIRONMENT
 
 
