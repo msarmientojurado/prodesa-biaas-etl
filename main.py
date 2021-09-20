@@ -6,30 +6,33 @@
 __author__      = "Miguel Sarmiento"
 __copyright__   = "Copyright 2021, ProCibernetica"
 
-# External Libraries
 
-from libraries.model import model
-from libraries.temporary import temporary
-from libraries.staging_area import staging
+
+# Internal Libraries 
+from libraries.mirror_area.mirror_area import mirror_area
+from libraries.staging_area.staging_area import staging_area
+from libraries.temporary_area.temporary_area import temporary_area
+from libraries.model_area.model_area import model
+
+# External Libraries
 from libraries.settings import ORIGIN_FILE
 import pandas as pd
 import numpy as np
 
-# Internal Libraries 
-from libraries.mirror import mirror
+
 
 def main():
     print("Starting ETL process...");
     
     # Running Mirror Area
-    esp_consolidado_corte=mirror(ORIGIN_FILE);
+    esp_consolidado_corte=mirror_area(ORIGIN_FILE);
     #print(" * Uploaded rows: {}".format(len(esp_consolidado_corte.index)));
 
     #Running Staging Area
-    stg_consolidado_corte = staging(esp_consolidado_corte);
+    stg_consolidado_corte = staging_area(esp_consolidado_corte);
 
     #Running Temporary Area
-    tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial = temporary(stg_consolidado_corte);
+    tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial = temporary_area(stg_consolidado_corte);
 
     #TODO Implementation of Model Area
     model(tmp_proyectos_construccion)

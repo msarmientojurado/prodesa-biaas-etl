@@ -2,7 +2,7 @@
 import pandas as pd
 
 
-def staging(esp_consolidado_corte):
+def staging_area(esp_consolidado_corte):
 
     print(" *Staging Area Starting...");
     

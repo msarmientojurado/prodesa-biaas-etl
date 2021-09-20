@@ -3,7 +3,7 @@ from libraries.settings import ENVIRONMENT
 import pandas as pd
 from google.cloud import storage
 
-def mirror(file_name):
+def mirror_area(file_name):
     print(" *Mirror Area Starting...");
     
     if ENVIRONMENT == "Development":

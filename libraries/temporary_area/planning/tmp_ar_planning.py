@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def planning(stg_consolidado_corte, tbl_proyectos):
+def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     print("  *Planning Starting")
     #Lets start by building the dataset to work, which includes those 
     # registers which have the word `PN` in their `stg_area_prodesa` 

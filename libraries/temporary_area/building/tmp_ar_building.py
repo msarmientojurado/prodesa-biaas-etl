@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-def building(stg_consolidado_corte, tbl_proyectos):
+def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     print("  *Building Starting")
 

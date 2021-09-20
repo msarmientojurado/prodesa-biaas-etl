@@ -6,6 +6,19 @@ def model(tmp_proyectos_construccion):
 
     print(" *Model Starting...")
 
+    #TODO
+    #   1. "Control de Hitos de Planeacion"
+    #   2. "Consolidado de Proyectos de Planeacion"
+    #   3. "Consolidado de Proyectos de Construccion"
+    #   4. "Consolidado de Proyectos de Comercial"
+    #   5. "Reporte por entrega"
+
+
+
+
+
+
+
     if ENVIRONMENT == "Production":
         #Persisting at BigQuery
         #modelo_biaas.tbl_inicio_venta

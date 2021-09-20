@@ -1,7 +1,7 @@
 
 import pandas as pd
 
-def milestones_inicio_escrituracion(milestones_dataset,tbl_proyectos):
+def tmp_ar_mlstns_inicio_escrituracion(milestones_dataset,tbl_proyectos):
 
     print("   *Inicio Escrituracion Starting")
 

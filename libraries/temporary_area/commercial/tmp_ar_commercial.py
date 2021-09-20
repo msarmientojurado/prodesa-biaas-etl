@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def commercial(stg_consolidado_corte):
+def tmp_ar_commercial(stg_consolidado_corte):
     print("  *Commercial Starting")
     #Lets start by building the dataset to work, which includes those registers which have the word `CL` in their `stg_area_prodesa` column
 
