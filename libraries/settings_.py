@@ -18,3 +18,4 @@ TBL_PROYECTOS_PLANEACION = 'modelo_biaas_python_test.tbl_proyectos_planeacion_te
 TBL_INICIO_VENTA = 'modelo_biaas_python_test.tbl_inicio_venta_test3'
 TBL_INICIO_PROMESA = 'modelo_biaas_python_test.tbl_inicio_promesa_test3'
 TBL_INICIO_CONSTRUCCION = 'modelo_biaas_python_test.tbl_inicio_construccion_test3'
+TBL_INICIO_ESCRITURACION = 'modelo_biaas_python_test.tbl_inicio_escrituracion_test3'
