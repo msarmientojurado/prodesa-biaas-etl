@@ -18,7 +18,7 @@ def tmp_ar_milestones(stg_consolidado_corte, tbl_proyectos):
 
 
     list_of_phases = ["IV", "PL"]
-    milestones_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_ind_buffer', 'stg_fecha_fin','stg_nombre_actividad', 'stg_fecha_corte')]
+    milestones_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_ind_buffer', 'stg_fecha_fin','stg_nombre_actividad', 'stg_fecha_corte', 'stg_notas')]
     milestones_dataset['key']=milestones_dataset['stg_codigo_proyecto']+'_'+milestones_dataset['stg_etapa_proyecto']
     milestones_dataset=milestones_dataset[milestones_dataset['stg_programacion_proyecto'].isin(list_of_phases)]
 
