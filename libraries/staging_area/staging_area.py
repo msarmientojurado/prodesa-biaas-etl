@@ -1,4 +1,5 @@
 
+from libraries.staging_area.information_consistency import information_consistency
 import pandas as pd
 
 
@@ -285,8 +286,8 @@ def staging_area(esp_consolidado_corte):
 
     stg_consolidado_corte.reindex(columns=['stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual'])
 
-
+    stg_consolidado_corte, continue_process = information_consistency(stg_consolidado_corte)
 
     print(" -Staging Area ending...");
 
-    return stg_consolidado_corte
+    return stg_consolidado_corte, continue_process

@@ -5,11 +5,7 @@ def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos):
 
     print("   *Inicio Construccion Starting")
 
-    start_building=milestones_dataset[(milestones_dataset['stg_programacion_proyecto'] == "PL") & ((milestones_dataset['stg_notas'] == "IC") | 
-                                                                                              (milestones_dataset['stg_notas'] == "IP-IC")| 
-                                                                                              (milestones_dataset['stg_notas'] == "IC-IP") | 
-                                                                                              (milestones_dataset['stg_notas'] == "IV-IC")|
-                                                                                              (milestones_dataset['stg_notas'] == "IV-IP-IC"))]
+    start_building=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
     tbl_inicio_construccion=pd.DataFrame()
     tbl_inicio_construccion=start_building[start_building['stg_nombre_actividad'] == "1.INICIO DE CONSTRUCCION"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tic_inicio_construccion_programado', 'stg_fecha_fin_planeada':'tic_inicio_construccion_proyectado'})
     tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, start_building[start_building['stg_nombre_actividad'] == "11.Compras y contrataciones 80% act"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tic_proc_contratacion_programado', 'stg_fecha_fin_planeada':'tic_proc_contratacion_proyectado'}), on='key', how="outer",)

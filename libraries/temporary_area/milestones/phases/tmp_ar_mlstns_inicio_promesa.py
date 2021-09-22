@@ -5,11 +5,7 @@ def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
 
     print("   *Inicio Ventas Starting")
 
-    start_promise=milestones_dataset[(milestones_dataset['stg_programacion_proyecto'] == "PL") & ((milestones_dataset['stg_notas'] == "IP") | 
-                                                                                              (milestones_dataset['stg_notas'] == "IP-IC")| 
-                                                                                              (milestones_dataset['stg_notas'] == "IC-IP") | 
-                                                                                              (milestones_dataset['stg_notas'] == "IV-IP")|
-                                                                                              (milestones_dataset['stg_notas'] == "IV-IP-IC"))]
+    start_promise=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
     tbl_inicio_promesa=pd.DataFrame()
     tbl_inicio_promesa=start_promise[start_promise['stg_nombre_actividad'] == "1.FIN INICIO PROMESAS"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_inicio_promesas_programado', 'stg_fecha_fin_planeada':'tip_inicio_promesas_proyectado'})
     tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "2.Entrega kit promesas"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_ent_kit_prom_programado', 'stg_fecha_fin_planeada':'tip_ent_kit_prom_proyectado'}), on='key', how="outer",)

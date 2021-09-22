@@ -5,7 +5,7 @@ def tmp_ar_mlstns_inicio_escrituracion(milestones_dataset,tbl_proyectos):
 
     print("   *Inicio Escrituracion Starting")
 
-    start_registration=milestones_dataset[(milestones_dataset['stg_programacion_proyecto'] == "PL") & ((milestones_dataset['stg_notas'] == "IE") | (milestones_dataset['stg_notas'] == "IP-IE"))]
+    start_registration=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
     tbl_inicio_escrituracion=pd.DataFrame()
     tbl_inicio_escrituracion=start_registration[start_registration['stg_nombre_actividad'] == "1.INICIO ESCRITURACION"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tie_inicio_escrituracion_programado', 'stg_fecha_fin_planeada':'tie_inicio_escrituracion_proyectado'})
     tbl_inicio_escrituracion=pd.merge(tbl_inicio_escrituracion, start_registration[start_registration['stg_nombre_actividad'] == "2.Poder firma de escrituras"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tie_poder_fiduciaria_programado', 'stg_fecha_fin_planeada':'tie_poder_fiduciaria_proyectado'}), on='key', how="outer",)

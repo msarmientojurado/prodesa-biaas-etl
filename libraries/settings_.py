@@ -13,9 +13,11 @@ BUCKET_NAME = "prodesa-biaas-bucket"
 BLOB_NAME = "Consolidado_Excel_13-08-2021.xlsx"
 
 #BigQuery parammeters
-TBL_PROYECTOS_CONSTRUCCION = 'modelo_biaas_python_test.tbl_proyectos_construccion_test3'
-TBL_PROYECTOS_PLANEACION = 'modelo_biaas_python_test.tbl_proyectos_planeacion_test3'
-TBL_INICIO_VENTA = 'modelo_biaas_python_test.tbl_inicio_venta_test3'
-TBL_INICIO_PROMESA = 'modelo_biaas_python_test.tbl_inicio_promesa_test3'
-TBL_INICIO_CONSTRUCCION = 'modelo_biaas_python_test.tbl_inicio_construccion_test3'
-TBL_INICIO_ESCRITURACION = 'modelo_biaas_python_test.tbl_inicio_escrituracion_test3'
+BIGQUERY_DATASET='modelo_biaas_python_test'
+
+TBL_PROYECTOS_CONSTRUCCION = BIGQUERY_DATASET + '.tbl_proyectos_construccion_test3'
+TBL_PROYECTOS_PLANEACION = BIGQUERY_DATASET + '.tbl_proyectos_planeacion_test3'
+TBL_INICIO_VENTA = BIGQUERY_DATASET + '.tbl_inicio_venta_test3'
+TBL_INICIO_PROMESA = BIGQUERY_DATASET + '.tbl_inicio_promesa_test3'
+TBL_INICIO_CONSTRUCCION = BIGQUERY_DATASET + '.tbl_inicio_construccion_test3'
+TBL_INICIO_ESCRITURACION = BIGQUERY_DATASET + '.tbl_inicio_escrituracion_test3'
