@@ -15,9 +15,9 @@ BLOB_NAME = "Consolidado_Excel_13-08-2021.xlsx"
 #BigQuery parammeters
 BIGQUERY_DATASET='modelo_biaas_python_test'
 
-TBL_PROYECTOS_CONSTRUCCION = BIGQUERY_DATASET + '.tbl_proyectos_construccion_test3'
-TBL_PROYECTOS_PLANEACION = BIGQUERY_DATASET + '.tbl_proyectos_planeacion_test3'
-TBL_INICIO_VENTA = BIGQUERY_DATASET + '.tbl_inicio_venta_test3'
-TBL_INICIO_PROMESA = BIGQUERY_DATASET + '.tbl_inicio_promesa_test3'
-TBL_INICIO_CONSTRUCCION = BIGQUERY_DATASET + '.tbl_inicio_construccion_test3'
-TBL_INICIO_ESCRITURACION = BIGQUERY_DATASET + '.tbl_inicio_escrituracion_test3'
+TBL_PROYECTOS_CONSTRUCCION = BIGQUERY_DATASET + '.tbl_proyectos_construccion'
+TBL_PROYECTOS_PLANEACION = BIGQUERY_DATASET + '.tbl_proyectos_planeacion'
+TBL_INICIO_VENTA = BIGQUERY_DATASET + '.tbl_inicio_venta'
+TBL_INICIO_PROMESA = BIGQUERY_DATASET + '.tbl_inicio_promesa'
+TBL_INICIO_CONSTRUCCION = BIGQUERY_DATASET + '.tbl_inicio_construccion'
+TBL_INICIO_ESCRITURACION = BIGQUERY_DATASET + '.tbl_inicio_escrituracion'

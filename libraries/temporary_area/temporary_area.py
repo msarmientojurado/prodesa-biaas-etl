@@ -6,6 +6,8 @@ from libraries.temporary_area.commercial.tmp_ar_commercial import tmp_ar_commerc
 from libraries.temporary_area.milestones.tmp_ar_milestones import tmp_ar_milestones
 from libraries.temporary_area.parametrization.tmp_ar_parametrization import tmp_ar_parametrization
 
+import pandas as pd
+
 def temporary_area(stg_consolidado_corte):
     print(" *Temporary Area Starting")
 

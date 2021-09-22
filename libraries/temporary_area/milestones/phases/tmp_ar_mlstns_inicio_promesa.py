@@ -3,7 +3,7 @@ import pandas as pd
 
 def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
 
-    print("   *Inicio Ventas Starting")
+    print("   *Inicio Promesas Starting")
 
     start_promise=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
     tbl_inicio_promesa=pd.DataFrame()
@@ -53,6 +53,6 @@ def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
                                                             'tip_fecha_proceso',
                                                             'tip_lote_proceso'])
 
-    print("   -Inicio Ventas ending")
+    print("   -Inicio Promesas ending")
 
     return tbl_inicio_promesa
