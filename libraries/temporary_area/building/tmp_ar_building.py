@@ -117,9 +117,9 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     #    * Sort register descending by column `stg_fecha_fin_planeada`
     #    * Group the result Data Set by the column key
 
-    Col=construction_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
+    auxCol=construction_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
     auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
-    auxCol.sort_values(by=['key',"stg_fecha_fin_planeada"],ascending=False, inplace=True)
+    auxCol.sort_values(by=['key','stg_fecha_fin_planeada'],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 
     #Now Attach column `tpc_fin_proyectado_optimista` to `tmp_proyectos_construccion` Dataset
