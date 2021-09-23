@@ -117,14 +117,15 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     #    * Sort register descending by column `stg_fecha_fin_planeada`
     #    * Group the result Data Set by the column key
 
-    auxCol=construction_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada')]
+    Col=construction_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
     auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
     auxCol.sort_values(by=['key',"stg_fecha_fin_planeada"],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 
     #Now Attach column `tpc_fin_proyectado_optimista` to `tmp_proyectos_construccion` Dataset
-    tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('stg_fecha_fin_planeada','key')], on='key', how="left",)
-    tmp_proyectos_construccion = tmp_proyectos_construccion.rename(columns={'stg_fecha_fin_planeada': 'tpc_fin_proyectado_optimista'})
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('total','key')], on='key', how="left",)
+    tmp_proyectos_construccion = tmp_proyectos_construccion.rename(columns={'total': 'tpc_fin_proyectado_optimista'})
 
     #Column `tpc_fin_proyectado_pesimista`
     #Lets start by calculating `TamanoBuffer`
