@@ -1,5 +1,6 @@
 
 import pandas as pd
+import numpy as np
 
 def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos):
 
