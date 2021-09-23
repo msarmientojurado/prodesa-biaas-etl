@@ -143,6 +143,10 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_planeacion['tpp_fecha_proceso']=pd.to_datetime("today")
     tmp_proyectos_planeacion['tpp_lote_proceso']=1
 
+    planning_items=['PL','IV','IP','GAS','AC','GASUE','ELS1','EL','EL…','ELS0','IP…','SPU','SP','IC','DC','IE','SPUE']
+    tmp_proyectos_planeacion=tmp_proyectos_planeacion[tmp_proyectos_planeacion['tpp_hito'].isin(planning_items)]
+    tmp_proyectos_planeacion['tpp_tarea_consume_buffer']=np.where(tmp_proyectos_planeacion['tpp_avance_cc']==100,"TERMINADO",tmp_proyectos_planeacion['tpp_tarea_consume_buffer'])
+
     tmp_proyectos_planeacion=tmp_proyectos_planeacion.reindex(columns=['tpp_regional',
                                                             'tpp_codigo_proyecto',
                                                             'tpp_macroproyecto',
