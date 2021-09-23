@@ -1,5 +1,6 @@
 
 import pandas as pd
+import numpy as np
 
 def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
 
@@ -7,15 +8,43 @@ def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
 
     start_promise=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
     tbl_inicio_promesa=pd.DataFrame()
-    tbl_inicio_promesa=start_promise[start_promise['stg_nombre_actividad'] == "1.FIN INICIO PROMESAS"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_inicio_promesas_programado', 'stg_fecha_fin_planeada':'tip_inicio_promesas_proyectado'})
-    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "2.Entrega kit promesas"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_ent_kit_prom_programado', 'stg_fecha_fin_planeada':'tip_ent_kit_prom_proyectado'}), on='key', how="outer",)
-    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "3.Permiso de ventas"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_permiso_ventas_programado', 'stg_fecha_fin_planeada':'tip_permiso_ventas_proyectado'}), on='key', how="outer",)
-    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "4.Minuta de Hipoteca Registrada"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_min_hipo_reg_programado', 'stg_fecha_fin_planeada':'tip_min_hipo_reg_proyectado'}), on='key', how="outer",)
-    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "5.Radicacion de Minuta de Hipoteca a Registro"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_rad_min_hipo_reg_programado', 'stg_fecha_fin_planeada':'tip_rad_min_hipo_reg_proyectado'}), on='key', how="outer",)
-    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "6.Credito constructor"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_cred_construct_programado', 'stg_fecha_fin_planeada':'tip_cred_construct_proyectado'}), on='key', how="outer",)
-    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "Linderos"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_linderos_programado', 'stg_fecha_fin_planeada':'tip_linderos_proyectado'}), on='key', how="outer",)
-    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "11.FAI"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_fai_programado', 'stg_fecha_fin_planeada':'tip_fai_proyectado'}), on='key', how="outer",)
-    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, start_promise[start_promise['stg_nombre_actividad'] == "12.Constitucion de la Urbanizacion"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin')].rename(columns={'stg_fecha_fin':'tip_constitut_urban_programado', 'stg_fecha_fin_planeada':'tip_constitut_urban_proyectado'}), on='key', how="outer",)
+
+    auxCol=start_promise[start_promise['stg_nombre_actividad'] == "1.FIN INICIO PROMESAS"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_inicio_promesas_programado', 'total':'tip_inicio_promesas_proyectado'})
+
+    auxCol=start_promise[start_promise['stg_nombre_actividad'] == "2.Entrega kit promesas"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_ent_kit_prom_programado', 'total':'tip_ent_kit_prom_proyectado'}), on='key', how="outer",)
+
+    auxCol=start_promise[start_promise['stg_nombre_actividad'] == "3.Permiso de ventas"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_permiso_ventas_programado', 'total':'tip_permiso_ventas_proyectado'}), on='key', how="outer",)
+
+    auxCol=start_promise[start_promise['stg_nombre_actividad'] == "4.Minuta de Hipoteca Registrada"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_min_hipo_reg_programado', 'total':'tip_min_hipo_reg_proyectado'}), on='key', how="outer",)
+
+    auxCol=start_promise[start_promise['stg_nombre_actividad'] == "5.Radicacion de Minuta de Hipoteca a Registro"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_rad_min_hipo_reg_programado', 'total':'tip_rad_min_hipo_reg_proyectado'}), on='key', how="outer",)
+
+    auxCol=start_promise[start_promise['stg_nombre_actividad'] == "6.Credito constructor"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_cred_construct_programado', 'total':'tip_cred_construct_proyectado'}), on='key', how="outer",)
+
+    auxCol= start_promise[start_promise['stg_nombre_actividad'] == "Linderos"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_linderos_programado', 'total':'tip_linderos_proyectado'}), on='key', how="outer",)
+
+    auxCol=start_promise[start_promise['stg_nombre_actividad'] == "11.FAI"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_fai_programado', 'total':'tip_fai_proyectado'}), on='key', how="outer",)
+
+    auxCol=start_promise[start_promise['stg_nombre_actividad'] == "12.Constitucion de la Urbanizacion"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_promesa=pd.merge(tbl_inicio_promesa, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tip_constitut_urban_programado', 'total':'tip_constitut_urban_proyectado'}), on='key', how="outer",)
+
     tbl_inicio_promesa['tip_dias_atraso']=(tbl_inicio_promesa['tip_inicio_promesas_programado']-tbl_inicio_promesa['tip_inicio_promesas_proyectado']).dt.days
     tbl_inicio_promesa=pd.merge(tbl_inicio_promesa,start_promise.loc[:, ('key','stg_codigo_proyecto','stg_etapa_proyecto')].groupby(by=["key"]).first().reset_index(), on='key', how="left",)
     tbl_inicio_promesa = tbl_inicio_promesa.rename(columns={'stg_codigo_proyecto': 'tpr_codigo_proyecto'})
