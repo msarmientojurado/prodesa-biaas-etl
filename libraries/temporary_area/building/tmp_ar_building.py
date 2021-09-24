@@ -118,7 +118,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     #    * Group the result Data Set by the column key
 
     auxCol=construction_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
-    auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
+    #auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
     auxCol.sort_values(by=['key','stg_fecha_fin_planeada'],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 
