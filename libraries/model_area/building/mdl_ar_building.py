@@ -17,7 +17,7 @@ def mdl_ar_building(tmp_proyectos_construccion):
         bigquery.SchemaField("tpc_avance_cc",                   "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpc_avance_comparativo_semana",   "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tpc_consumo_buffer",              "FLOAT64",  mode="NULLABLE"),
-        bigquery.SchemaField("tpc_tpc_consumo_buffer_color",    "INT64",    mode="NULLABLE"),
+        bigquery.SchemaField("tpc_consumo_buffer_color",        "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tpc_consumo_buffer_comparativo",  "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tpc_fin_proyectado_optimista",    "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tpc_fin_proyectado_pesimista",    "DATE",     mode="NULLABLE"),
