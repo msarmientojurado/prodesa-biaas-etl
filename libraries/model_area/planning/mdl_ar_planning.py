@@ -17,6 +17,7 @@ def mdl_ar_planning(tmp_proyectos_planeacion):
         bigquery.SchemaField("tpp_avance_cc",                   "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpp_avance_comparativo_semana",   "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tpp_consumo_buffer",              "FLOAT64",  mode="NULLABLE"),
+        bigquery.SchemaField("tpp_consumo_buffer_color",        "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tpp_consumo_buffer_comparativo",  "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tpp_fin_proyectado_optimista",    "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tpp_fin_proyectado_pesimista",    "DATE",     mode="NULLABLE"),

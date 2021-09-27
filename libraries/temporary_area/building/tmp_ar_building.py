@@ -171,6 +171,14 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     tmp_proyectos_construccion['tpc_tarea_consume_buffer']=np.where(tmp_proyectos_construccion['tpc_avance_cc']==100,"TERMINADO",tmp_proyectos_construccion['tpc_tarea_consume_buffer'])
 
+    conditions = [(tmp_proyectos_construccion['tpc_consumo_buffer']) < (0.2*tmp_proyectos_construccion['tpc_avance_cc']+20),
+                (0.8*tmp_proyectos_construccion['tpc_avance_cc']+20 > tmp_proyectos_construccion['tpc_consumo_buffer']) & (tmp_proyectos_construccion['tpc_consumo_buffer'] > 0.2*tmp_proyectos_construccion['tpc_avance_cc']+20),
+                (tmp_proyectos_construccion['tpc_consumo_buffer'] > 0.8*tmp_proyectos_construccion['tpc_avance_cc']+20)]
+    
+    choices = [1,0,-1]
+
+    tmp_proyectos_construccion['tpc_consumo_buffer_color'] = np.select(conditions, choices, default= 1 )
+
     tmp_proyectos_construccion=tmp_proyectos_construccion.reindex(columns=['tpc_regional',
                                                             'tpc_codigo_proyecto',
                                                             'tpc_macroproyecto',
@@ -181,6 +189,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
                                                             'tpc_avance_cc',
                                                             'tpc_avance_comparativo_semana',
                                                             'tpc_consumo_buffer',
+                                                            'tpc_consumo_buffer_color',
                                                             'tpc_consumo_buffer_comparativo',
                                                             'tpc_fin_proyectado_optimista',
                                                             'tpc_fin_proyectado_pesimista',
