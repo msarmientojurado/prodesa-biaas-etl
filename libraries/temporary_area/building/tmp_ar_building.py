@@ -167,27 +167,32 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     #------------------------------
     client = bigquery.Client()
     project_codes=tmp_proyectos_construccion.tpc_codigo_proyecto.unique()
+    now = datetime.now()
     text=""
     for project_code in project_codes:
         if text== "":
             text=text+"'"+project_code+"'"
         else:
             text=text+", '"+project_code+"'"
+        
     query ="""
-    SELECT distinct CONCAT(tt.tpc_codigo_proyecto, '_', tt.tpc_etapa, '_',tpc_programacion) key, tt.tpc_fecha_corte, tt.tpc_avance_cc, tt.tpc_consumo_buffer
-    FROM `proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion` tt 
-    inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
-        FROM proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion
-        WHERE tpc_codigo_proyecto in ("""+text+""")
-        and tpc_fecha_corte <= DATE_SUB(DATE "2021-06-25", INTERVAL 4 WEEK) 
-        GROUP BY key) groupedtt
-    ON key = groupedtt.key 
-    AND tt.tpc_fecha_corte = groupedtt.MaxDate
-    order by key, tt.tpc_fecha_corte desc 
-    """
+        SELECT distinct CONCAT(tt.tpc_codigo_proyecto, '_', tt.tpc_etapa, '_',tpc_programacion) key, tt.tpc_fecha_corte, tt.tpc_avance_cc, tt.tpc_consumo_buffer
+        FROM `proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion` tt 
+        inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
+            FROM proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion
+            WHERE tpc_codigo_proyecto in ("""+text+""")
+            and tpc_fecha_corte <= DATE_SUB(DATE '""" + now.strftime("%Y-%m-%d") +"""', INTERVAL 4 WEEK) 
+            GROUP BY key) groupedtt
+        ON key = groupedtt.key 
+        AND tt.tpc_fecha_corte = groupedtt.MaxDate
+        order by key, tt.tpc_fecha_corte desc 
+        """
 
     print(query)
-    #query_job = client.query(query) 
+    auxCol = client.query(query)
+    auxCol=auxCol.groupby(by=["key"]).first().reset_index()
+    tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_ultima_semana'}), on='key', how="left",)
+    
 
     #for row in query_job:
         # Row values can be accessed by field name or index.
@@ -196,7 +201,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     tmp_proyectos_construccion['tpc_avance_comparativo_semana']=0
     tmp_proyectos_construccion['tpc_consumo_buffer_comparativo']=0
-    tmp_proyectos_construccion['tpc_ultima_semana']=0
+    #tmp_proyectos_construccion['tpc_ultima_semana']=0
     tmp_proyectos_construccion['tpc_ultimo_mes']=0
     tmp_proyectos_construccion['tpc_fecha_proceso']=pd.to_datetime("today")
     tmp_proyectos_construccion['tpc_lote_proceso']=1
