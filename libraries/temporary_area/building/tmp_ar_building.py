@@ -4,6 +4,7 @@ import numpy as np
 
 from google.cloud import bigquery
 
+
 def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     print("  *Building Starting")
@@ -190,6 +191,18 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     print(query)
     auxCol = client.query(query)
+
+    auxCol= (
+        client.query(query)
+        .result()
+        .to_dataframe(
+            # Optionally, explicitly request to use the BigQuery Storage API. As of
+            # google-cloud-bigquery version 1.26.0 and above, the BigQuery Storage
+            # API is used by default.
+            create_bqstorage_client=True,
+        )
+    )
+
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_ultima_semana'}), on='key', how="left",)
     
