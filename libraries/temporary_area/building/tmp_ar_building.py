@@ -166,23 +166,32 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     #------------------------------
     client = bigquery.Client()
+    project_codes=tmp_proyectos_construccion.tpc_codigo_proyecto.unique()
+    text=""
+    for project_code in project_codes:
+        if text== "":
+            text=text+"'"+project_code+"'"
+        else:
+            text=text+", '"+project_code+"'"
     query ="""
     SELECT distinct CONCAT(tt.tpc_codigo_proyecto, '_', tt.tpc_etapa, '_',tpc_programacion) key, tt.tpc_fecha_corte, tt.tpc_avance_cc, tt.tpc_consumo_buffer
     FROM `proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion` tt 
     inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
         FROM proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion
-        WHERE tpc_codigo_proyecto in ('ALAM3', 'MADNV', 'SITUM','ALAMNO', 'IBAGUE-VIPMZ14','VILLETA-NOVIS', 'ALAM4')
+        WHERE tpc_codigo_proyecto in ("""+text+""")
         and tpc_fecha_corte <= DATE_SUB(DATE "2021-06-25", INTERVAL 4 WEEK) 
         GROUP BY key) groupedtt
     ON key = groupedtt.key 
     AND tt.tpc_fecha_corte = groupedtt.MaxDate
     order by key, tt.tpc_fecha_corte desc 
     """
-    query_job = client.query(query) 
 
-    for row in query_job:
+    print(query)
+    #query_job = client.query(query) 
+
+    #for row in query_job:
         # Row values can be accessed by field name or index.
-        print("name={}, count={}".format(row[0], row[1]))
+        #print("name={}, count={}".format(row[0], row[1]))
     #------------------------------
 
     tmp_proyectos_construccion['tpc_avance_comparativo_semana']=0
