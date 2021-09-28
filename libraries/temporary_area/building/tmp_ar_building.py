@@ -202,7 +202,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
             create_bqstorage_client=True,
         )
     )
-
+    print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_ultima_semana'}), on='key', how="left",)
     
