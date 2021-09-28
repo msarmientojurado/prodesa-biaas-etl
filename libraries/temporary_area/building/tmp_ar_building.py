@@ -178,7 +178,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         
     query ="""
         SELECT distinct CONCAT(tt.tpc_codigo_proyecto, '_', tt.tpc_etapa, '_',tpc_programacion) key, tt.tpc_fecha_corte, tt.tpc_avance_cc
-        FROM `proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion` tt 
+        FROM `proyecto-prodesa.modelo_biaas_python_test.tbl_proyectos_construccion` tt 
         inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
             FROM proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion
             WHERE tpc_codigo_proyecto in ("""+text+""")
@@ -209,7 +209,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     #-----------------------------
     query ="""
         SELECT distinct CONCAT(tt.tpc_codigo_proyecto, '_', tt.tpc_etapa, '_',tpc_programacion) key, tt.tpc_fecha_corte, tt.tpc_avance_cc, tt.tpc_consumo_buffer
-        FROM `proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion` tt 
+        FROM `proyecto-prodesa.modelo_biaas_python_test.tbl_proyectos_construccion` tt 
         inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
             FROM proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion
             WHERE tpc_codigo_proyecto in ("""+text+""")
