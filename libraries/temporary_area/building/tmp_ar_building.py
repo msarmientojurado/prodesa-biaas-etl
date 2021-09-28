@@ -167,7 +167,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     #------------------------------
     client = bigquery.Client()
     project_codes=tmp_proyectos_construccion.tpc_codigo_proyecto.unique()
-    now = datetime.now()
+    cut_date = pd.to_datetime(tmp_proyectos_construccion.tpc_fecha_corte.unique()[0])
     text=""
     for project_code in project_codes:
         if text== "":
@@ -181,7 +181,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
             FROM proyecto-prodesa.modelo_biaas.tbl_proyectos_construccion
             WHERE tpc_codigo_proyecto in ("""+text+""")
-            and tpc_fecha_corte <= DATE_SUB(DATE '""" + now.strftime("%Y-%m-%d") +"""', INTERVAL 4 WEEK) 
+            and tpc_fecha_corte <= DATE_SUB(DATE '""" + cut_date.strftime("%Y-%m-%d") +"""', INTERVAL 4 WEEK) 
             GROUP BY key) groupedtt
         ON key = groupedtt.key 
         AND tt.tpc_fecha_corte = groupedtt.MaxDate
