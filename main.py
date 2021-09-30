@@ -15,7 +15,7 @@ from libraries.temporary_area.temporary_area import temporary_area
 from libraries.model_area.model_area import model
 
 # External Libraries
-from libraries.settings import ORIGIN_FILE
+
 import pandas as pd
 import numpy as np
 
@@ -25,7 +25,7 @@ def main():
     print("Starting ETL process...");
     
     # Running Mirror Area
-    esp_consolidado_corte=mirror_area(ORIGIN_FILE);
+    esp_consolidado_corte=mirror_area();
     #print(" * Uploaded rows: {}".format(len(esp_consolidado_corte.index)));
 
     #Running Staging Area

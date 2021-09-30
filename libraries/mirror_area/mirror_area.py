@@ -4,7 +4,7 @@ from libraries.settings import BLOB_NAME, BUCKET_NAME, ENVIRONMENT
 import pandas as pd
 from google.cloud import storage
 
-def mirror_area(file_name):
+def mirror_area():
     print(" *Mirror Area Starting...");
     
     if ENVIRONMENT == "Development":
