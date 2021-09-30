@@ -1,4 +1,5 @@
 
+from libraries.settings_ import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_CONSTRUCCION
 import pandas as pd
 import numpy as np
 
@@ -166,22 +167,24 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_construccion = tmp_proyectos_construccion.rename(columns={'tpr_codigo_proyecto' : 'tpc_codigo_proyecto','tpr_regional' : 'tpc_regional','tpr_macroproyecto' : 'tpc_macroproyecto', 'stg_etapa_proyecto' : 'tpc_etapa', 'stg_programacion_proyecto' : 'tpc_programacion', 'tpr_proyecto' : 'tpc_proyecto', 'stg_fecha_corte' : 'tpc_fecha_corte'})
 
     #------------------------------
+    #Column tpc_ultimo_mes
+
     client = bigquery.Client()
     project_codes=tmp_proyectos_construccion.tpc_codigo_proyecto.unique()
     cut_date = pd.to_datetime(tmp_proyectos_construccion.tpc_fecha_corte.unique()[0])
-    text=""
+    project_codes=""
     for project_code in project_codes:
-        if text== "":
-            text=text+"'"+project_code+"'"
+        if project_codes== "":
+            project_codes=project_codes+"'"+project_code+"'"
         else:
-            text=text+", '"+project_code+"'"
+            project_codes=project_codes+", '"+project_code+"'"
         
     query ="""
         SELECT distinct CONCAT(tt.tpc_codigo_proyecto, '_', tt.tpc_etapa, '_',tpc_programacion) key, tt.tpc_fecha_corte, tt.tpc_avance_cc
-        FROM `proyecto-prodesa.modelo_biaas_python_test.tbl_proyectos_construccion` tt 
+        FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """` tt 
         inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
-            FROM proyecto-prodesa.modelo_biaas_python_test.tbl_proyectos_construccion
-            WHERE tpc_codigo_proyecto in ("""+text+""")
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """`
+            WHERE tpc_codigo_proyecto in ("""+project_codes+""")
             and tpc_fecha_corte <= DATE_SUB(DATE '""" + cut_date.strftime("%Y-%m-%d") +"""', INTERVAL 4 WEEK) 
             GROUP BY key) groupedtt
         ON key = groupedtt.key 
@@ -189,58 +192,73 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         order by key, tt.tpc_fecha_corte desc 
         """
 
-    print(query)
+    #print(query)
     auxCol = client.query(query)
 
     auxCol= (
         client.query(query)
         .result()
         .to_dataframe(
-            # Optionally, explicitly request to use the BigQuery Storage API. As of
-            # google-cloud-bigquery version 1.26.0 and above, the BigQuery Storage
-            # API is used by default.
             create_bqstorage_client=True,
         )
     )
-    print(auxCol.columns)
+    #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
-    tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_ultimo_mes'}), on='key', how="left",)
-    
+    tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_avance_ultimo_mes'}), on='key', how="left",)
+    tmp_proyectos_construccion['tpc_ultimo_mes']= tmp_proyectos_construccion['tpc_avance_cc']-tmp_proyectos_construccion['tpc_avance_ultimo_mes']
+
     #-----------------------------
+    #Column tpc_ultima_semana
     query ="""
         SELECT distinct CONCAT(tt.tpc_codigo_proyecto, '_', tt.tpc_etapa, '_',tpc_programacion) key, tt.tpc_fecha_corte, tt.tpc_avance_cc, tt.tpc_consumo_buffer
-        FROM `proyecto-prodesa.modelo_biaas_python_test.tbl_proyectos_construccion` tt 
+        FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """` tt 
         inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
-            FROM proyecto-prodesa.modelo_biaas_python_test.tbl_proyectos_construccion
-            WHERE tpc_codigo_proyecto in ("""+text+""")
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """`
+            WHERE tpc_codigo_proyecto in ("""+project_codes+""")
             GROUP BY key) groupedtt
         ON key = groupedtt.key 
         AND tt.tpc_fecha_corte = groupedtt.MaxDate
         order by key, tt.tpc_fecha_corte desc 
         """
 
-    print(query)
+    #print(query)
     auxCol = client.query(query)
 
     auxCol= (
         client.query(query)
         .result()
         .to_dataframe(
-            # Optionally, explicitly request to use the BigQuery Storage API. As of
-            # google-cloud-bigquery version 1.26.0 and above, the BigQuery Storage
-            # API is used by default.
             create_bqstorage_client=True,
         )
     )
-    print(auxCol.columns)
+    #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
-    print(auxCol.head(5))
-    tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_ultima_semana'}), on='key', how="left",)
+    #print(auxCol.head(5))
+    tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_consumo_buffer', 'tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_avance_ultima_semana', 'tpc_consumo_buffer' : 'tpc_consumo_buffer_ultima_semana'}), on='key', how="left",)
+    tmp_proyectos_construccion['tpc_ultima_semana']= tmp_proyectos_construccion['tpc_avance_cc']-tmp_proyectos_construccion['tpc_avance_ultima_semana']
+
+    #Column tpc_avance_comparativo_semana
+    conditions = [(tmp_proyectos_construccion['tpc_avance_ultima_semana'] < tmp_proyectos_construccion['tpc_avance_cc']),
+                (tmp_proyectos_construccion['tpc_avance_ultima_semana'] == tmp_proyectos_construccion['tpc_avance_cc']),
+                (tmp_proyectos_construccion['tpc_avance_ultima_semana'] > tmp_proyectos_construccion['tpc_avance_cc'])]
+    
+    choices = [1,0,-1]
+
+    tmp_proyectos_construccion['tpc_avance_comparativo_semana'] = np.select(conditions, choices, default= 0 )
+
+    #Column tpc_consumo_buffer_comparativo
+    conditions = [(tmp_proyectos_construccion['tpc_consumo_buffer_ultima_semana'] < tmp_proyectos_construccion['tpc_consumo_buffer']),
+                (tmp_proyectos_construccion['tpc_consumo_buffer_ultima_semana'] == tmp_proyectos_construccion['tpc_consumo_buffer']),
+                (tmp_proyectos_construccion['tpc_consumo_buffer_ultima_semana'] > tmp_proyectos_construccion['tpc_consumo_buffer'])]
+    
+    choices = [1,0,-1]
+
+    tmp_proyectos_construccion['tpc_consumo_buffer_comparativo'] = np.select(conditions, choices, default= 0 )
 
     #------------------------------
 
-    tmp_proyectos_construccion['tpc_avance_comparativo_semana']=0
-    tmp_proyectos_construccion['tpc_consumo_buffer_comparativo']=0
+    #tmp_proyectos_construccion['tpc_avance_comparativo_semana']=0
+    #tmp_proyectos_construccion['tpc_consumo_buffer_comparativo']=0
     #tmp_proyectos_construccion['tpc_ultima_semana']=0
     #tmp_proyectos_construccion['tpc_ultimo_mes']=0
     tmp_proyectos_construccion['tpc_fecha_proceso']=pd.to_datetime("today")

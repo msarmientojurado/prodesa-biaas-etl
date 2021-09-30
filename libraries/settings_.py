@@ -13,6 +13,12 @@ BUCKET_NAME = "prodesa-biaas-bucket"
 BLOB_NAME = "Consolidado_Excel_13-08-2021.xlsx"
 
 #BigQuery parammeters
+BIGQUERY_ENVIRONMENT_NAME="proyecto-prodesa"
+# This variable is used to switch between production and development environments.
+#   Values:
+#       proyecto-prodesa
+#       production-prodesa-biaas
+
 BIGQUERY_DATASET='modelo_biaas_python_test'
 
 TBL_PROYECTOS_CONSTRUCCION = BIGQUERY_DATASET + '.tbl_proyectos_construccion'
