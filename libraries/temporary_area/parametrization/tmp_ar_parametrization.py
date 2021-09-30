@@ -2,9 +2,7 @@
 
 import pandas as pd
 from google.cloud import bigquery
-from libraries.settings import TBL_PROYECTOS
-
-from libraries.settings_ import BIGQUERY_ENVIRONMENT_NAME, ENVIRONMENT
+from libraries.settings import TBL_PROYECTOS, BIGQUERY_ENVIRONMENT_NAME, ENVIRONMENT
 
 def tmp_ar_parametrization(stg_consolidado_corte):
     print("  *Parametrization Script Starting...");
