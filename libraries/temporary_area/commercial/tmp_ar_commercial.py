@@ -171,7 +171,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
         order by key, tt.tpcm_fecha_corte desc 
         """
 
-    print(query)
+    #print(query)
     auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
@@ -192,7 +192,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
         order by key, tt.tpcm_fecha_corte desc 
         """
 
-    print(query)
+    #print(query)
     auxCol= client.query(query).result().to_dataframe(create_bqstorage_client=True,) 
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
@@ -254,6 +254,8 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
                                                             'tpcm_fecha_corte',
                                                             'tpcm_fecha_proceso',
                                                             'tpcm_lote_proceso'])
+
+    print(tmp_proyectos_comercial.head(10))
 
 
     #------------------------------------------------------------------------------
