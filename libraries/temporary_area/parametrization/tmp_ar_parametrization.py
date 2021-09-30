@@ -24,12 +24,44 @@ def tmp_ar_parametrization(stg_consolidado_corte):
             SELECT *
                 FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS + """`
                 WHERE tpr_codigo_proyecto in ("""+ text +""")
+                and tpr_estado = TRUE
             """
 
-        print(query)        
+        #print(query)        
         tbl_proyectos= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))
-        print(tbl_proyectos.head(5))
+        #print(tbl_proyectos.head(5))
 
+    # Verification: Is there information related to Building
+    construction_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
+    construction_dataset=construction_dataset[construction_dataset['stg_area_prodesa']=='CS']
+    building_report=False
+    if construction_dataset[construction_dataset.columns[0]].count() == 0:
+        building_report=False
+    else:
+        building_report=True
+
+    print (building_report)
+    # Verification: Is there information related to Planning
+    planning_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
+    planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']=='PN']
+    planning_report=False
+    if planning_dataset[planning_dataset.columns[0]].count() == 0:
+        planning_report=False
+    else:
+        planning_report=True
+
+    print (planning_report)
+    # Verification: Is there information related to Commercial
+    commercial_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
+    commercial_dataset=commercial_dataset[commercial_dataset['stg_area_prodesa']=='CL']
+    commercial_report=False
+    if commercial_dataset[commercial_dataset.columns[0]].count() == 0:
+        commercial_report=False
+    else:
+        commercial_report=True
+
+    print (commercial_report)
+    
     print("  -Parametrization Script ending...");
 
     return tbl_proyectos
