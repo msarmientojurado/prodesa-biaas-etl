@@ -193,12 +193,10 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         """
 
     #print(query)
-    auxCol = client.query(query)
+    #auxCol = client.query(query)
 
     auxCol= (
-        client.query(query)
-        .result()
-        .to_dataframe(
+        client.query(query).result().to_dataframe(
             create_bqstorage_client=True,
         )
     )
@@ -222,7 +220,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         """
 
     #print(query)
-    auxCol = client.query(query)
+    #auxCol = client.query(query)
 
     auxCol= (
         client.query(query)
