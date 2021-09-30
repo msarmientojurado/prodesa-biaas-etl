@@ -23,8 +23,7 @@ def tmp_ar_parametrization(stg_consolidado_corte):
         query ="""
             SELECT *
                 FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS + """`
-                WHERE tpc_codigo_proyecto in ("""+ text +""")
-                GROUP BY key 
+                WHERE tpr_codigo_proyecto in ("""+ text +""")
             """
 
         print(query)        
