@@ -12,25 +12,25 @@ def temporary_area(stg_consolidado_corte):
     print(" *Temporary Area Starting")
 
     #Executing Parametrization Script
-    tbl_proyectos, building_report, planning_report, commercial_report=tmp_ar_parametrization(stg_consolidado_corte);
+    tbl_proyectos, building_report_excecution, planning_report_excecution, commercial_report_excecution=tmp_ar_parametrization(stg_consolidado_corte);
 
     #Hitos
     tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion = tmp_ar_milestones(stg_consolidado_corte, tbl_proyectos)
     
     #Construccion
-    if building_report == True:
+    if building_report_excecution == True:
         tmp_proyectos_construccion = tmp_ar_building(stg_consolidado_corte, tbl_proyectos)
     else:
         tmp_proyectos_construccion= pd.DataFrame()
 
     #Consolidado Proyectos de Planeacion
-    if planning_report == True:
+    if planning_report_excecution == True:
         tmp_proyectos_planeacion = tmp_ar_planning(stg_consolidado_corte, tbl_proyectos)
     else:
         tmp_proyectos_planeacion= pd.DataFrame()
 
-    #TODO Implement "Consolidado Proyectos Comercial"
-    if commercial_report == True:
+    #Consolidado Proyectos Comercial
+    if commercial_report_excecution == True:
         tmp_proyectos_comercial = tmp_ar_commercial(stg_consolidado_corte)
     else:
         tmp_proyectos_comercial= pd.DataFrame()
@@ -38,6 +38,4 @@ def temporary_area(stg_consolidado_corte):
     #TODO Implement "Reporte por Entregas"
     
     print(" -Temporary Area ending")
-    return tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial
-
-    
+    return tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial, building_report_excecution, planning_report_excecution, commercial_report_excecution
