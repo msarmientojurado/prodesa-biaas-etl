@@ -192,7 +192,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         order by key, tt.tpc_fecha_corte desc 
         """
 
-    #print(query)
+    print(query)
     #auxCol = client.query(query)
 
     auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
@@ -215,7 +215,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         order by key, tt.tpc_fecha_corte desc 
         """
 
-    #print(query)
+    print(query)
     #auxCol = client.query(query)
 
     auxCol= (
