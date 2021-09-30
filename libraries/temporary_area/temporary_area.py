@@ -12,19 +12,22 @@ def temporary_area(stg_consolidado_corte):
     print(" *Temporary Area Starting")
 
     #Executing Parametrization Script
-    tbl_proyectos=tmp_ar_parametrization(stg_consolidado_corte);
+    tbl_proyectos, building_report, planning_report, commercial_report=tmp_ar_parametrization(stg_consolidado_corte);
 
     #Hitos
     tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion = tmp_ar_milestones(stg_consolidado_corte, tbl_proyectos)
     
     #Construccion
-    tmp_proyectos_construccion = tmp_ar_building(stg_consolidado_corte, tbl_proyectos)
+    if building_report == True:
+        tmp_proyectos_construccion = tmp_ar_building(stg_consolidado_corte, tbl_proyectos)
 
     #Consolidado Proyectos de Planeacion
-    tmp_proyectos_planeacion = tmp_ar_planning(stg_consolidado_corte, tbl_proyectos)
+    if planning_report == True:
+        tmp_proyectos_planeacion = tmp_ar_planning(stg_consolidado_corte, tbl_proyectos)
 
     #TODO Implement "Consolidado Proyectos Comercial"
-    tmp_proyectos_comercial = tmp_ar_commercial(stg_consolidado_corte)
+    if commercial_report == True:
+        tmp_proyectos_comercial = tmp_ar_commercial(stg_consolidado_corte)
 
     #TODO Implement "Reporte por Entregas"
     
