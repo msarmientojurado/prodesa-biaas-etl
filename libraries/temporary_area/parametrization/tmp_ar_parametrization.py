@@ -61,7 +61,7 @@ def tmp_ar_parametrization(stg_consolidado_corte):
         commercial_report=True
 
     print (commercial_report)
-    
+
     print("  -Parametrization Script ending...");
 
-    return tbl_proyectos
+    return tbl_proyectos, building_report, planning_report, commercial_report
