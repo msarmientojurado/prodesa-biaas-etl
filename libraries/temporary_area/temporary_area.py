@@ -20,14 +20,20 @@ def temporary_area(stg_consolidado_corte):
     #Construccion
     if building_report == True:
         tmp_proyectos_construccion = tmp_ar_building(stg_consolidado_corte, tbl_proyectos)
+    else:
+        tmp_proyectos_construccion= pd.DataFrame()
 
     #Consolidado Proyectos de Planeacion
     if planning_report == True:
         tmp_proyectos_planeacion = tmp_ar_planning(stg_consolidado_corte, tbl_proyectos)
+    else:
+        tmp_proyectos_planeacion= pd.DataFrame()
 
     #TODO Implement "Consolidado Proyectos Comercial"
     if commercial_report == True:
         tmp_proyectos_comercial = tmp_ar_commercial(stg_consolidado_corte)
+    else:
+        tmp_proyectos_comercial= pd.DataFrame()
 
     #TODO Implement "Reporte por Entregas"
     
