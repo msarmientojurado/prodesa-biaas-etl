@@ -12,7 +12,7 @@ def temporary_area(stg_consolidado_corte):
     print(" *Temporary Area Starting")
 
     #Executing Parametrization Script
-    tbl_proyectos=tmp_ar_parametrization();
+    tbl_proyectos=tmp_ar_parametrization(stg_consolidado_corte);
 
     #Hitos
     tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion = tmp_ar_milestones(stg_consolidado_corte, tbl_proyectos)
