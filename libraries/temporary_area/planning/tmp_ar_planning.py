@@ -1,6 +1,11 @@
 import pandas as pd
 import numpy as np
 
+from google.cloud import bigquery
+from libraries.settings import TBL_PROYECTOS_PLANEACION
+
+from libraries.settings_ import BIGQUERY_ENVIRONMENT_NAME
+
 def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     print("  *Planning Starting")
     #Lets start by building the dataset to work, which includes those 
@@ -136,10 +141,87 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
     tmp_proyectos_planeacion = tmp_proyectos_planeacion.rename(columns={'tpr_regional' : 'tpp_regional','tpr_macroproyecto' : 'tpp_macroproyecto', 'stg_etapa_proyecto' : 'tpp_etapa', 'tpr_proyecto' : 'tpp_proyecto', 'stg_fecha_corte' : 'tpp_fecha_corte', 'tpr_codigo_proyecto': 'tpp_codigo_proyecto'})
 
-    tmp_proyectos_planeacion['tpp_avance_comparativo_semana']=0
-    tmp_proyectos_planeacion['tpp_consumo_buffer_comparativo']=0
-    tmp_proyectos_planeacion['tpp_ultima_semana']=0
-    tmp_proyectos_planeacion['tpp_ultimo_mes']=0
+    #------------------------------
+    #Column tpc_ultimo_mes
+
+    client = bigquery.Client()
+    project_codes=tmp_proyectos_planeacion.tpp_codigo_proyecto.unique()
+    cut_date = pd.to_datetime(tmp_proyectos_planeacion.tpp_fecha_corte.unique()[0])
+    text=""
+    for project_code in project_codes:
+        if text== "":
+            text=text+"'"+project_code+"'"
+        else:
+            text=text+", '"+project_code+"'"
+    
+    #planning_dataset['key']=planning_dataset['stg_codigo_proyecto']+'_'+planning_dataset['stg_etapa_proyecto']+'_'+planning_dataset['stg_notas']
+
+    query ="""
+        SELECT distinct CONCAT(tt.tpp_codigo_proyecto, '_', tt.tpp_etapa, '_',tpp_hito) key, tt.tpp_fecha_corte, tt.tpp_avance_cc
+        FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_PLANEACION + """` tt 
+        inner JOIN (SELECT CONCAT(tpp_codigo_proyecto, '_', tpp_etapa, '_',tpp_hito) key, MAX(tpp_fecha_corte) AS MaxDate
+            FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_PLANEACION + """
+            WHERE tpp_codigo_proyecto in ("""+text+""")
+            and tpp_fecha_corte <= DATE_SUB(DATE '""" + cut_date.strftime("%Y-%m-%d") +"""', INTERVAL 4 WEEK) 
+            GROUP BY key) groupedtt
+        ON key = groupedtt.key 
+        AND tt.tpp_fecha_corte = groupedtt.MaxDate
+        order by key, tt.tpp_fecha_corte desc 
+        """
+
+    #print(query)
+    auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
+    #print(auxCol.columns)
+    auxCol=auxCol.groupby(by=["key"]).first().reset_index()
+    tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,auxCol.loc[:, ('tpp_avance_cc','key')].rename(columns={'tpp_avance_cc':'tpp_avance_ultimo_mes'}), on='key', how="left",)
+    tmp_proyectos_planeacion['tpp_ultimo_mes']= tmp_proyectos_planeacion['tpp_avance_cc']-tmp_proyectos_planeacion['tpp_avance_ultimo_mes']
+
+    #-----------------------------
+    #Column tpc_ultima_semana
+    query ="""
+        SELECT distinct CONCAT(tt.tpp_codigo_proyecto, '_', tt.tpp_etapa, '_',tpp_hito) key, tt.tpp_fecha_corte, tt.tpp_avance_cc, tt.tpp_consumo_buffer
+        FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_PLANEACION + """` tt 
+        inner JOIN (SELECT CONCAT(tpp_codigo_proyecto, '_', tpp_etapa, '_',tpp_hito) key, MAX(tpp_fecha_corte) AS MaxDate
+            FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_PLANEACION + """
+            WHERE tpp_codigo_proyecto in ("""+text+""")
+            GROUP BY key) groupedtt
+        ON key = groupedtt.key 
+        AND tt.tpp_fecha_corte = groupedtt.MaxDate
+        order by key, tt.tpp_fecha_corte desc 
+        """
+
+    #print(query)
+    auxCol= client.query(query).result().to_dataframe(create_bqstorage_client=True,) 
+    #print(auxCol.columns)
+    auxCol=auxCol.groupby(by=["key"]).first().reset_index()
+    #print(auxCol.head(5))
+    tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,auxCol.loc[:, ('tpp_consumo_buffer', 'tpp_avance_cc','key')].rename(columns={'tpp_avance_cc':'tpp_avance_ultima_semana', 'tpp_consumo_buffer' : 'tpp_consumo_buffer_ultima_semana'}), on='key', how="left",)
+    tmp_proyectos_planeacion['tpp_ultima_semana']= tmp_proyectos_planeacion['tpp_avance_cc']-tmp_proyectos_planeacion['tpp_avance_ultima_semana']
+
+    #Column tpc_avance_comparativo_semana
+    conditions = [(tmp_proyectos_planeacion['tpp_avance_ultima_semana'] < tmp_proyectos_planeacion['tpp_avance_cc']),
+                (tmp_proyectos_planeacion['tpp_avance_ultima_semana'] == tmp_proyectos_planeacion['tpp_avance_cc']),
+                (tmp_proyectos_planeacion['tpp_avance_ultima_semana'] > tmp_proyectos_planeacion['tpp_avance_cc'])]
+    
+    choices = [1,0,-1]
+
+    tmp_proyectos_planeacion['tpp_avance_comparativo_semana'] = np.select(conditions, choices, default= 0 )
+
+    #Column tpc_consumo_buffer_comparativo
+    conditions = [(tmp_proyectos_planeacion['tpp_consumo_buffer_ultima_semana'] < tmp_proyectos_planeacion['tpp_consumo_buffer']),
+                (tmp_proyectos_planeacion['tpp_consumo_buffer_ultima_semana'] == tmp_proyectos_planeacion['tpp_consumo_buffer']),
+                (tmp_proyectos_planeacion['tpp_consumo_buffer_ultima_semana'] > tmp_proyectos_planeacion['tpp_consumo_buffer'])]
+    
+    choices = [1,0,-1]
+
+    tmp_proyectos_planeacion['tpp_consumo_buffer_comparativo'] = np.select(conditions, choices, default= 0 )
+
+    #------------------------------
+
+    #tmp_proyectos_planeacion['tpp_avance_comparativo_semana']=0
+    #tmp_proyectos_planeacion['tpp_consumo_buffer_comparativo']=0
+    #tmp_proyectos_planeacion['tpp_ultima_semana']=0
+    #tmp_proyectos_planeacion['tpp_ultimo_mes']=0
     tmp_proyectos_planeacion['tpp_fecha_proceso']=pd.to_datetime("today")
     tmp_proyectos_planeacion['tpp_lote_proceso']=1
 
