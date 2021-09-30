@@ -1,7 +1,11 @@
 import pandas as pd
 import numpy as np
 
-def tmp_ar_commercial(stg_consolidado_corte):
+from google.cloud import bigquery
+
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_COMERCIAL
+
+def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     print("  *Commercial Starting")
     #Lets start by building the dataset to work, which includes those registers which have the word `CL` in their `stg_area_prodesa` column
 
@@ -121,9 +125,140 @@ def tmp_ar_commercial(stg_consolidado_corte):
     auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-(auxCol['tpcm_avance_cc']/100)))
     auxCol['delta_days'] = auxCol['delta'].apply(np.ceil).apply(lambda x: pd.Timedelta(x, unit='D'))
 
-    #TODO Finish calculus
-    # auxCol['tpcm_fin_proyectado_pesimista']=auxCol['tpcm_fin_proyectado_optimista']+auxCol['delta_days']
+    #-------------------------------------------------------------------------
 
+    auxCol['tpcm_fin_proyectado_pesimista']=auxCol['tpcm_fin_proyectado_optimista']+auxCol['delta_days']
+
+    tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_fin_proyectado_pesimista','key')], on='key', how="left",)
+
+    #Column `tpcm_fin_programada`
+    auxCol=commercial_dataset.loc[:, ('key', 'stg_fecha_fin')]
+    auxCol.sort_values(by=['key',"stg_fecha_fin"],ascending=False, inplace=True)
+    auxCol=auxCol.groupby(by=["key"]).first().reset_index()
+    tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('stg_fecha_fin','key')], on='key', how="left",)
+    tmp_proyectos_comercial = tmp_proyectos_comercial.rename(columns={'stg_fecha_fin': 'tpcm_fin_programada'})
+
+    #Column `tpcm_dias_atraso`
+    tmp_proyectos_comercial['tpcm_dias_atraso']=(tmp_proyectos_comercial['tpcm_fin_programada']-tmp_proyectos_comercial['tpcm_fin_proyectado_optimista']).dt.days
+
+    tmp_proyectos_comercial = tmp_proyectos_comercial.rename(columns={'stg_codigo_proyecto': 'tpr_codigo_proyecto'})
+    tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
+    tmp_proyectos_comercial = tmp_proyectos_comercial.rename(columns={'tpr_codigo_proyecto' : 'tpcm_codigo_proyecto','tpr_regional' : 'tpcm_regional','tpr_macroproyecto' : 'tpcm_macroproyecto', 'stg_etapa_proyecto' : 'tpcm_etapa', 'stg_programacion_proyecto' : 'tpcm_programacion', 'tpr_proyecto' : 'tpcm_proyecto', 'stg_fecha_corte' : 'tpcm_fecha_corte'})
+
+    #------------------------------
+    #Column tpc_ultimo_mes
+
+    client = bigquery.Client()
+    project_codes=tmp_proyectos_comercial.tpcm_codigo_proyecto.unique()
+    cut_date = pd.to_datetime(tmp_proyectos_comercial.tpcm_fecha_corte.unique()[0])
+    text=""
+    for project_code in project_codes:
+        if text== "":
+            text=text+"'"+project_code+"'"
+        else:
+            text=text+", '"+project_code+"'"
+        
+    query ="""
+        SELECT distinct CONCAT(tt.tpcm_codigo_proyecto, '_', tt.tpcm_etapa, '_',tpcm_programacion) key, tt.tpcm_fecha_corte, tt.tpcm_avance_cc
+        FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_COMERCIAL + """` tt 
+        inner JOIN (SELECT CONCAT(tpcm_codigo_proyecto, '_', tpcm_etapa, '_',tpcm_programacion) key, MAX(tpcm_fecha_corte) AS MaxDate
+            FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_COMERCIAL + """
+            WHERE tpcm_codigo_proyecto in ("""+text+""")
+            and tpcm_fecha_corte <= DATE_SUB(DATE '""" + cut_date.strftime("%Y-%m-%d") +"""', INTERVAL 4 WEEK) 
+            GROUP BY key) groupedtt
+        ON key = groupedtt.key 
+        AND tt.tpcm_fecha_corte = groupedtt.MaxDate
+        order by key, tt.tpcm_fecha_corte desc 
+        """
+
+    #print(query)
+    auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
+    #print(auxCol.columns)
+    auxCol=auxCol.groupby(by=["key"]).first().reset_index()
+    tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_avance_cc','key')].rename(columns={'tpcm_avance_cc':'tpcm_avance_ultimo_mes'}), on='key', how="left",)
+    tmp_proyectos_comercial['tpcm_ultimo_mes']= tmp_proyectos_comercial['tpcm_avance_cc']-tmp_proyectos_comercial['tpcm_avance_ultimo_mes']
+
+    #-----------------------------
+    #Column tpc_ultima_semana
+    query ="""
+        SELECT distinct CONCAT(tt.tpcm_codigo_proyecto, '_', tt.tpcm_etapa, '_',tpcm_programacion) key, tt.tpcm_fecha_corte, tt.tpcm_avance_cc, tt.tpcm_consumo_buffer
+        FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_COMERCIAL + """` tt 
+        inner JOIN (SELECT CONCAT(tpcm_codigo_proyecto, '_', tpcm_etapa, '_',tpcm_programacion) key, MAX(tpcm_fecha_corte) AS MaxDate
+            FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_COMERCIAL + """
+            WHERE tpcm_codigo_proyecto in ("""+text+""")
+            GROUP BY key) groupedtt
+        ON key = groupedtt.key 
+        AND tt.tpcm_fecha_corte = groupedtt.MaxDate
+        order by key, tt.tpcm_fecha_corte desc 
+        """
+
+    #print(query)
+    auxCol= client.query(query).result().to_dataframe(create_bqstorage_client=True,) 
+    #print(auxCol.columns)
+    auxCol=auxCol.groupby(by=["key"]).first().reset_index()
+    #print(auxCol.head(5))
+    tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_consumo_buffer', 'tpcm_avance_cc','key')].rename(columns={'tpcm_avance_cc':'tpcm_avance_ultima_semana', 'tpcm_consumo_buffer' : 'tpcm_consumo_buffer_ultima_semana'}), on='key', how="left",)
+    tmp_proyectos_comercial['tpcm_ultima_semana']= tmp_proyectos_comercial['tpcm_avance_cc']-tmp_proyectos_comercial['tpcm_avance_ultima_semana']
+
+    #Column tpc_avance_comparativo_semana
+    conditions = [(tmp_proyectos_comercial['tpcm_avance_ultima_semana'] < tmp_proyectos_comercial['tpcm_avance_cc']),
+                (tmp_proyectos_comercial['tpcm_avance_ultima_semana'] == tmp_proyectos_comercial['tpcm_avance_cc']),
+                (tmp_proyectos_comercial['tpcm_avance_ultima_semana'] > tmp_proyectos_comercial['tpcm_avance_cc'])]
+    
+    choices = [1,0,-1]
+
+    tmp_proyectos_comercial['tpcm_avance_comparativo_semana'] = np.select(conditions, choices, default= 0 )
+
+    #Column tpc_consumo_buffer_comparativo
+    conditions = [(tmp_proyectos_comercial['tpcm_consumo_buffer_ultima_semana'] < tmp_proyectos_comercial['tpcm_consumo_buffer']),
+                (tmp_proyectos_comercial['tpcm_consumo_buffer_ultima_semana'] == tmp_proyectos_comercial['tpcm_consumo_buffer']),
+                (tmp_proyectos_comercial['tpcm_consumo_buffer_ultima_semana'] > tmp_proyectos_comercial['tpcm_consumo_buffer'])]
+    
+    choices = [1,0,-1]
+
+    tmp_proyectos_comercial['tpcm_consumo_buffer_comparativo'] = np.select(conditions, choices, default= 0 )
+
+    #------------------------------
+
+    tmp_proyectos_comercial['tpcm_fecha_proceso']=pd.to_datetime("today")
+    tmp_proyectos_comercial['tpcm_lote_proceso']=1
+
+    tmp_proyectos_comercial['tpcm_tarea_consume_buffer']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']==100,"TERMINADO",tmp_proyectos_comercial['tpcm_tarea_consume_buffer'])
+
+    conditions = [(tmp_proyectos_comercial['tpcm_consumo_buffer']) < (0.2*tmp_proyectos_comercial['tpcm_avance_cc']+20),
+                (0.8*tmp_proyectos_comercial['tpcm_avance_cc']+20 > tmp_proyectos_comercial['tpcm_consumo_buffer']) & (tmp_proyectos_comercial['tpcm_consumo_buffer'] > 0.2*tmp_proyectos_comercial['tpcm_avance_cc']+20),
+                (tmp_proyectos_comercial['tpcm_consumo_buffer'] > 0.8*tmp_proyectos_comercial['tpcm_avance_cc']+20)]
+    
+    choices = [1,0,-1]
+
+    tmp_proyectos_comercial['tpcm_consumo_buffer_color'] = np.select(conditions, choices, default= 1 )
+
+    tmp_proyectos_comercial=tmp_proyectos_comercial.reindex(columns=['tpcm_regional',
+                                                            'tpcm_codigo_proyecto',
+                                                            'tpcm_macroproyecto',
+                                                            'tpcm_proyecto',
+                                                            'tpcm_etapa',
+                                                            'tpcm_programacion',
+                                                            'tpcm_tarea_consume_buffer',
+                                                            'tpcm_avance_cc',
+                                                            'tpcm_avance_comparativo_semana',
+                                                            'tpcm_consumo_buffer',
+                                                            'tpcm_consumo_buffer_color',
+                                                            'tpcm_consumo_buffer_comparativo',
+                                                            'tpcm_fin_proyectado_optimista',
+                                                            'tpcm_fin_proyectado_pesimista',
+                                                            'tpcm_fin_programada',
+                                                            'tpcm_dias_atraso',
+                                                            'tpcm_ultima_semana',
+                                                            'tpcm_ultimo_mes',
+                                                            'tpcm_fecha_corte',
+                                                            'tpcm_fecha_proceso',
+                                                            'tpcm_lote_proceso'])
+
+
+    #------------------------------------------------------------------------------
+
+    
     print("  *Commercial ending")
 
     return tmp_proyectos_comercial

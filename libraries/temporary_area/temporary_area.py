@@ -31,7 +31,7 @@ def temporary_area(stg_consolidado_corte):
 
     #Consolidado Proyectos Comercial
     if commercial_report_excecution == True:
-        tmp_proyectos_comercial = tmp_ar_commercial(stg_consolidado_corte)
+        tmp_proyectos_comercial = tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos)
     else:
         tmp_proyectos_comercial= pd.DataFrame()
 
