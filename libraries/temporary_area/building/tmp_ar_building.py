@@ -172,19 +172,19 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     client = bigquery.Client()
     project_codes=tmp_proyectos_construccion.tpc_codigo_proyecto.unique()
     cut_date = pd.to_datetime(tmp_proyectos_construccion.tpc_fecha_corte.unique()[0])
-    project_codes=""
+    text=""
     for project_code in project_codes:
-        if project_codes== "":
-            project_codes=project_codes+"'"+project_code+"'"
+        if text== "":
+            text=text+"'"+project_code+"'"
         else:
-            project_codes=project_codes+", '"+project_code+"'"
+            text=text+", '"+project_code+"'"
         
     query ="""
         SELECT distinct CONCAT(tt.tpc_codigo_proyecto, '_', tt.tpc_etapa, '_',tpc_programacion) key, tt.tpc_fecha_corte, tt.tpc_avance_cc
         FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """` tt 
         inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
             FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """
-            WHERE tpc_codigo_proyecto in ("""+project_codes+""")
+            WHERE tpc_codigo_proyecto in ("""+text+""")
             and tpc_fecha_corte <= DATE_SUB(DATE '""" + cut_date.strftime("%Y-%m-%d") +"""', INTERVAL 4 WEEK) 
             GROUP BY key) groupedtt
         ON key = groupedtt.key 
@@ -208,7 +208,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """` tt 
         inner JOIN (SELECT CONCAT(tpc_codigo_proyecto, '_', tpc_etapa, '_',tpc_programacion) key, MAX(tpc_fecha_corte) AS MaxDate
             FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """
-            WHERE tpc_codigo_proyecto in ("""+project_codes+""")
+            WHERE tpc_codigo_proyecto in ("""+text+""")
             GROUP BY key) groupedtt
         ON key = groupedtt.key 
         AND tt.tpc_fecha_corte = groupedtt.MaxDate
