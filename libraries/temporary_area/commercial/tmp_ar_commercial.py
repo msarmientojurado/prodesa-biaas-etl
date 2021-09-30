@@ -255,7 +255,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
                                                             'tpcm_fecha_proceso',
                                                             'tpcm_lote_proceso'])
 
-    print(tmp_proyectos_comercial.head(10))
+    #print(tmp_proyectos_comercial.head(10))
 
 
     #------------------------------------------------------------------------------
