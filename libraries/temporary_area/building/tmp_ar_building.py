@@ -192,9 +192,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         order by key, tt.tpc_fecha_corte desc 
         """
 
-    print(query)
-    #auxCol = client.query(query)
-
+    #print(query)
     auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
@@ -215,16 +213,8 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
         order by key, tt.tpc_fecha_corte desc 
         """
 
-    print(query)
-    #auxCol = client.query(query)
-
-    auxCol= (
-        client.query(query)
-        .result()
-        .to_dataframe(
-            create_bqstorage_client=True,
-        )
-    )
+    #print(query)
+    auxCol= client.query(query).result().to_dataframe(create_bqstorage_client=True,) 
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     #print(auxCol.head(5))
@@ -251,10 +241,6 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     #------------------------------
 
-    #tmp_proyectos_construccion['tpc_avance_comparativo_semana']=0
-    #tmp_proyectos_construccion['tpc_consumo_buffer_comparativo']=0
-    #tmp_proyectos_construccion['tpc_ultima_semana']=0
-    #tmp_proyectos_construccion['tpc_ultimo_mes']=0
     tmp_proyectos_construccion['tpc_fecha_proceso']=pd.to_datetime("today")
     tmp_proyectos_construccion['tpc_lote_proceso']=1
 
