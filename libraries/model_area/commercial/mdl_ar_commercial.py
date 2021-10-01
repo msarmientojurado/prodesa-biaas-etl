@@ -12,7 +12,7 @@ def mdl_ar_commercial(tmp_proyectos_comercial):
         bigquery.SchemaField("tpcm_codigo_proyecto",             "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tpcm_macroproyecto",               "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tpcm_proyecto",                    "STRING",   mode="REQUIRED"),
-        bigquery.SchemaField("tpcm_etapa",                       "STRING",   mode="NULLABLE"),
+        bigquery.SchemaField("tpcm_etapa",                       "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tpcm_programacion",                "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpcm_tarea_consume_buffer",        "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpcm_avance_cc",                   "FLOAT64",  mode="NULLABLE"),
@@ -27,7 +27,7 @@ def mdl_ar_commercial(tmp_proyectos_comercial):
         bigquery.SchemaField("tpcm_ultima_semana",               "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpcm_ultimo_mes",                  "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpcm_fecha_corte",                 "DATE",     mode="REQUIRED"),
-        bigquery.SchemaField("tpcm_fecha_proceso",               "DATE", mode="REQUIRED"),
+        bigquery.SchemaField("tpcm_fecha_proceso",               "DATE",     mode="REQUIRED"),
         bigquery.SchemaField("tpcm_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 
