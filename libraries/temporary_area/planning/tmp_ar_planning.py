@@ -171,6 +171,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
+    auxCol['tpp_avance_cc']=auxCol['tpp_avance_cc']*100
     tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,auxCol.loc[:, ('tpp_avance_cc','key')].rename(columns={'tpp_avance_cc':'tpp_avance_ultimo_mes'}), on='key', how="left",)
     tmp_proyectos_planeacion['tpp_ultimo_mes']= tmp_proyectos_planeacion['tpp_avance_cc']-tmp_proyectos_planeacion['tpp_avance_ultimo_mes']
 
@@ -193,6 +194,8 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     #print(auxCol.head(5))
+    auxCol['tpp_consumo_buffer']=auxCol['tpp_consumo_buffer']*100
+    auxCol['tpp_avance_cc']=auxCol['tpp_avance_cc']*100
     tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,auxCol.loc[:, ('tpp_consumo_buffer', 'tpp_avance_cc','key')].rename(columns={'tpp_avance_cc':'tpp_avance_ultima_semana', 'tpp_consumo_buffer' : 'tpp_consumo_buffer_ultima_semana'}), on='key', how="left",)
     tmp_proyectos_planeacion['tpp_ultima_semana']= tmp_proyectos_planeacion['tpp_avance_cc']-tmp_proyectos_planeacion['tpp_avance_ultima_semana']
 

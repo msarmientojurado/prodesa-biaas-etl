@@ -175,6 +175,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
+    auxCol['tpcm_avance_cc']=auxCol['tpcm_avance_cc']*100
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_avance_cc','key')].rename(columns={'tpcm_avance_cc':'tpcm_avance_ultimo_mes'}), on='key', how="left",)
     tmp_proyectos_comercial['tpcm_ultimo_mes']= tmp_proyectos_comercial['tpcm_avance_cc']-tmp_proyectos_comercial['tpcm_avance_ultimo_mes']
 
@@ -197,6 +198,8 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     #print(auxCol.head(5))
+    auxCol['tpcm_consumo_buffer']=auxCol['tpcm_consumo_buffer']*100
+    auxCol['tpcm_avance_cc']=auxCol['tpcm_avance_cc']*100
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_consumo_buffer', 'tpcm_avance_cc','key')].rename(columns={'tpcm_avance_cc':'tpcm_avance_ultima_semana', 'tpcm_consumo_buffer' : 'tpcm_consumo_buffer_ultima_semana'}), on='key', how="left",)
     tmp_proyectos_comercial['tpcm_ultima_semana']= tmp_proyectos_comercial['tpcm_avance_cc']-tmp_proyectos_comercial['tpcm_avance_ultima_semana']
 
