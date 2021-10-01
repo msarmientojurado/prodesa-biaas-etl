@@ -25,13 +25,16 @@ def model(tbl_inicio_venta,
         #   5. "Reporte por entrega"
         
         #"Consolidado de Proyectos de Construccion"
-        mdl_ar_building(tmp_proyectos_construccion)
+        if building_report_excecution ==True:
+            mdl_ar_building(tmp_proyectos_construccion)
 
         #"Consolidado de Proyectos de Planeacion"
-        mdl_ar_planning(tmp_proyectos_planeacion)
+        if planning_report_excecution ==True:
+            mdl_ar_planning(tmp_proyectos_planeacion)
 
         #"Consolidado de Proyectos de Comercial"
-        mdl_ar_commercial(tmp_proyectos_comercial)
+        if commercial_report_excecution ==True:
+            mdl_ar_commercial(tmp_proyectos_comercial)
 
         #"Control de Hitos de Planeacion"
         model_milestones(tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion)
