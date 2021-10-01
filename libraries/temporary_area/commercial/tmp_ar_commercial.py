@@ -233,10 +233,10 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
 
     tmp_proyectos_comercial['tpcm_consumo_buffer_color'] = np.select(conditions, choices, default= 1 )
 
-    tmp_proyectos_comercial['tpcm_avance_cc'] = tmp_proyectos_comercial['tpcm_avance_cc']/100
-    tmp_proyectos_comercial['tpcm_consumo_buffer'] = tmp_proyectos_comercial['tpcm_consumo_buffer']/100
-    tmp_proyectos_comercial['tpcm_ultima_semana'] = tmp_proyectos_comercial['tpcm_ultima_semana']/100
-    tmp_proyectos_comercial['tpcm_ultimo_mes'] = tmp_proyectos_comercial['tpcm_ultimo_mes']/100
+    tmp_proyectos_comercial['tpcm_avance_cc'] = tmp_proyectos_comercial['tpcm_avance_cc'].div(100)
+    tmp_proyectos_comercial['tpcm_consumo_buffer'] = tmp_proyectos_comercial['tpcm_consumo_buffer'].div(100)
+    tmp_proyectos_comercial['tpcm_ultima_semana'] = tmp_proyectos_comercial['tpcm_ultima_semana'].div(100)
+    tmp_proyectos_comercial['tpcm_ultimo_mes'] = tmp_proyectos_comercial['tpcm_ultimo_mes'].div(100)
 
     tmp_proyectos_comercial=tmp_proyectos_comercial.reindex(columns=['tpcm_regional',
                                                             'tpcm_codigo_proyecto',
