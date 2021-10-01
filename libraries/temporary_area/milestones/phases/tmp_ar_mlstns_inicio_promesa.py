@@ -51,7 +51,7 @@ def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
     tbl_inicio_promesa=pd.merge(tbl_inicio_promesa,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
     tbl_inicio_promesa['stg_fecha_corte'] = start_promise['stg_fecha_corte'].iloc[0]
     tbl_inicio_promesa = tbl_inicio_promesa.rename(columns={'tpr_codigo_proyecto' : 'tip_codigo_proyecto','tpr_regional' : 'tip_regional','tpr_macroproyecto' : 'tip_macroproyecto', 'stg_etapa_proyecto' : 'tip_etapa', 'tpr_proyecto' : 'tip_proyecto', 'stg_fecha_corte': 'tip_fecha_corte'})
-    tbl_inicio_promesa['tip_fecha_proceso']=pd.to_datetime("today").strftime("%m/%d/%Y")
+    tbl_inicio_promesa['tip_fecha_proceso']=pd.to_datetime("1/10/2021", dayfirst=True)
     tbl_inicio_promesa['tip_lote_proceso']=1
 
     tbl_inicio_promesa=tbl_inicio_promesa.reindex(columns=['tip_regional',

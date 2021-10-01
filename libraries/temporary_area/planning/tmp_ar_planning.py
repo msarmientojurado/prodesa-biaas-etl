@@ -220,7 +220,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     #tmp_proyectos_planeacion['tpp_consumo_buffer_comparativo']=0
     #tmp_proyectos_planeacion['tpp_ultima_semana']=0
     #tmp_proyectos_planeacion['tpp_ultimo_mes']=0
-    tmp_proyectos_planeacion['tpp_fecha_proceso']=pd.to_datetime("today").strftime("%m/%d/%Y")
+    tmp_proyectos_planeacion['tpp_fecha_proceso']=pd.to_datetime("1/10/2021", dayfirst=True)
     tmp_proyectos_planeacion['tpp_lote_proceso']=1
 
     planning_items=['PL','IV','IP','GAS','AC','GASUE','ELS1','EL','EL…','ELS0','IP…','SPU','SP','IC','DC','IE','SPUE']

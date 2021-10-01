@@ -241,7 +241,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     #------------------------------
 
-    tmp_proyectos_construccion['tpc_fecha_proceso']=pd.to_datetime("today").strftime("%m/%d/%Y")
+    tmp_proyectos_construccion['tpc_fecha_proceso']=pd.to_datetime("1/10/2021", dayfirst=True)
     tmp_proyectos_construccion['tpc_lote_proceso']=1
 
     tmp_proyectos_construccion['tpc_tarea_consume_buffer']=np.where(tmp_proyectos_construccion['tpc_avance_cc']==100,"TERMINADO",tmp_proyectos_construccion['tpc_tarea_consume_buffer'])

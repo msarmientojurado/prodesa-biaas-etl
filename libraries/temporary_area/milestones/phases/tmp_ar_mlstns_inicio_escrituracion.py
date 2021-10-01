@@ -44,7 +44,7 @@ def tmp_ar_mlstns_inicio_escrituracion(milestones_dataset,tbl_proyectos):
     tbl_inicio_escrituracion=pd.merge(tbl_inicio_escrituracion,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
     tbl_inicio_escrituracion['stg_fecha_corte'] = start_registration['stg_fecha_corte'].iloc[0]
     tbl_inicio_escrituracion = tbl_inicio_escrituracion.rename(columns={'tpr_codigo_proyecto' : 'tie_codigo_proyecto','tpr_regional' : 'tie_regional','tpr_macroproyecto' : 'tie_macroproyecto', 'stg_etapa_proyecto' : 'tie_etapa', 'tpr_proyecto' : 'tie_proyecto', 'stg_fecha_corte' : 'tie_fecha_corte'})
-    tbl_inicio_escrituracion['tie_fecha_proceso']=pd.to_datetime("today").strftime("%m/%d/%Y")
+    tbl_inicio_escrituracion['tie_fecha_proceso']=pd.to_datetime("1/10/2021", dayfirst=True)
     tbl_inicio_escrituracion['tie_lote_proceso']=1
 
     tbl_inicio_escrituracion=tbl_inicio_escrituracion.reindex(columns=['tie_regional',

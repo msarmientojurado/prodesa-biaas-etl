@@ -79,7 +79,7 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos):
     tbl_inicio_venta=pd.merge(tbl_inicio_venta,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
     tbl_inicio_venta['stg_fecha_corte'] = start_selling['stg_fecha_corte'].iloc[0]
     tbl_inicio_venta = tbl_inicio_venta.rename(columns={'tpr_codigo_proyecto' : 'tiv_codigo_proyecto','tpr_regional' : 'tiv_regional','tpr_macroproyecto' : 'tiv_macroproyecto', 'stg_etapa_proyecto' : 'tiv_etapa', 'tpr_proyecto' : 'tiv_proyecto', 'stg_fecha_corte' : 'tiv_fecha_corte'})
-    tbl_inicio_venta['tiv_fecha_proceso']=pd.to_datetime("today").strftime("%m/%d/%Y")
+    tbl_inicio_venta['tiv_fecha_proceso']=pd.to_datetime("1/10/2021", dayfirst=True)
     tbl_inicio_venta['tiv_lote_proceso']=1
 
     tbl_inicio_venta=tbl_inicio_venta.reindex(columns=['tiv_regional',
