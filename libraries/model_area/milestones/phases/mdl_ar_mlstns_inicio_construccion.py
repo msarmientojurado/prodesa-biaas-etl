@@ -10,11 +10,11 @@ def mdl_ar_mlstns_inicio_construccion(tbl_inicio_construccion):
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[
-        bigquery.SchemaField("tic_regional",                        "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tic_codigo_proyecto",                 "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tic_macroproyecto",                   "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tic_proyecto",                        "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tic_etapa",                           "STRING",   mode="NULLABLE"),
+        bigquery.SchemaField("tic_regional",                        "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tic_codigo_proyecto",                 "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tic_macroproyecto",                   "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tic_proyecto",                        "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tic_etapa",                           "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tic_dias_atraso",                     "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tic_inicio_construccion_proyectado",  "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tic_inicio_construccion_programado",  "DATE",     mode="NULLABLE"),
@@ -34,9 +34,9 @@ def mdl_ar_mlstns_inicio_construccion(tbl_inicio_construccion):
         bigquery.SchemaField("tic_docs_inic_constru_programado",    "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tic_diseno_inic_constru_proyectado",  "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tic_diseno_inic_constru_programado",  "DATE",     mode="NULLABLE"),
-        bigquery.SchemaField("tic_fecha_corte",                     "DATE",     mode="NULLABLE"),
-        bigquery.SchemaField("tic_fecha_proceso",                   "DATETIME", mode="NULLABLE"),
-        bigquery.SchemaField("tic_lote_proceso",                    "INT64",    mode="NULLABLE"),
+        bigquery.SchemaField("tic_fecha_corte",                     "DATE",     mode="REQUIRED"),
+        bigquery.SchemaField("tic_fecha_proceso",                   "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tic_lote_proceso",                    "INT64",    mode="REQUIRED"),
     ])
 
     job = client.load_table_from_dataframe(

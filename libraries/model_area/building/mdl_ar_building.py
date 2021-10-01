@@ -7,12 +7,12 @@ def mdl_ar_building(tmp_proyectos_construccion):
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[
-        bigquery.SchemaField("tpc_regional",                    "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tpc_codigo_proyecto",             "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tpc_macroproyecto",               "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tpc_proyecto",                    "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tpc_etapa",                       "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tpc_programacion",                "STRING",   mode="NULLABLE"),
+        bigquery.SchemaField("tpc_regional",                    "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tpc_codigo_proyecto",             "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tpc_macroproyecto",               "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tpc_proyecto",                    "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tpc_etapa",                       "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tpc_programacion",                "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tpc_tarea_consume_buffer",        "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpc_avance_cc",                   "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpc_avance_comparativo_semana",   "INT64",    mode="NULLABLE"),
@@ -25,9 +25,9 @@ def mdl_ar_building(tmp_proyectos_construccion):
         bigquery.SchemaField("tpc_dias_atraso",                 "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tpc_ultima_semana",               "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpc_ultimo_mes",                  "FLOAT64",  mode="NULLABLE"),
-        bigquery.SchemaField("tpc_fecha_corte",                 "DATE",     mode="NULLABLE"),
-        bigquery.SchemaField("tpc_fecha_proceso",               "DATETIME", mode="NULLABLE"),
-        bigquery.SchemaField("tpc_lote_proceso",                "INT64",    mode="NULLABLE"),
+        bigquery.SchemaField("tpc_fecha_corte",                 "DATE",     mode="REQUIRED"),
+        bigquery.SchemaField("tpc_fecha_proceso",               "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tpc_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 
     job = client.load_table_from_dataframe(

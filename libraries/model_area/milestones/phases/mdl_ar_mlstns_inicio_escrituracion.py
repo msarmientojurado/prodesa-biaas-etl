@@ -7,11 +7,11 @@ def mdl_ar_mlstns_inicio_escrituracion(tbl_inicio_escrituracion):
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[
-        bigquery.SchemaField("tie_regional",                            "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tie_codigo_proyecto",                     "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tie_macroproyecto",                       "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tie_proyecto",                            "STRING",   mode="NULLABLE"),
-        bigquery.SchemaField("tie_etapa",                               "STRING",   mode="NULLABLE"),
+        bigquery.SchemaField("tie_regional",                            "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tie_codigo_proyecto",                     "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tie_macroproyecto",                       "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tie_proyecto",                            "STRING",   mode="REQUIRED"),
+        bigquery.SchemaField("tie_etapa",                               "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tie_dias_atraso",                         "INT64",    mode="NULLABLE"),
         bigquery.SchemaField("tie_inicio_escrituracion_proyectado",     "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tie_inicio_escrituracion_programado",     "DATE",     mode="NULLABLE"),
@@ -27,9 +27,9 @@ def mdl_ar_mlstns_inicio_escrituracion(tbl_inicio_escrituracion):
         bigquery.SchemaField("tie_modificacion_lc_programado",          "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tie_radic_modif_lc_proyectado",           "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tie_radic_modif_lc_programado",           "DATE",     mode="NULLABLE"),
-        bigquery.SchemaField("tie_fecha_corte",                         "DATE",     mode="NULLABLE"),
-        bigquery.SchemaField("tie_fecha_proceso",                       "DATETIME", mode="NULLABLE"),
-        bigquery.SchemaField("tie_lote_proceso",                        "INT64",    mode="NULLABLE"),
+        bigquery.SchemaField("tie_fecha_corte",                         "DATE",     mode="REQUIRED"),
+        bigquery.SchemaField("tie_fecha_proceso",                       "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tie_lote_proceso",                        "INT64",    mode="REQUIRED"),
     ])
 
     job = client.load_table_from_dataframe(
