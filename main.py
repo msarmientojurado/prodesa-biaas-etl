@@ -27,23 +27,26 @@ def main():
     #print(" * Uploaded rows: {}".format(len(esp_consolidado_corte.index)));
 
     #Running Staging Area
-    stg_consolidado_corte = staging_area(esp_consolidado_corte);
+    stg_consolidado_corte, continue_process = staging_area(esp_consolidado_corte);
 
-    #Running Temporary Area
-    tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial, building_report_excecution, planning_report_excecution, commercial_report_excecution = temporary_area(stg_consolidado_corte);
+    if continue_process == True:
+        #Running Temporary Area
+        tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial, building_report_excecution, planning_report_excecution, commercial_report_excecution = temporary_area(stg_consolidado_corte);
 
-    #TODO Implementation of Model Area
-    model(tbl_inicio_venta, 
-        tbl_inicio_promesa, 
-        tbl_inicio_construccion, 
-        tbl_inicio_escrituracion, 
-        tmp_proyectos_construccion, 
-        tmp_proyectos_planeacion,
-        tmp_proyectos_comercial, 
-        building_report_excecution, 
-        planning_report_excecution,
-        commercial_report_excecution
-    )
+        #TODO Implementation of Model Area
+        model(tbl_inicio_venta, 
+            tbl_inicio_promesa, 
+            tbl_inicio_construccion, 
+            tbl_inicio_escrituracion, 
+            tmp_proyectos_construccion, 
+            tmp_proyectos_planeacion,
+            tmp_proyectos_comercial, 
+            building_report_excecution, 
+            planning_report_excecution,
+            commercial_report_excecution
+        )
+    else:
+        print("Proceso no pudo ser terminado por resultado de la malla de Validacion")
 
     print("Ending ETL process...");
 
