@@ -13,7 +13,7 @@ def mdl_ar_commercial(tmp_proyectos_comercial):
         bigquery.SchemaField("tpcm_macroproyecto",               "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tpcm_proyecto",                    "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tpcm_etapa",                       "STRING",   mode="REQUIRED"),
-        bigquery.SchemaField("tpcm_programacion",                "STRING",   mode="NULLABLE"),
+        bigquery.SchemaField("tpcm_programacion",                "STRING",   mode="REQUIRED"),
         bigquery.SchemaField("tpcm_tarea_consume_buffer",        "STRING",   mode="NULLABLE"),
         bigquery.SchemaField("tpcm_avance_cc",                   "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpcm_avance_comparativo_semana",   "INT64",    mode="NULLABLE"),
