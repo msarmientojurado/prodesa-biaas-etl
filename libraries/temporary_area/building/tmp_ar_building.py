@@ -1,5 +1,5 @@
 
-from libraries.settings_ import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_CONSTRUCCION
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_CONSTRUCCION
 import pandas as pd
 import numpy as np
 
