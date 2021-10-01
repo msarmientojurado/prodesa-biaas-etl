@@ -237,6 +237,11 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
 
     tmp_proyectos_planeacion['tpp_consumo_buffer_color'] = np.select(conditions, choices, default= 1 )
 
+    tmp_proyectos_planeacion['tpp_avance_cc'] = tmp_proyectos_planeacion['tpp_avance_cc']/100
+    tmp_proyectos_planeacion['tpp_consumo_buffer'] = tmp_proyectos_planeacion['tpp_consumo_buffer']/100
+    tmp_proyectos_planeacion['tpp_ultima_semana'] = tmp_proyectos_planeacion['tpp_ultima_semana']/100
+    tmp_proyectos_planeacion['tpp_ultimo_mes'] = tmp_proyectos_planeacion['tpp_ultimo_mes']/100
+
     tmp_proyectos_planeacion=tmp_proyectos_planeacion.reindex(columns=['tpp_regional',
                                                             'tpp_codigo_proyecto',
                                                             'tpp_macroproyecto',

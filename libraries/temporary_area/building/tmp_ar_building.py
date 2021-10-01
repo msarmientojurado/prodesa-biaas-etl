@@ -254,6 +254,11 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     tmp_proyectos_construccion['tpc_consumo_buffer_color'] = np.select(conditions, choices, default= 1 )
 
+    tmp_proyectos_construccion['tpc_avance_cc'] = tmp_proyectos_construccion['tpc_avance_cc']/100
+    tmp_proyectos_construccion['tpc_consumo_buffer'] = tmp_proyectos_construccion['tpc_consumo_buffer']/100
+    tmp_proyectos_construccion['tpc_ultima_semana'] = tmp_proyectos_construccion['tpc_ultima_semana']/100
+    tmp_proyectos_construccion['tpc_ultimo_mes'] = tmp_proyectos_construccion['tpc_ultimo_mes']/100
+
     tmp_proyectos_construccion=tmp_proyectos_construccion.reindex(columns=['tpc_regional',
                                                             'tpc_codigo_proyecto',
                                                             'tpc_macroproyecto',
