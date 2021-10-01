@@ -66,8 +66,8 @@ def information_consistency(stg_consolidado_corte):
     #print(query)        
     tbl_proyectos= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))
     #print(tbl_proyectos.head(5))
-
-    tbl_proyectos=tbl_proyectos[~tbl_proyectos['tpr_codigo_proyecto'].isin(project_codes)]
+    project_codes=tbl_proyectos.stg_codigo_proyecto.unique()
+    tbl_proyectos=stg_consolidado_corte[~stg_consolidado_corte['tpr_codigo_proyecto'].isin(project_codes)]
     print("Codigos de Proyecto faltantes en la Tabla 'tbl_proyectos':")
     print(tbl_proyectos.tpr_codigo_proyecto.to_string(index=False))
     return stg_consolidado_corte, continue_process
