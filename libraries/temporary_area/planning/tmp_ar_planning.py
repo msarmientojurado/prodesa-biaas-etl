@@ -2,9 +2,7 @@ import pandas as pd
 import numpy as np
 
 from google.cloud import bigquery
-from libraries.settings import TBL_PROYECTOS_PLANEACION
-
-from libraries.settings_ import BIGQUERY_ENVIRONMENT_NAME
+from libraries.settings import TBL_PROYECTOS_PLANEACION, BIGQUERY_ENVIRONMENT_NAME
 
 def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     print("  *Planning Starting")
