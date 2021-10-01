@@ -57,14 +57,19 @@ def information_consistency(stg_consolidado_corte):
         else:
             text=text+", '"+project_code+"'"
     query ="""
-        SELECT tpr_codigo_proyecto, TRUE
+        SELECT tpr_codigo_proyecto, (1) AS tpr_in_table
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS + """`
             WHERE tpr_codigo_proyecto in ("""+ text +""")
             and tpr_estado = TRUE
         """
 
-    print(query)        
+    #print(query)        
     tbl_proyectos= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))
     #print(tbl_proyectos.head(5))
+
+    tbl_proyectos=tbl_proyectos[~tbl_proyectos['tpr_codigo_proyecto'].isin(project_codes)]
+    print("Codigos de Proyecto faltantes en la Tabla 'tbl_proyectos':")
+    for codigo_proyecto in tbl_proyectos['tpr_codigo_proyecto']:
+        print(codigo_proyecto)
 
     return stg_consolidado_corte, continue_process
