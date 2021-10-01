@@ -290,4 +290,4 @@ def staging_area(esp_consolidado_corte):
 
     print(" -Staging Area ending...");
 
-    return stg_consolidado_corte
+    return stg_consolidado_corte, continue_process
