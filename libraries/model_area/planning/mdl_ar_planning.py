@@ -26,7 +26,7 @@ def mdl_ar_planning(tmp_proyectos_planeacion):
         bigquery.SchemaField("tpp_ultima_semana",               "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpp_ultimo_mes",                  "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpp_fecha_corte",                 "DATE",     mode="REQUIRED"),
-        bigquery.SchemaField("tpp_fecha_proceso",               "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tpp_fecha_proceso",               "DATE", mode="REQUIRED"),
         bigquery.SchemaField("tpp_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 

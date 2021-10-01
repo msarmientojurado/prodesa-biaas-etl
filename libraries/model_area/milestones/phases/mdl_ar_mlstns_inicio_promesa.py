@@ -34,7 +34,7 @@ def mdl_ar_mlstns_inicio_promesa(tbl_inicio_promesa):
         bigquery.SchemaField("tip_constitut_urban_proyectado",  "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tip_constitut_urban_programado",  "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tip_fecha_corte",                 "DATE",     mode="REQUIRED"),
-        bigquery.SchemaField("tip_fecha_proceso",               "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tip_fecha_proceso",               "DATE", mode="REQUIRED"),
         bigquery.SchemaField("tip_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 

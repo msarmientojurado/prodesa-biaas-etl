@@ -27,7 +27,7 @@ def mdl_ar_commercial(tmp_proyectos_comercial):
         bigquery.SchemaField("tpcm_ultima_semana",               "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpcm_ultimo_mes",                  "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpcm_fecha_corte",                 "DATE",     mode="REQUIRED"),
-        bigquery.SchemaField("tpcm_fecha_proceso",               "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tpcm_fecha_proceso",               "DATE", mode="REQUIRED"),
         bigquery.SchemaField("tpcm_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 

@@ -26,7 +26,7 @@ def mdl_ar_building(tmp_proyectos_construccion):
         bigquery.SchemaField("tpc_ultima_semana",               "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpc_ultimo_mes",                  "FLOAT64",  mode="NULLABLE"),
         bigquery.SchemaField("tpc_fecha_corte",                 "DATE",     mode="REQUIRED"),
-        bigquery.SchemaField("tpc_fecha_proceso",               "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tpc_fecha_proceso",               "DATE", mode="REQUIRED"),
         bigquery.SchemaField("tpc_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 

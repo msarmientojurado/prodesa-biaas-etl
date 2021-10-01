@@ -35,7 +35,7 @@ def mdl_ar_mlstns_inicio_construccion(tbl_inicio_construccion):
         bigquery.SchemaField("tic_diseno_inic_constru_proyectado",  "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tic_diseno_inic_constru_programado",  "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tic_fecha_corte",                     "DATE",     mode="REQUIRED"),
-        bigquery.SchemaField("tic_fecha_proceso",                   "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tic_fecha_proceso",                   "DATE", mode="REQUIRED"),
         bigquery.SchemaField("tic_lote_proceso",                    "INT64",    mode="REQUIRED"),
     ])
 

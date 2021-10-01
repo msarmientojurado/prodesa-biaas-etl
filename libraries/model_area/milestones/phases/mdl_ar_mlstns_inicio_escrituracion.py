@@ -28,7 +28,7 @@ def mdl_ar_mlstns_inicio_escrituracion(tbl_inicio_escrituracion):
         bigquery.SchemaField("tie_radic_modif_lc_proyectado",           "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tie_radic_modif_lc_programado",           "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tie_fecha_corte",                         "DATE",     mode="REQUIRED"),
-        bigquery.SchemaField("tie_fecha_proceso",                       "DATETIME", mode="REQUIRED"),
+        bigquery.SchemaField("tie_fecha_proceso",                       "DATE", mode="REQUIRED"),
         bigquery.SchemaField("tie_lote_proceso",                        "INT64",    mode="REQUIRED"),
     ])
 
