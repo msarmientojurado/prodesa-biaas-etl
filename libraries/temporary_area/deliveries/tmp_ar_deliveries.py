@@ -23,7 +23,7 @@ def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos):
     tbl_reporte_por_entregas=pd.merge(tbl_reporte_por_entregas,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
     tbl_reporte_por_entregas['stg_fecha_corte'] = deliveries_dataset['stg_fecha_corte'].iloc[0]
     tbl_reporte_por_entregas = tbl_reporte_por_entregas.rename(columns={'tpr_codigo_proyecto' : 'trpe_codigo_proyecto','tpr_regional' : 'trpe_regional','tpr_macroproyecto' : 'trpe_macroproyecto', 'stg_etapa_proyecto' : 'trpe_etapa', 'tpr_proyecto' : 'trpe_proyecto', 'stg_fecha_corte' : 'trpe_fecha_corte'})
-    tbl_reporte_por_entregas['trpe_fecha_proceso']=pd.to_datetime("today")
+    tbl_reporte_por_entregas['trpe_fecha_proceso']=pd.to_datetime("today").astype({'datetime64[ns]': 'date'})
     tbl_reporte_por_entregas['trpe_lote_proceso']=1
 
     tbl_reporte_por_entregas=tbl_reporte_por_entregas.reindex(columns=['trpe_regional',
