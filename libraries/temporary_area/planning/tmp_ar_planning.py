@@ -119,7 +119,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     auxCol=pd.merge(auxCol,tmp_proyectos_planeacion.loc[:, ('tpp_avance_cc','tpp_fin_proyectado_optimista','key')], on='key', how="left",)
 
     #Proceed with calculations of the equation above
-    auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-(auxCol['tpp_avance_cc']/100)))
+    auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-(auxCol['tpp_avance_cc']/100))).astype(int)
     auxCol['delta_days'] = auxCol['delta'].apply(np.ceil).apply(lambda x: pd.Timedelta(x, unit='D'))
     auxCol['tpp_fin_proyectado_pesimista']=auxCol['tpp_fin_proyectado_optimista']+auxCol['delta_days']
 

@@ -122,7 +122,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     auxCol=pd.merge(auxCol,tmp_proyectos_comercial.loc[:, ('tpcm_avance_cc','tpcm_fin_proyectado_optimista','key')], on='key', how="left",)
 
     #Proceed with calculations of the equation above
-    auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-(auxCol['tpcm_avance_cc']/100)))
+    auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-(auxCol['tpcm_avance_cc']/100))).astype(int)
     auxCol['delta_days'] = auxCol['delta'].apply(np.ceil).apply(lambda x: pd.Timedelta(x, unit='D'))
 
     #-------------------------------------------------------------------------

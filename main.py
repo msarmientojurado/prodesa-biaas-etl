@@ -31,7 +31,7 @@ def main():
 
     if continue_process == True:
         #Running Temporary Area
-        tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial, building_report_excecution, planning_report_excecution, commercial_report_excecution = temporary_area(stg_consolidado_corte);
+        tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial, tbl_reporte_por_entregas, building_report_excecution, planning_report_excecution, commercial_report_excecution = temporary_area(stg_consolidado_corte);
 
         #TODO Implementation of Model Area
         model(tbl_inicio_venta, 
@@ -41,6 +41,7 @@ def main():
             tmp_proyectos_construccion, 
             tmp_proyectos_planeacion,
             tmp_proyectos_comercial, 
+            tbl_reporte_por_entregas,
             building_report_excecution, 
             planning_report_excecution,
             commercial_report_excecution
