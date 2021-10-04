@@ -41,4 +41,4 @@ def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos):
                                                                     ])
 
     print("  -Deliveries ending")
-    return
+    return tbl_reporte_por_entregas
