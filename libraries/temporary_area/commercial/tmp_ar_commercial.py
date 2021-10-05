@@ -223,7 +223,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
 
     #------------------------------
 
-    tmp_proyectos_comercial['tpcm_fecha_proceso']=pd.to_datetime("1/10/2021", dayfirst=True)
+    tmp_proyectos_comercial['tpcm_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
     tmp_proyectos_comercial['tpcm_lote_proceso']=1
 
     tmp_proyectos_comercial['tpcm_tarea_consume_buffer']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']==100,"TERMINADO",tmp_proyectos_comercial['tpcm_tarea_consume_buffer'])

@@ -1,9 +1,22 @@
-from libraries.settings import TBL_PROYECTOS_CONSTRUCCION
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_CONSTRUCCION
 from google.cloud import bigquery
+
 
 def mdl_ar_building(tmp_proyectos_construccion):
     print("  *Model -tbl_proyectos_construccion- Starting")
+    
     client = bigquery.Client()
+    cut_date=(tmp_proyectos_construccion.tpc_fecha_corte.unique()[0]).strftime("%m/%d/%Y")
+    query ="""
+        DELETE
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """`
+            WHERE tpc_fecha_corte >= """+ cut_date
+
+    print(query)        
+    client.query(query)
+
+
+    #client = bigquery.Client()
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[

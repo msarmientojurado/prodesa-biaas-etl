@@ -52,7 +52,7 @@ def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos):
     tbl_inicio_construccion=pd.merge(tbl_inicio_construccion,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
     tbl_inicio_construccion['stg_fecha_corte'] = start_building['stg_fecha_corte'].iloc[0]
     tbl_inicio_construccion = tbl_inicio_construccion.rename(columns={'tpr_codigo_proyecto' : 'tic_codigo_proyecto','tpr_regional' : 'tic_regional','tpr_macroproyecto' : 'tic_macroproyecto', 'stg_etapa_proyecto' : 'tic_etapa', 'tpr_proyecto' : 'tic_proyecto', 'stg_fecha_corte' : 'tic_fecha_corte'})
-    tbl_inicio_construccion['tic_fecha_proceso']=pd.to_datetime("1/10/2021", dayfirst=True)
+    tbl_inicio_construccion['tic_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
     tbl_inicio_construccion['tic_lote_proceso']=1
 
     tbl_inicio_construccion=tbl_inicio_construccion.reindex(columns=['tic_regional',

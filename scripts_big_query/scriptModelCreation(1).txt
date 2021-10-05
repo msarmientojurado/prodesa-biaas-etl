@@ -159,7 +159,10 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_proyectos_planeacion
     tpp_ultimo_mes FLOAT64,
     tpp_fecha_corte DATE NOT NULL,
     tpp_fecha_proceso DATE NOT NULL,
-    tpp_lote_proceso INT64 NOT NULL
+    tpp_lote_proceso INT64 NOT NULL,
+    tpp_fecha_inicio_linea_base DATE NOT NULL,
+    tpp_fecha_fin_linea_base   DATE NOT NULL,
+    tpp_fecha_fin_buffer_linea_base    DATE NOT NULL
 );
 
 
@@ -186,7 +189,10 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_proyectos_construccion
     tpc_ultimo_mes FLOAT64,
     tpc_fecha_corte DATE NOT NULL,
     tpc_fecha_proceso DATE NOT NULL,
-    tpc_lote_proceso INT64 NOT NULL
+    tpc_lote_proceso INT64 NOT NULL,
+    tpc_fecha_inicio_linea_base DATE NOT NULL,
+    tpc_fecha_fin_linea_base   DATE NOT NULL,
+    tpc_fecha_fin_buffer_linea_base    DATE NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas.tbl_proyectos_comercial;
@@ -212,7 +218,10 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_proyectos_comercial
     tpcm_ultimo_mes FLOAT64,
     tpcm_fecha_corte DATE NOT NULL,
     tpcm_fecha_proceso DATE NOT NULL,
-    tpcm_lote_proceso INT64 NOT NULL
+    tpcm_lote_proceso INT64 NOT NULL,
+    tpcm_fecha_inicio_linea_base DATE NOT NULL,
+    tpcm_fecha_fin_linea_base   DATE NOT NULL,
+    tpcm_fecha_fin_buffer_linea_base    DATE NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas.tbl_reporte_por_entrega;
