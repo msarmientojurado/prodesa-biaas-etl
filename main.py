@@ -19,6 +19,8 @@ from libraries.model_area.model_area import model
 import pandas as pd
 import numpy as np
 
+from libraries.validation_mesh.validation_mesh import validation_mesh
+
 def main():
     print("Starting ETL process...");
     
@@ -26,10 +28,16 @@ def main():
     esp_consolidado_corte=mirror_area();
     #print(" * Uploaded rows: {}".format(len(esp_consolidado_corte.index)));
 
-    #Running Staging Area
-    stg_consolidado_corte, continue_process = staging_area(esp_consolidado_corte);
+    esp_consolidado_corte, continue_process= validation_mesh(esp_consolidado_corte)
 
     if continue_process == True:
+        #Running Staging Area
+        stg_consolidado_corte, continue_process = staging_area(esp_consolidado_corte);
+
+    if continue_process == True:
+
+        
+        
         #Running Temporary Area
         tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial, tbl_reporte_por_entregas, building_report_excecution, planning_report_excecution, commercial_report_excecution = temporary_area(stg_consolidado_corte);
 
