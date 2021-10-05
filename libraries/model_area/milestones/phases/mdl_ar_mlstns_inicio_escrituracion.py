@@ -32,9 +32,9 @@ def mdl_ar_mlstns_inicio_escrituracion(tbl_inicio_escrituracion):
         bigquery.SchemaField("tie_lote_proceso",                        "INT64",    mode="REQUIRED"),
     ])
 
-    job = client.load_table_from_dataframe(
-        tbl_inicio_escrituracion, TBL_INICIO_ESCRITURACION, job_config=job_config
-    )
+    #job = client.load_table_from_dataframe(
+    #    tbl_inicio_escrituracion, TBL_INICIO_ESCRITURACION, job_config=job_config
+    #)
     # Wait for the load job to complete.
     job.result()
     print("  -Model -tbl_inicio_escrituracion- ending") 

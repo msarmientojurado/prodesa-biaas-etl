@@ -30,9 +30,9 @@ def mdl_ar_planning(tmp_proyectos_planeacion):
         bigquery.SchemaField("tpp_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 
-    job = client.load_table_from_dataframe(
-        tmp_proyectos_planeacion, TBL_PROYECTOS_PLANEACION, job_config=job_config
-    )
+    #job = client.load_table_from_dataframe(
+    #    tmp_proyectos_planeacion, TBL_PROYECTOS_PLANEACION, job_config=job_config
+    #)
     # Wait for the load job to complete.
-    job.result()
+    #job.result()
     print("  -Model -tmp_proyectos_planeacion- ending")

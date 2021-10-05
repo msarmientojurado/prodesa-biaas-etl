@@ -31,9 +31,9 @@ def mdl_ar_commercial(tmp_proyectos_comercial):
         bigquery.SchemaField("tpcm_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 
-    job = client.load_table_from_dataframe(
-        tmp_proyectos_comercial, TBL_PROYECTOS_COMERCIAL, job_config=job_config
-    )
+    #job = client.load_table_from_dataframe(
+    #    tmp_proyectos_comercial, TBL_PROYECTOS_COMERCIAL, job_config=job_config
+    #)
     # Wait for the load job to complete.
-    job.result()
+    #job.result()
     print("  -Model -tbl_proyectos_comercial- ending")

@@ -22,10 +22,10 @@ def mdl_ar_deliveries(tbl_reporte_por_entrega):
         bigquery.SchemaField("trpe_lote_proceso",                "INT64",    mode="REQUIRED")
     ])
 
-    job = client.load_table_from_dataframe(
-        tbl_reporte_por_entrega, TBL_REPORTE_POR_ENTREGAS, job_config=job_config
-    )
+    #job = client.load_table_from_dataframe(
+    #    tbl_reporte_por_entrega, TBL_REPORTE_POR_ENTREGAS, job_config=job_config
+    #)
     # Wait for the load job to complete.
-    job.result()
+    #job.result()
     print("  -Model -tbl_reporte_por_entrega- ending")
     return

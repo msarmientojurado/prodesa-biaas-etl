@@ -39,9 +39,9 @@ def mdl_ar_mlstns_inicio_construccion(tbl_inicio_construccion):
         bigquery.SchemaField("tic_lote_proceso",                    "INT64",    mode="REQUIRED"),
     ])
 
-    job = client.load_table_from_dataframe(
-        tbl_inicio_construccion, TBL_INICIO_CONSTRUCCION, job_config=job_config
-    )
+    #job = client.load_table_from_dataframe(
+    #    tbl_inicio_construccion, TBL_INICIO_CONSTRUCCION, job_config=job_config
+    #)
     # Wait for the load job to complete.
-    job.result()
+    #job.result()
     print("  -Model -tbl_inicio_construccion- ending") 

@@ -38,9 +38,9 @@ def mdl_ar_mlstns_inicio_promesa(tbl_inicio_promesa):
         bigquery.SchemaField("tip_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 
-    job = client.load_table_from_dataframe(
-        tbl_inicio_promesa, TBL_INICIO_PROMESA, job_config=job_config
-    )
+    #job = client.load_table_from_dataframe(
+    #    tbl_inicio_promesa, TBL_INICIO_PROMESA, job_config=job_config
+    #)
     # Wait for the load job to complete.
-    job.result()
+    #job.result()
     print("  -Model -tbl_inicio_promesa- ending") 

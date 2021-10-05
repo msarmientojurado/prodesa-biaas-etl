@@ -13,7 +13,7 @@ def mdl_ar_building(tmp_proyectos_construccion):
             WHERE tpc_fecha_corte >= """+ cut_date
 
     print(query)        
-    client.query(query)
+    #client.query(query)
 
 
     #client = bigquery.Client()
@@ -43,9 +43,9 @@ def mdl_ar_building(tmp_proyectos_construccion):
         bigquery.SchemaField("tpc_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 
-    job = client.load_table_from_dataframe(
-        tmp_proyectos_construccion, TBL_PROYECTOS_CONSTRUCCION, job_config=job_config
-    )
+    #job = client.load_table_from_dataframe(
+    #    tmp_proyectos_construccion, TBL_PROYECTOS_CONSTRUCCION, job_config=job_config
+    #)
     # Wait for the load job to complete.
-    job.result()
+    #job.result()
     print("  -Model -tbl_proyectos_construccion- ending")
