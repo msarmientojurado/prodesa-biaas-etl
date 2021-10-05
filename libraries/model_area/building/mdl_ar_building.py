@@ -7,6 +7,7 @@ def mdl_ar_building(tmp_proyectos_construccion):
     
     client = bigquery.Client()
     cut_date=tmp_proyectos_construccion.tpc_fecha_corte.unique()[0]
+    cut_date=cut_date.strftime('%Y.%m.%d')
     query ="""
         DELETE
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """`
