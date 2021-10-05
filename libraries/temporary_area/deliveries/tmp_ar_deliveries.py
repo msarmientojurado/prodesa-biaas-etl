@@ -11,7 +11,7 @@ def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos):
 
     cols_list = ['stg_nombre_actividad']
     search_values = ['ENTREGA']
-    deliveries_dataset=deliveries_dataset[deliveries_dataset[cols_list].stack().str.contains('|'.join(search_values),case=False,na=False).any(level=0)]
+    deliveries_dataset=deliveries_dataset[deliveries_dataset[cols_list].stack().str.contains('|'.join(search_values),case=False,na=False).groupby(level=0).any()]
 
     auxCol=deliveries_dataset.loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
