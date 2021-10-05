@@ -55,5 +55,5 @@ def mdl_ar_mlstns_inicio_venta(tbl_inicio_venta):
     #    tbl_inicio_venta, TBL_INICIO_VENTA, job_config=job_config
     #)
     # Wait for the load job to complete.
-    job.result()
+    #job.result()
     print("  -Model -tbl_inicio_venta- ending") 
