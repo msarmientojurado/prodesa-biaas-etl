@@ -6,7 +6,7 @@ def mdl_ar_building(tmp_proyectos_construccion):
     print("  *Model -tbl_proyectos_construccion- Starting")
     
     client = bigquery.Client()
-    cut_date=(tmp_proyectos_construccion.tpc_fecha_corte.unique()[0]).strftime("%m/%d/%Y")
+    cut_date=tmp_proyectos_construccion.tpc_fecha_corte.unique()[0]
     query ="""
         DELETE
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """`
