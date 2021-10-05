@@ -10,7 +10,8 @@ def mdl_ar_building(tmp_proyectos_construccion):
     query ="""
         DELETE
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_CONSTRUCCION + """`
-            WHERE tpc_fecha_corte >= """+ cut_date.strftime("%Y-%m-%d")
+            WHERE tpc_fecha_corte >= DATE '""" + cut_date.strftime("%Y-%m-%d") +"""'
+            """
 
     print(query)        
     #client.query(query)
