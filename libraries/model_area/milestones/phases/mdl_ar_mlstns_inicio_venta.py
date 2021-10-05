@@ -1,11 +1,24 @@
 
 
-from libraries.settings import TBL_INICIO_VENTA
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_INICIO_VENTA
 from google.cloud import bigquery
+import pandas as pd
 
 def mdl_ar_mlstns_inicio_venta(tbl_inicio_venta):
     print("  *Model -tbl_inicio_venta- Starting")
     client = bigquery.Client()
+    cut_date = pd.to_datetime(tbl_inicio_venta.tiv_fecha_corte.unique()[0])
+    query ="""
+        DELETE
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_INICIO_VENTA + """`
+            WHERE tiv_fecha_corte >= DATE '""" + cut_date.strftime("%Y-%m-%d") +"""'
+            """
+
+    #print(query)        
+    client.query(query)
+
+
+    #client = bigquery.Client()
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[
@@ -51,9 +64,9 @@ def mdl_ar_mlstns_inicio_venta(tbl_inicio_venta):
         bigquery.SchemaField("tiv_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 
-    #job = client.load_table_from_dataframe(
-    #    tbl_inicio_venta, TBL_INICIO_VENTA, job_config=job_config
-    #)
+    job = client.load_table_from_dataframe(
+        tbl_inicio_venta, TBL_INICIO_VENTA, job_config=job_config
+    )
     # Wait for the load job to complete.
-    #job.result()
+    job.result()
     print("  -Model -tbl_inicio_venta- ending") 

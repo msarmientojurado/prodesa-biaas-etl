@@ -1,11 +1,25 @@
 
 
-from libraries.settings import TBL_INICIO_PROMESA
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_INICIO_PROMESA
 from google.cloud import bigquery
+import pandas as pd
 
 def mdl_ar_mlstns_inicio_promesa(tbl_inicio_promesa):
     print("  *Model -tbl_inicio_promesa- Starting")
+    
     client = bigquery.Client()
+    cut_date = pd.to_datetime(tbl_inicio_promesa.tip_fecha_corte.unique()[0])
+    query ="""
+        DELETE
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_INICIO_PROMESA + """`
+            WHERE tip_fecha_corte >= DATE '""" + cut_date.strftime("%Y-%m-%d") +"""'
+            """
+
+    #print(query)        
+    client.query(query)
+
+
+    #client = bigquery.Client()
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[
@@ -38,9 +52,9 @@ def mdl_ar_mlstns_inicio_promesa(tbl_inicio_promesa):
         bigquery.SchemaField("tip_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
 
-    #job = client.load_table_from_dataframe(
-    #    tbl_inicio_promesa, TBL_INICIO_PROMESA, job_config=job_config
-    #)
+    job = client.load_table_from_dataframe(
+        tbl_inicio_promesa, TBL_INICIO_PROMESA, job_config=job_config
+    )
     # Wait for the load job to complete.
-    #job.result()
+    job.result()
     print("  -Model -tbl_inicio_promesa- ending") 

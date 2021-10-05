@@ -187,6 +187,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
         inner JOIN (SELECT CONCAT(tpcm_codigo_proyecto, '_', tpcm_etapa, '_',tpcm_programacion) key, MAX(tpcm_fecha_corte) AS MaxDate
             FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_COMERCIAL + """
             WHERE tpcm_codigo_proyecto in ("""+text+""")
+            and tpcm_fecha_corte < DATE '""" + cut_date.strftime("%Y-%m-%d") +"""'
             GROUP BY key) groupedtt
         ON key = groupedtt.key 
         AND tt.tpcm_fecha_corte = groupedtt.MaxDate

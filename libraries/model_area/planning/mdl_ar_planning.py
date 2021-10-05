@@ -1,9 +1,25 @@
-from libraries.settings import TBL_PROYECTOS_PLANEACION
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_PLANEACION
 from google.cloud import bigquery
+
+import pandas as pd
 
 def mdl_ar_planning(tmp_proyectos_planeacion):
     print("  *Model -tmp_proyectos_planeacion- Starting")
+    
+    
     client = bigquery.Client()
+    cut_date = pd.to_datetime(tmp_proyectos_planeacion.tpp_fecha_corte.unique()[0])
+    query ="""
+        DELETE
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_PLANEACION + """`
+            WHERE tpp_fecha_corte >= DATE '""" + cut_date.strftime("%Y-%m-%d") +"""'
+            """
+
+    #print(query)        
+    client.query(query)
+
+
+    #client = bigquery.Client()
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[
@@ -29,10 +45,10 @@ def mdl_ar_planning(tmp_proyectos_planeacion):
         bigquery.SchemaField("tpp_fecha_proceso",               "DATE", mode="REQUIRED"),
         bigquery.SchemaField("tpp_lote_proceso",                "INT64",    mode="REQUIRED"),
     ])
-
-    #job = client.load_table_from_dataframe(
-    #    tmp_proyectos_planeacion, TBL_PROYECTOS_PLANEACION, job_config=job_config
-    #)
+    
+    job = client.load_table_from_dataframe(
+        tmp_proyectos_planeacion, TBL_PROYECTOS_PLANEACION, job_config=job_config
+    )
     # Wait for the load job to complete.
-    #job.result()
+    job.result()
     print("  -Model -tmp_proyectos_planeacion- ending")
