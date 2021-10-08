@@ -5,7 +5,7 @@ import numpy as np
 import io
 from google.cloud import bigquery
 
-from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, BLOB_NAME_VALIDATION_REPORT, BUCKET_NAME_VALIDATION_REPORT, TBL_PROYECTOS
 
 def validation_mesh(esp_consolidado_corte):
     print(" *Validation Mesh Starting...");
@@ -260,14 +260,14 @@ def validation_mesh(esp_consolidado_corte):
 
     #Storing the result to the bucket
     # bucket name
-    bucket = "prodesa-biaas-salida"
+    bucket = BUCKET_NAME_VALIDATION_REPORT
 
     # Get the bucket that the file will be uploaded to.
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket)
 
     # Create a new blob and upload the file's content.
-    my_file = bucket.blob('resultado_malla_validacion.txt')
+    my_file = bucket.blob(BLOB_NAME_VALIDATION_REPORT)
     
     # upload from string
     my_file.upload_from_string(output.read(), content_type="text/plain")
