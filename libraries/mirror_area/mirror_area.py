@@ -36,6 +36,7 @@ def mirror_area():
         data_bytes = blob.download_as_bytes()
 
         esp_consolidado_corte = pd.read_excel(data_bytes)
+        print(esp_consolidado_corte.head(10))
 
     print(" -Mirror Area ending...");
 
