@@ -244,6 +244,9 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_planeacion['tpp_ultima_semana'] = tmp_proyectos_planeacion['tpp_ultima_semana'].div(100)
     tmp_proyectos_planeacion['tpp_ultimo_mes'] = tmp_proyectos_planeacion['tpp_ultimo_mes'].div(100)
 
+    tmp_proyectos_planeacion.tpp_avance_cc.dropna()
+    tmp_proyectos_planeacion['tpp_avance_cc']=np.where(tmp_proyectos_planeacion['tpp_avance_cc']<0,0,tmp_proyectos_planeacion['tpp_avance_cc'])
+
     tmp_proyectos_planeacion=tmp_proyectos_planeacion.reindex(columns=['tpp_regional',
                                                             'tpp_codigo_proyecto',
                                                             'tpp_macroproyecto',

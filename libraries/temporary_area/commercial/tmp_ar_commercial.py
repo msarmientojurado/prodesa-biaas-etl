@@ -242,6 +242,9 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_comercial['tpcm_ultima_semana'] = tmp_proyectos_comercial['tpcm_ultima_semana'].div(100)
     tmp_proyectos_comercial['tpcm_ultimo_mes'] = tmp_proyectos_comercial['tpcm_ultimo_mes'].div(100)
 
+    tmp_proyectos_comercial.tpcm_avance_cc.dropna()
+    tmp_proyectos_comercial['tpcm_avance_cc']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']<0,0,tmp_proyectos_comercial['tpcm_avance_cc'])
+
     tmp_proyectos_comercial=tmp_proyectos_comercial.reindex(columns=['tpcm_regional',
                                                             'tpcm_codigo_proyecto',
                                                             'tpcm_macroproyecto',
