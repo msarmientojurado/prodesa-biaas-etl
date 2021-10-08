@@ -1,5 +1,8 @@
 venv/
 Consolidado_Excel.xlsx
+Consolidado_Excel_.xlsx
+Consolidado_Excel__.xlsx
 *.pyc
 settings.py
 prueba/
+google-cloud-credentials/

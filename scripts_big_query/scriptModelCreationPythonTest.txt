@@ -1,11 +1,11 @@
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_inicio_venta;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_venta
 (
-    tiv_regional STRING,
-    tiv_codigo_proyecto STRING,
-    tiv_macroproyecto STRING,
-    tiv_proyecto STRING,
-    tiv_etapa STRING,
+    tiv_regional STRING NOT NULL,
+    tiv_codigo_proyecto STRING NOT NULL,
+    tiv_macroproyecto STRING NOT NULL,
+    tiv_proyecto STRING NOT NULL,
+    tiv_etapa STRING NOT NULL,
     tiv_dias_atraso INT64,
     tiv_inicio_ventas_proyectado DATE,
     tiv_inicio_ventas_programado DATE,
@@ -39,19 +39,19 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_venta
     tiv_prod_objetivo_programado DATE,
     tiv_lluvia_ideas_proyectado DATE,
     tiv_lluvia_ideas_programado DATE,
-    tiv_fecha_corte DATE,
-    tiv_fecha_proceso DATETIME,
-    tiv_lote_proceso INT64 
+    tiv_fecha_corte DATE NOT NULL,
+    tiv_fecha_proceso DATE NOT NULL,
+    tiv_lote_proceso INT64 NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_inicio_promesa;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_promesa
 (
-    tip_regional STRING,
-    tip_codigo_proyecto STRING,
-    tip_macroproyecto STRING,
-    tip_proyecto STRING,
-    tip_etapa STRING,
+    tip_regional STRING NOT NULL,
+    tip_codigo_proyecto STRING NOT NULL,
+    tip_macroproyecto STRING NOT NULL,
+    tip_proyecto STRING NOT NULL,
+    tip_etapa STRING NOT NULL,
     tip_dias_atraso INT64,
     tip_inicio_promesas_proyectado DATE,
     tip_inicio_promesas_programado DATE,
@@ -71,19 +71,19 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_promesa
     tip_fai_programado DATE,
     tip_constitut_urban_proyectado DATE,
     tip_constitut_urban_programado DATE,
-    tip_fecha_corte DATE,
-    tip_fecha_proceso DATETIME,
-    tip_lote_proceso INT64
+    tip_fecha_corte DATE NOT NULL,
+    tip_fecha_proceso DATE NOT NULL,
+    tip_lote_proceso INT64 NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_inicio_construccion;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_construccion
 (
-    tic_regional STRING,
-    tic_codigo_proyecto STRING,
-    tic_macroproyecto STRING,
-    tic_proyecto STRING,
-    tiC_etapa STRING,
+    tic_regional STRING NOT NULL,
+    tic_codigo_proyecto STRING NOT NULL,
+    tic_macroproyecto STRING NOT NULL,
+    tic_proyecto STRING NOT NULL,
+    tiC_etapa STRING NOT NULL,
     tic_dias_atraso INT64,
     tic_inicio_construccion_proyectado DATE,
     tic_inicio_construccion_programado DATE,
@@ -103,19 +103,19 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_construccion
     tic_docs_inic_constru_programado DATE,
     tic_diseno_inic_constru_proyectado DATE,
     tic_diseno_inic_constru_programado DATE,
-    tic_fecha_corte DATE,
-    tic_fecha_proceso DATETIME,
-    tic_lote_proceso INT64
+    tic_fecha_corte DATE NOT NULL,
+    tic_fecha_proceso DATE NOT NULL,
+    tic_lote_proceso INT64 NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_inicio_escrituracion;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_escrituracion
 (
-    tie_regional STRING,
-    tie_codigo_proyecto STRING,
-    tie_macroproyecto STRING,
-    tie_proyecto STRING,
-    tie_etapa STRING,
+    tie_regional STRING NOT NULL,
+    tie_codigo_proyecto STRING NOT NULL,
+    tie_macroproyecto STRING NOT NULL,
+    tie_proyecto STRING NOT NULL,
+    tie_etapa STRING NOT NULL,
     tie_dias_atraso INT64,
     tie_inicio_escrituracion_proyectado DATE,
     tie_inicio_escrituracion_programado DATE,
@@ -131,18 +131,18 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_escrituracion
     tie_modificacion_lc_programado DATE,
     tie_radic_modif_lc_proyectado DATE,
     tie_radic_modif_lc_programado DATE,
-    tie_fecha_corte DATE,
-    tie_fecha_proceso DATETIME,
-    tie_lote_proceso INT64
+    tie_fecha_corte DATE NOT NULL,
+    tie_fecha_proceso DATE NOT NULL,
+    tie_lote_proceso INT64 NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_proyectos_planeacion;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos_planeacion
 (
-    tpp_regional STRING,
-    tpp_codigo_proyecto STRING,
-    tpp_macroproyecto STRING,
-    tpp_proyecto STRING,
+    tpp_regional STRING NOT NULL,
+    tpp_codigo_proyecto STRING NOT NULL,
+    tpp_macroproyecto STRING NOT NULL,
+    tpp_proyecto STRING NOT NULL,
     tpp_hito STRING,
     tpp_etapa STRING,
     tpp_tarea_consume_buffer STRING,
@@ -157,47 +157,47 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos_planeacion
     tpp_dias_atraso INT64,
     tpp_ultima_semana FLOAT64,
     tpp_ultimo_mes FLOAT64,
-    tpp_fecha_corte DATE,
-    tpp_fecha_proceso DATETIME,
-    tpp_lote_proceso INT64
+    tpp_fecha_corte DATE NOT NULL,
+    tpp_fecha_proceso DATE NOT NULL,
+    tpp_lote_proceso INT64 NOT NULL,
 );
 
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_proyectos_construccion;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos_construccion
 (
-    tpc_regional STRING,
-    tpc_codigo_proyecto STRING,
-    tpc_macroproyecto STRING,
-    tpc_proyecto STRING,
-    tpc_etapa STRING,
-    tpc_programacion STRING,
+    tpc_regional STRING NOT NULL,
+    tpc_codigo_proyecto STRING NOT NULL,
+    tpc_macroproyecto STRING NOT NULL,
+    tpc_proyecto STRING NOT NULL,
+    tpc_etapa STRING NOT NULL,
+    tpc_programacion STRING NOT NULL,
     tpc_tarea_consume_buffer STRING,
     tpc_avance_cc FLOAT64,
     tpc_avance_comparativo_semana INT64,
     tpc_consumo_buffer FLOAT64,
     tpc_consumo_buffer_color INT64,
-    tpc_consumo_buffer_comparativo INT64,
+    tpc_consumo_buffer_comparativo int64,
     tpc_fin_proyectado_optimista DATE,
     tpc_fin_proyectado_pesimista DATE,
     tpc_fin_programada DATE,
     tpc_dias_atraso INT64,
     tpc_ultima_semana FLOAT64,
     tpc_ultimo_mes FLOAT64,
-    tpc_fecha_corte DATE,
-    tpc_fecha_proceso DATETIME,
-    tpc_lote_proceso INT64
+    tpc_fecha_corte DATE NOT NULL,
+    tpc_fecha_proceso DATE NOT NULL,
+    tpc_lote_proceso INT64 NOT NULL,
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_proyectos_comercial;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos_comercial
 (
-    tpcm_regional STRING,
-    tpcm_codigo_proyecto STRING,
-    tpcm_macroproyecto STRING,
-    tpcm_proyecto STRING,
-    tpcm_etapa STRING,
-    tpcm_programacion STRING,
+    tpcm_regional STRING NOT NULL,
+    tpcm_codigo_proyecto STRING NOT NULL,
+    tpcm_macroproyecto STRING NOT NULL,
+    tpcm_proyecto STRING NOT NULL,
+    tpcm_etapa STRING NOT NULL,
+    tpcm_programacion STRING NOT NULL,
     tpcm_tarea_consume_buffer STRING,
     tpcm_avance_cc FLOAT64,
     tpcm_avance_comparativo_semana INT64,
@@ -210,109 +210,109 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos_comercial
     tpcm_dias_atraso INT64,
     tpcm_ultima_semana FLOAT64,
     tpcm_ultimo_mes FLOAT64,
-    tpcm_fecha_corte DATETIME,
-    tpcm_fecha_proceso DATE,
-    tpcm_lote_proceso INT64
+    tpcm_fecha_corte DATE NOT NULL,
+    tpcm_fecha_proceso DATE NOT NULL,
+    tpcm_lote_proceso INT64 NOT NULL,
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_reporte_por_entrega;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_reporte_por_entrega
 (
-    trpe_regional STRING,
-    trpe_codigo_proyecto STRING,
-    trpe_macroproyecto STRING,
-    trpe_proyecto STRING,
+    trpe_regional STRING NOT NULL,
+    trpe_codigo_proyecto STRING NOT NULL,
+    trpe_macroproyecto STRING NOT NULL,
+    trpe_proyecto STRING NOT NULL,
     trpe_programacion STRING,
     trpe_tarea_entrega STRING,
     trpe_etapa STRING,
     trpe_entrega_real DATE,
     trpe_entrega_programada DATE,
-    trpe_fecha_corte DATE,
-    trpe_fecha_proceso DATETIME,
-    trpe_lote_proceso INT64
+    trpe_fecha_corte DATE NOT NULL,
+    trpe_fecha_proceso DATE NOT NULL,
+    trpe_lote_proceso INT64 NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_proyectos;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos
 (
-    tpr_regional STRING,
-    tpr_codigo_proyecto STRING,
-    tpr_macroproyecto STRING,
-    tpr_proyecto STRING,
-    tpr_estado BOOL,
-    tpr_fecha_actualizacion DATE
+    tpr_regional STRING NOT NULL,
+    tpr_codigo_proyecto STRING NOT NULL,
+    tpr_macroproyecto STRING NOT NULL,
+    tpr_proyecto STRING NOT NULL,
+    tpr_estado BOOL NOT NULL,
+    tpr_fecha_actualizacion DATE NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_valores_hitos;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_valores_hitos
 (
-    tvh_sigla STRING,
-    tvh_hito STRING,
-    tvh_estado BOOL,
-    tvh_fecha_actualizacion DATE
+    tvh_sigla STRING NOT NULL,
+    tvh_hito STRING NOT NULL,
+    tvh_estado BOOL NOT NULL,
+    tvh_fecha_actualizacion DATE NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_control_cargue;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_control_cargue
 (
-    tcc_nombre_fuente STRING,
-    tcc_fecha_proceso DATETIME,
-    tcc_lote_proceso INT64,
-    tcc_cantidad_registros INT64
+    tcc_nombre_fuente STRING NOT NULL,
+    tcc_fecha_proceso DATE NOT NULL,
+    tcc_lote_proceso INT64 NOT NULL,
+    tcc_cantidad_registros INT64 NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_area_prodesa;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_area_prodesa
 (
-    tap_nombre_area STRING,
-    tap_sigla_area STRING,
-    tpr_estado BOOL,
-    tpr_fecha_actualizacion DATE
+    tap_nombre_area STRING NOT NULL,
+    tap_sigla_area STRING NOT NULL,
+    tpr_estado BOOL NOT NULL,
+    tpr_fecha_actualizacion DATE NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_consolidado_corte;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_consolidado_corte
 (
-    tbl_project_id INT64,
-    tbl_wbs STRING,
-    tbl_nombre_actividad STRING,
-    tbl_fecha_inicial_actual DATE,
-    tbl_fecha_final_actual DATE,
-    tbl_duracion_real_cantidad FLOAT64,
-    tbl_duracion_real_unidad STRING,
-    tbl_fecha_inicio_planeada DATE,
-    tbl_duracion_cantidad INT64,
-    tbl_duracion_unidad STRING,
-    tbl_riesgo_bajo_duracion_cantidad INT64,
-    tbl_riesgo_bajo_duracion_unidad STRING,
-    tbl_recursos STRING,
-    tbl_actividad_sucesora STRING,
-    tbl_impacto_buffer INT64,
-    tbl_indicador_cantidad INT64,
-    tbl_indicador_unidad STRING,
-    tbl_porc_completitud FLOAT64,
-    tbl_ind_buffer STRING,
-    tbl_indice_buffer STRING,
-    tbl_duracion_critica_cantidad FLOAT64,
-    tbl_duracion_critica_unidad STRING,
-    tbl_ind_tarea STRING,
-    tbl_ind_tarea_critica STRING,
-    tbl_estado INT64,
-    tbl_numero_esquema STRING,
-    tbl_fecha_fin_planeada DATE,
-    tbl_area_prodesa STRING,
-    tbl_nombre_archivo STRING,
-    tbl_codigo_proyecto STRING,
-    tbl_etapa_proyecto STRING,
-    tbl_programacion_proyecto STRING,
-    tbl_fecha_corte DATE,
-    tbl_fecha_inicial DATETIME,
-    tbl_fecha_fin DATETIME,
-    tbl_actividad_predecesora STRING,
-    tbl_notas STRING,
-    tbl_duracion_restante_cantidad FLOAT64,
-    tbl_duracion_restante_unidad STRING,
-    tbl_fecha_fin_programada DATE,
-    tbl_fecha_proceso DATETIME,
-    tbl_lote_proceso INT64
+    tcco_project_id INT64 NOT NULL,
+    tcco_wbs STRING NOT NULL,
+    tcco_nombre_actividad STRING NOT NULL,
+    tcco_fecha_inicial_actual DATE,
+    tcco_fecha_final_actual DATE,
+    tcco_duracion_real_cantidad FLOAT64,
+    tcco_duracion_real_unidad STRING,
+    tcco_fecha_inicio_planeada DATE,
+    tcco_duracion_cantidad INT64,
+    tcco_duracion_unidad STRING,
+    tcco_riesgo_bajo_duracion_cantidad INT64,
+    tcco_riesgo_bajo_duracion_unidad STRING,
+    tcco_recursos STRING,
+    tcco_actividad_sucesora STRING,
+    tcco_impacto_buffer INT64,
+    tcco_indicador_cantidad INT64,
+    tcco_indicador_unidad STRING,
+    tcco_porc_completitud FLOAT64,
+    tcco_ind_buffer STRING,
+    tcco_indice_buffer STRING,
+    tcco_duracion_critica_cantidad FLOAT64,
+    tcco_duracion_critica_unidad STRING,
+    tcco_ind_tarea STRING,
+    tcco_ind_tarea_critica STRING,
+    tcco_estado INT64,
+    tcco_numero_esquema STRING,
+    tcco_fecha_fin_planeada DATE,
+    tcco_area_prodesa STRING NOT NULL,
+    tcco_nombre_archivo STRING NOT NULL,
+    tcco_codigo_proyecto STRING NOT NULL,
+    tcco_etapa_proyecto STRING NOT NULL,
+    tcco_programacion_proyecto STRING NOT NULL,
+    tcco_fecha_corte DATE NOT NULL,
+    tcco_fecha_inicial DATETIME,
+    tcco_fecha_fin DATETIME,
+    tcco_actividad_predecesora STRING,
+    tcco_notas STRING,
+    tcco_duracion_restante_cantidad FLOAT64,
+    tcco_duracion_restante_unidad STRING,
+    tcco_fecha_fin_programada DATE,
+    tcco_fecha_proceso DATE NOT NULL,
+    tcco_lote_proceso INT64 NOT NULL
 ); 
