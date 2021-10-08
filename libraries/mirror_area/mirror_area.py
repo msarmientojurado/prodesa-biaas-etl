@@ -1,6 +1,5 @@
 
-from libraries.settings_ import ORIGIN_FILE
-from libraries.settings import BLOB_NAME, BUCKET_NAME, ENVIRONMENT
+from libraries.settings import BLOB_NAME, BUCKET_NAME, ENVIRONMENT,ORIGIN_FILE 
 import pandas as pd
 from google.cloud import storage
 import io
