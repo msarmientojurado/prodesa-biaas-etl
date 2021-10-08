@@ -30,6 +30,8 @@ def mirror_area():
         storage_client = storage.Client()
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(blob_namne)
+        print(bucket_name)
+        print(blob_namne)
 
         data_bytes = blob.download_as_bytes()
 
