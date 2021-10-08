@@ -208,9 +208,9 @@ def validation_mesh(esp_consolidado_corte):
     text=""
     for project_code in project_codes:
         if text== "":
-            text=text+"'"+project_code+"'"
+            text=text+"'"+str(project_code)+"'"
         else:
-            text=text+", '"+project_code+"'"
+            text=text+", '"+(project_code)+"'"
     query ="""
         SELECT tpr_codigo_proyecto, (1) AS tpr_in_table
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS + """`
