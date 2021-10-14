@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos):
+def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos, current_bash):
 
     print("   *Inicio Construccion Starting")
 
@@ -53,7 +53,7 @@ def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos):
     tbl_inicio_construccion['stg_fecha_corte'] = start_building['stg_fecha_corte'].iloc[0]
     tbl_inicio_construccion = tbl_inicio_construccion.rename(columns={'tpr_codigo_proyecto' : 'tic_codigo_proyecto','tpr_regional' : 'tic_regional','tpr_macroproyecto' : 'tic_macroproyecto', 'stg_etapa_proyecto' : 'tic_etapa', 'tpr_proyecto' : 'tic_proyecto', 'stg_fecha_corte' : 'tic_fecha_corte'})
     tbl_inicio_construccion['tic_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
-    tbl_inicio_construccion['tic_lote_proceso']=1
+    tbl_inicio_construccion['tic_lote_proceso']=current_bash
 
     tbl_inicio_construccion=tbl_inicio_construccion.reindex(columns=['tic_regional',
                                                                         'tic_codigo_proyecto',

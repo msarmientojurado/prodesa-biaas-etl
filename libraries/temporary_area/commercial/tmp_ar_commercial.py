@@ -5,7 +5,7 @@ from google.cloud import bigquery
 
 from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_COMERCIAL
 
-def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
+def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
     print("  *Commercial Starting")
     #Lets start by building the dataset to work, which includes those registers which have the word `CL` in their `stg_area_prodesa` column
 
@@ -101,12 +101,13 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     #    * Filter registers with condition `stg_duracion_cantidad = 0`
     #    * Sort register descending by column `stg_fecha_fin_planeada`
     #    * Group the result Data Set by the column key
-    auxCol=commercial_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada')]
-    auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
-    auxCol.sort_values(by=['key',"stg_fecha_fin_planeada"],ascending=False, inplace=True)
+    auxCol=commercial_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
+    #auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
+    auxCol.sort_values(by=['key','stg_fecha_fin_planeada', 'stg_fecha_final_actual'],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 
     #Now Attach column `tpc_fin_proyectado_optimista` to `tmp_proyectos_construccion` Dataset
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('stg_fecha_fin_planeada','key')], on='key', how="left",)
     tmp_proyectos_comercial = tmp_proyectos_comercial.rename(columns={'stg_fecha_fin_planeada': 'tpcm_fin_proyectado_optimista'})
 
@@ -132,7 +133,8 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_fin_proyectado_pesimista','key')], on='key', how="left",)
 
     #Column `tpcm_fin_programada`
-    auxCol=commercial_dataset.loc[:, ('key', 'stg_fecha_fin')]
+    auxCol=commercial_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_fecha_fin')]
+    auxCol=auxCol[auxCol['stg_ind_buffer']=='Sí']
     auxCol.sort_values(by=['key',"stg_fecha_fin"],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('stg_fecha_fin','key')], on='key', how="left",)
@@ -225,7 +227,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     #------------------------------
 
     tmp_proyectos_comercial['tpcm_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
-    tmp_proyectos_comercial['tpcm_lote_proceso']=1
+    tmp_proyectos_comercial['tpcm_lote_proceso']=current_bash
 
     tmp_proyectos_comercial['tpcm_tarea_consume_buffer']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']==100,"TERMINADO",tmp_proyectos_comercial['tpcm_tarea_consume_buffer'])
 
@@ -242,7 +244,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_comercial['tpcm_ultima_semana'] = tmp_proyectos_comercial['tpcm_ultima_semana'].div(100)
     tmp_proyectos_comercial['tpcm_ultimo_mes'] = tmp_proyectos_comercial['tpcm_ultimo_mes'].div(100)
 
-    tmp_proyectos_comercial.tpcm_avance_cc.dropna()
+    tmp_proyectos_comercial.tpcm_avance_cc.dropna(inplace=True)
     tmp_proyectos_comercial['tpcm_avance_cc']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']<0,0,tmp_proyectos_comercial['tpcm_avance_cc'])
 
     tmp_proyectos_comercial=tmp_proyectos_comercial.reindex(columns=['tpcm_regional',

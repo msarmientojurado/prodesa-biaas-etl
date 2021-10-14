@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_inicio_venta;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_venta
 (
@@ -159,7 +160,7 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos_planeacion
     tpp_ultimo_mes FLOAT64,
     tpp_fecha_corte DATE NOT NULL,
     tpp_fecha_proceso DATE NOT NULL,
-    tpp_lote_proceso INT64 NOT NULL,
+    tpp_lote_proceso INT64 NOT NULL
 );
 
 
@@ -186,7 +187,7 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos_construccion
     tpc_ultimo_mes FLOAT64,
     tpc_fecha_corte DATE NOT NULL,
     tpc_fecha_proceso DATE NOT NULL,
-    tpc_lote_proceso INT64 NOT NULL,
+    tpc_lote_proceso INT64 NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_proyectos_comercial;
@@ -212,7 +213,7 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_proyectos_comercial
     tpcm_ultimo_mes FLOAT64,
     tpcm_fecha_corte DATE NOT NULL,
     tpcm_fecha_proceso DATE NOT NULL,
-    tpcm_lote_proceso INT64 NOT NULL,
+    tpcm_lote_proceso INT64 NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_reporte_por_entrega;
@@ -256,10 +257,13 @@ DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_control_cargue;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_control_cargue
 (
     tcc_nombre_fuente STRING NOT NULL,
+    tcc_nombre_backup STRING NOT NULL,
     tcc_fecha_proceso DATE NOT NULL,
     tcc_lote_proceso INT64 NOT NULL,
     tcc_cantidad_registros INT64 NOT NULL
 );
+INSERT INTO `proyecto-prodesa.modelo_biaas_python_test.tbl_control_cargue`
+VALUES ("ghost", "ghost", DATE "2020-12-12", 0, 0)
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_area_prodesa;
 CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_area_prodesa
@@ -315,4 +319,24 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_consolidado_corte
     tcco_fecha_fin_programada DATE,
     tcco_fecha_proceso DATE NOT NULL,
     tcco_lote_proceso INT64 NOT NULL
+); 
+
+DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_graficos_tiempo_avance_buffer;
+CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_graficos_tiempo_avance_buffer
+(
+    tgabt_area_prodesa  STRING NOT NULL,
+    tgabt_regional  STRING NOT NULL,
+    tgabt_codigo_proyecto   STRING NOT NULL,
+    tgabt_macroproyecto STRING NOT NULL,
+    tgabt_proyecto  STRING NOT NULL,
+    tgabt_etapa STRING NOT NULL,
+    tgabt_programacion STRING NOT NULL,
+    tgabt_avance_cc     FLOAT64,
+    tgabt_consumo_buffer    FLOAT64,
+    tgabt_fecha_inicio_linea_base   DATE NOT NULL,
+    tgabt_fecha_fin_linea_base  DATE NOT NULL,
+    tgabt_fecha_fin_buffer_linea_base   DATE NOT NULL,
+    tgabt_fecha_corte   DATE NOT NULL,
+    tgabt_fecha_proceso     DATE NOT NULL,
+    tgabt_lote_proceso  INT64 NOT NULL,
 ); 

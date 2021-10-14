@@ -6,7 +6,7 @@ import numpy as np
 from google.cloud import bigquery
 
 
-def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
+def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
 
     print("  *Building Starting")
 
@@ -123,7 +123,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
 
     auxCol=construction_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
     #auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
-    auxCol.sort_values(by=['key','stg_fecha_fin_planeada'],ascending=False, inplace=True)
+    auxCol.sort_values(by=['key','stg_fecha_fin_planeada', 'stg_fecha_final_actual'],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 
     #Now Attach column `tpc_fin_proyectado_optimista` to `tmp_proyectos_construccion` Dataset
@@ -153,7 +153,8 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_fin_proyectado_pesimista','key')], on='key', how="left",)
 
     #Column `tpc_fin_programada`
-    auxCol=construction_dataset.loc[:, ('key', 'stg_fecha_fin')]
+    auxCol=construction_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_fecha_fin')]
+    auxCol=auxCol[auxCol['stg_ind_buffer']=='Sí']
     auxCol.sort_values(by=['key',"stg_fecha_fin"],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('stg_fecha_fin','key')], on='key', how="left",)
@@ -246,7 +247,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     #------------------------------
 
     tmp_proyectos_construccion['tpc_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
-    tmp_proyectos_construccion['tpc_lote_proceso']=1
+    tmp_proyectos_construccion['tpc_lote_proceso']=current_bash
 
     tmp_proyectos_construccion['tpc_tarea_consume_buffer']=np.where(tmp_proyectos_construccion['tpc_avance_cc']==100,"TERMINADO",tmp_proyectos_construccion['tpc_tarea_consume_buffer'])
 
@@ -263,7 +264,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_construccion['tpc_ultima_semana'] = tmp_proyectos_construccion['tpc_ultima_semana'].div(100)
     tmp_proyectos_construccion['tpc_ultimo_mes'] = tmp_proyectos_construccion['tpc_ultimo_mes'].div(100)
 
-    tmp_proyectos_construccion.tpc_avance_cc.dropna()
+    tmp_proyectos_construccion.tpc_avance_cc.dropna(inplace=True)
     tmp_proyectos_construccion['tpc_avance_cc']=np.where(tmp_proyectos_construccion['tpc_avance_cc']<0,0,tmp_proyectos_construccion['tpc_avance_cc'])
 
     tmp_proyectos_construccion=tmp_proyectos_construccion.reindex(columns=['tpc_regional',

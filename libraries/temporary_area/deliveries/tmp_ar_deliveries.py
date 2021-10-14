@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos):
+def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos, current_bash):
     print("  *Deliveries Starting")
     
     deliveries_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
@@ -23,7 +23,7 @@ def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos):
     tbl_reporte_por_entregas['stg_fecha_corte'] = deliveries_dataset['stg_fecha_corte'].iloc[0]
     tbl_reporte_por_entregas = tbl_reporte_por_entregas.rename(columns={'tpr_codigo_proyecto' : 'trpe_codigo_proyecto','tpr_regional' : 'trpe_regional','tpr_macroproyecto' : 'trpe_macroproyecto', 'stg_etapa_proyecto' : 'trpe_etapa', 'tpr_proyecto' : 'trpe_proyecto', 'stg_fecha_corte' : 'trpe_fecha_corte'})
     tbl_reporte_por_entregas['trpe_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
-    tbl_reporte_por_entregas['trpe_lote_proceso']=1
+    tbl_reporte_por_entregas['trpe_lote_proceso']=current_bash
 
     tbl_reporte_por_entregas=tbl_reporte_por_entregas.reindex(columns=['trpe_regional',
                                                                     'trpe_codigo_proyecto',

@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-def tmp_ar_mlstns_inicio_escrituracion(milestones_dataset,tbl_proyectos):
+def tmp_ar_mlstns_inicio_escrituracion(milestones_dataset,tbl_proyectos, current_bash):
 
     print("   *Inicio Escrituracion Starting")
 
@@ -45,7 +45,7 @@ def tmp_ar_mlstns_inicio_escrituracion(milestones_dataset,tbl_proyectos):
     tbl_inicio_escrituracion['stg_fecha_corte'] = start_registration['stg_fecha_corte'].iloc[0]
     tbl_inicio_escrituracion = tbl_inicio_escrituracion.rename(columns={'tpr_codigo_proyecto' : 'tie_codigo_proyecto','tpr_regional' : 'tie_regional','tpr_macroproyecto' : 'tie_macroproyecto', 'stg_etapa_proyecto' : 'tie_etapa', 'tpr_proyecto' : 'tie_proyecto', 'stg_fecha_corte' : 'tie_fecha_corte'})
     tbl_inicio_escrituracion['tie_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
-    tbl_inicio_escrituracion['tie_lote_proceso']=1
+    tbl_inicio_escrituracion['tie_lote_proceso']=current_bash
 
     tbl_inicio_escrituracion=tbl_inicio_escrituracion.reindex(columns=['tie_regional',
                                                                         'tie_codigo_proyecto',

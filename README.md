@@ -3,15 +3,38 @@ This repository aims to guide technical staff during the setting up of the prode
 ## Creating Virtual Environment
 1. Install Python 3
 ```
- 
+ python3 --version
+
+
+ sudo apt-get update
 ```
 2. Install and upgrade pip3
 ```
+sudo apt install python3-pip
+pip3 --version
 pip3 install --upgrade pip
+python3 -m pip --version
 ```
+Installing Git
+```
+git version
+sudo apt-get update
+sudo apt-get install git-all
+git version
+```
+
+Clone repository
+```
+mkdir repos
+cd repos
+git clone https://github.com/msarmientojurado/prodesa-biaas-etl.git
+cd prodesa-biaas-etl
+```
+
 3. First, we have to install 'python3-venv' using the following command
 ```
 sudo apt install python3-venv
+
 ```
 4. Create the virtual environment `venv`
 ```
@@ -23,6 +46,8 @@ source venv/bin/activate
 ```
 6. In order to add new packages to our new virtual environment we create a file called 'requirements.txt' and excecute the following command
 ```
+python3 -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 pip3 install -r requirements.txt
 ```
 ## File Structure

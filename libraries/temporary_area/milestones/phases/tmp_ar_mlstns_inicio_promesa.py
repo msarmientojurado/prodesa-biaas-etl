@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
+def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos, current_bash):
 
     print("   *Inicio Promesas Starting")
 
@@ -52,7 +52,7 @@ def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos):
     tbl_inicio_promesa['stg_fecha_corte'] = start_promise['stg_fecha_corte'].iloc[0]
     tbl_inicio_promesa = tbl_inicio_promesa.rename(columns={'tpr_codigo_proyecto' : 'tip_codigo_proyecto','tpr_regional' : 'tip_regional','tpr_macroproyecto' : 'tip_macroproyecto', 'stg_etapa_proyecto' : 'tip_etapa', 'tpr_proyecto' : 'tip_proyecto', 'stg_fecha_corte': 'tip_fecha_corte'})
     tbl_inicio_promesa['tip_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
-    tbl_inicio_promesa['tip_lote_proceso']=1
+    tbl_inicio_promesa['tip_lote_proceso']=current_bash
 
     tbl_inicio_promesa=tbl_inicio_promesa.reindex(columns=['tip_regional',
                                                             'tip_codigo_proyecto',

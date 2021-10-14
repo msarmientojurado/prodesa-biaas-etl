@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 
 from google.cloud import bigquery
-from libraries.settings import TBL_PROYECTOS_PLANEACION, BIGQUERY_ENVIRONMENT_NAME
+from libraries.settings import TBL_PROYECTOS_PLANEACION, BIGQUERY_ENVIRONMENT_NAME, TBL_VALORES_HITOS
 
-def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
+def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     print("  *Planning Starting")
     #Lets start by building the dataset to work, which includes those 
     # registers which have the word `PN` in their `stg_area_prodesa` 
@@ -99,8 +99,8 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     #    * Sort register descending by column `stg_fecha_fin_planeada`
     #    * Group the result Data Set by the column key
     auxCol=planning_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
-    auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
-    auxCol.sort_values(by=['key',"stg_fecha_fin_planeada"],ascending=False, inplace=True)
+    #auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
+    auxCol.sort_values(by=['key',"stg_fecha_fin_planeada","stg_fecha_final_actual"],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 
     #Now Attach column `tpc_fin_proyectado_optimista` to `tmp_proyectos_construccion` Dataset
@@ -126,7 +126,9 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,auxCol.loc[:, ('tpp_fin_proyectado_pesimista','key')], on='key', how="left",)
 
     #Column `tpc_fin_programada`
-    auxCol=planning_dataset.loc[:, ('key', 'stg_fecha_fin')]
+    
+    auxCol=planning_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_fecha_fin')]
+    auxCol=auxCol[auxCol['stg_ind_buffer']=='Sí']
     auxCol.sort_values(by=['key',"stg_fecha_fin"],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,auxCol.loc[:, ('stg_fecha_fin','key')], on='key', how="left",)
@@ -225,9 +227,20 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     #tmp_proyectos_planeacion['tpp_ultima_semana']=0
     #tmp_proyectos_planeacion['tpp_ultimo_mes']=0
     tmp_proyectos_planeacion['tpp_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
-    tmp_proyectos_planeacion['tpp_lote_proceso']=1
+    tmp_proyectos_planeacion['tpp_lote_proceso']=current_bash
 
-    planning_items=['PL','IV','IP','GAS','AC','GASUE','ELS1','EL','EL…','ELS0','IP…','SPU','SP','IC','DC','IE','SPUE']
+    client = bigquery.Client()
+
+    query ="""
+        SELECT tvh_sigla,
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_VALORES_HITOS + """`
+            WHERE tvh_estado = TRUE
+        """
+
+    #print(query)        
+    planning_items= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))['tvh_sigla'].unique()
+
+    #planning_items=['PL','IV','IP','GAS','AC','GASUE','ELS1','EL','EL…','ELS0','IP…','SPU','SP','IC','DC','IE','SPUE']
     tmp_proyectos_planeacion=tmp_proyectos_planeacion[tmp_proyectos_planeacion['tpp_hito'].isin(planning_items)]
     tmp_proyectos_planeacion['tpp_tarea_consume_buffer']=np.where(tmp_proyectos_planeacion['tpp_avance_cc']==100,"TERMINADO",tmp_proyectos_planeacion['tpp_tarea_consume_buffer'])
 
@@ -244,7 +257,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos):
     tmp_proyectos_planeacion['tpp_ultima_semana'] = tmp_proyectos_planeacion['tpp_ultima_semana'].div(100)
     tmp_proyectos_planeacion['tpp_ultimo_mes'] = tmp_proyectos_planeacion['tpp_ultimo_mes'].div(100)
 
-    tmp_proyectos_planeacion.tpp_avance_cc.dropna()
+    tmp_proyectos_planeacion.tpp_avance_cc.dropna(inplace=True)
     tmp_proyectos_planeacion['tpp_avance_cc']=np.where(tmp_proyectos_planeacion['tpp_avance_cc']<0,0,tmp_proyectos_planeacion['tpp_avance_cc'])
 
     tmp_proyectos_planeacion=tmp_proyectos_planeacion.reindex(columns=['tpp_regional',

@@ -8,7 +8,7 @@ from libraries.temporary_area.milestones.phases.tmp_ar_mlstns_inicio_construccio
 import pandas as pd
 
 
-def tmp_ar_milestones(stg_consolidado_corte, tbl_proyectos):
+def tmp_ar_milestones(stg_consolidado_corte, tbl_proyectos, current_bash):
     
     print("  *Milestones Starting")
 
@@ -40,13 +40,13 @@ def tmp_ar_milestones(stg_consolidado_corte, tbl_proyectos):
     auxCol2=auxCol2.rename(columns={'stg_fecha_fin':'fecha_fin_programado'})
     milestones_dataset=pd.merge(milestones_dataset,auxCol2, on='key', how="left",)
 
-    tbl_inicio_venta = tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos)
+    tbl_inicio_venta = tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos, current_bash)
 
-    tbl_inicio_promesa=tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos)
+    tbl_inicio_promesa=tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos, current_bash)
 
-    tbl_inicio_construccion=tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos)
+    tbl_inicio_construccion=tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos, current_bash)
 
-    tbl_inicio_escrituracion=tmp_ar_mlstns_inicio_escrituracion(milestones_dataset, tbl_proyectos)
+    tbl_inicio_escrituracion=tmp_ar_mlstns_inicio_escrituracion(milestones_dataset, tbl_proyectos, current_bash)
 
     print("  *Milestones ending")
 

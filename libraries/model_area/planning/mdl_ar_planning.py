@@ -8,7 +8,7 @@ def mdl_ar_planning(tmp_proyectos_planeacion):
     
     
     client = bigquery.Client()
-    cut_date = pd.to_datetime(tmp_proyectos_planeacion.tpp_fecha_corte.unique()[0])
+    cut_date = pd.to_datetime((tmp_proyectos_planeacion.tpp_fecha_corte.unique())[0])
     query ="""
         DELETE
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_PROYECTOS_PLANEACION + """`

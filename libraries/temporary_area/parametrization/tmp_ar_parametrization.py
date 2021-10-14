@@ -40,7 +40,7 @@ def tmp_ar_parametrization(stg_consolidado_corte):
     else:
         building_report=True
 
-    print (building_report)
+    #print (building_report)
     # Verification: Is there information related to Planning
     planning_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
     planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']=='PN']
@@ -50,7 +50,7 @@ def tmp_ar_parametrization(stg_consolidado_corte):
     else:
         planning_report=True
 
-    print (planning_report)
+    #print (planning_report)
     # Verification: Is there information related to Commercial
     commercial_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
     commercial_dataset=commercial_dataset[commercial_dataset['stg_area_prodesa']=='CL']
@@ -60,7 +60,7 @@ def tmp_ar_parametrization(stg_consolidado_corte):
     else:
         commercial_report=True
 
-    print (commercial_report)
+    #print (commercial_report)
 
     print("  -Parametrization Script ending...");
 
