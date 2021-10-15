@@ -264,7 +264,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     tmp_proyectos_construccion['tpc_ultima_semana'] = tmp_proyectos_construccion['tpc_ultima_semana'].div(100)
     tmp_proyectos_construccion['tpc_ultimo_mes'] = tmp_proyectos_construccion['tpc_ultimo_mes'].div(100)
 
-    tmp_proyectos_construccion.tpc_avance_cc.dropna(inplace=True)
+    tmp_proyectos_construccion = tmp_proyectos_construccion.dropna(subset=['tpc_avance_cc'])
     tmp_proyectos_construccion['tpc_avance_cc']=np.where(tmp_proyectos_construccion['tpc_avance_cc']<0,0,tmp_proyectos_construccion['tpc_avance_cc'])
 
     tmp_proyectos_construccion=tmp_proyectos_construccion.reindex(columns=['tpc_regional',

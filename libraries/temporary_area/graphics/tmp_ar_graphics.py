@@ -142,7 +142,7 @@ def tmp_ar_graphics(stg_consolidado_corte, tbl_proyectos, current_bash):
     tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_buffer_linea_base_total']=(np.where(tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_buffer_linea_base'].isna(),tbl_graficos_tiempo_avance_buffer['stg_fecha_fin'],tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_buffer_linea_base'])).astype('datetime64[ns]')
     
     
-    print (tbl_graficos_tiempo_avance_buffer.columns)
+    #print (tbl_graficos_tiempo_avance_buffer.columns)
     tbl_graficos_tiempo_avance_buffer=tbl_graficos_tiempo_avance_buffer.reindex(columns=['tgabt_area_prodesa',
                                                             'tgabt_regional',
                                                             'tgabt_codigo_proyecto',

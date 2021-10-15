@@ -11,6 +11,22 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     # column
 
     planning_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_notas')]
+    
+    #print(planning_dataset['stg_notas'].unique())
+    milestones_set=['IV','IP','IC','IE','DC','GAS','AC','EL','SP']
+    
+    planning_dataset_filtered=planning_dataset[planning_dataset['stg_notas'].str.contains('GASUE')]
+    #planning_dataset_filtered['stg_notas']='GASUE'
+    planning_dataset_filtered['stg_notas']='GASUE'
+    for milestone in milestones_set:
+        planning_dataset_filtered_set = planning_dataset[planning_dataset['stg_notas'].str.contains(milestone)]
+        #planning_dataset_filtered_set['stg_notas']=milestone
+        planning_dataset_filtered_set['stg_notas']=milestone
+        planning_dataset_filtered = planning_dataset_filtered.append(planning_dataset_filtered_set, ignore_index=True)
+    planning_dataset=planning_dataset_filtered
+    
+    #print(planning_dataset.head(30))
+    #print(planning_dataset['stg_notas'].unique())
     planning_dataset['key']=planning_dataset['stg_codigo_proyecto']+'_'+planning_dataset['stg_etapa_proyecto']+'_'+planning_dataset['stg_notas']
     planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']=='PN']
     planning_dataset=planning_dataset[planning_dataset['stg_notas']!='-']
@@ -257,7 +273,8 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     tmp_proyectos_planeacion['tpp_ultima_semana'] = tmp_proyectos_planeacion['tpp_ultima_semana'].div(100)
     tmp_proyectos_planeacion['tpp_ultimo_mes'] = tmp_proyectos_planeacion['tpp_ultimo_mes'].div(100)
 
-    tmp_proyectos_planeacion.tpp_avance_cc.dropna(inplace=True)
+    
+    tmp_proyectos_planeacion = tmp_proyectos_planeacion.dropna(subset=['tpp_avance_cc'])
     tmp_proyectos_planeacion['tpp_avance_cc']=np.where(tmp_proyectos_planeacion['tpp_avance_cc']<0,0,tmp_proyectos_planeacion['tpp_avance_cc'])
 
     tmp_proyectos_planeacion=tmp_proyectos_planeacion.reindex(columns=['tpp_regional',
