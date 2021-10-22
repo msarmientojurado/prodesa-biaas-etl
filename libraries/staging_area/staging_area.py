@@ -260,17 +260,8 @@ def staging_area(esp_consolidado_corte):
     #    |stg_notas|string|
 
     stg_consolidado_corte['stg_actividad_predecesora']=esp_consolidado_corte['PREDECESSOR']
+    stg_consolidado_corte['stg_notas']=esp_consolidado_corte['NOTE']
     
-    milestones_set=['IV','IP','IC','IE','DC','GAS','AC','EL','SP']
-    res=esp_consolidado_corte['NOTE'].str.contains('GASUE')
-    stg_consolidado_corte['stg_notas']=np.where(res==True,'GASUE',"")
-    esp_consolidado_corte['NOTE']=np.where(res==True,"",esp_consolidado_corte['NOTE'])
-    for milestone in milestones_set:
-        res=esp_consolidado_corte['NOTE'].str.contains(milestone)
-        stg_consolidado_corte['stg_notas']=np.where(res==True,(stg_consolidado_corte['stg_notas']+"-"+milestone),stg_consolidado_corte['stg_notas'])
-    stg_consolidado_corte['stg_notas'] = stg_consolidado_corte['stg_notas'].apply(lambda x : x[1:] if x.startswith("-") else x)
-
-
     # Now continue with the column
     #    |Column|Data Type|
     #    |-----|----|

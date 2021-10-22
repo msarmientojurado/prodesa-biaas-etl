@@ -200,24 +200,34 @@ def validation_mesh(esp_consolidado_corte, output_file_content):
         SELECT tvh_sigla,
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_VALORES_HITOS + """`
             WHERE tvh_estado = TRUE
+            order by tvh_sigla desc
         """
 
     #print(query)        
-    tbl_valores_hitos= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))['tvh_sigla'].unique()
-
-    mistakes=esp_consolidado_corte[~(esp_consolidado_corte['NOTE'].isnull()) & (~esp_consolidado_corte['NOTE'].isin(tbl_valores_hitos))]
-    findings = len(mistakes)
-    mistakes = mistakes['PROJECT'].unique()
-    happened=""
-    if findings > 0:
-        happened="Sí"
-    else:
-        happened="No"
-    file_result_content = "\n\n\t*Columna NOTE - STRING \n\t\tDescripción: \n\t\t\tAcciones: Eliminar los valores fuera del conjunto de referencia.\n\t\t\tDetiene el proceso: No\n\t\tResultado:\n\t\t\tDetectado: "+happened+"\n\t\t\tCantidad:"+str(findings)+"\n\t\t\t"+ str(mistakes)
-    output_file_content.write(file_result_content)
-
-    #esp_consolidado_corte['NOTE']=np.where(~(esp_consolidado_corte['NOTE'].isin(tbl_valores_hitos)),"",esp_consolidado_corte['NOTE'])
+    milestones_set= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))['tvh_sigla'].unique()
+    esp_consolidado_corte['NOTE'] = esp_consolidado_corte['NOTE'].astype(str)
     
+    #milestones_set=['GASUE','IV','IP','IC','IE','DC','GAS','AC','EL','SP']
+    auxCol=pd.DataFrame()
+    file_result_content = "\n\n\t*Columna NOTE - STRING \n\t\tDescripción: \n\t\t\tAcciones: Eliminar los valores fuera del conjunto de referencia.\n\t\t\tDetiene el proceso: No\n\t\tResultado:\n\t\t\tCantidades de filas detectadas por hito:"
+    output_file_content.write(file_result_content)
+    
+    first_time_loop=True
+    for milestone in milestones_set:
+        res=esp_consolidado_corte['NOTE'].str.contains(milestone)
+        file_result_content = "\n\t\t\t\t"+ milestone +"= "+ str(res.sum())
+        output_file_content.write(file_result_content)
+        banned = [milestone]
+        f = lambda x: ' '.join([item for item in x.split() if item not in banned])
+        esp_consolidado_corte['NOTE'] = esp_consolidado_corte['NOTE'].apply(f)
+        if first_time_loop:
+            auxCol['stg_notas']=np.where(res==True,milestone,"")
+            first_time_loop=False
+        else:
+            auxCol['stg_notas']=np.where(res==True,(auxCol['stg_notas']+"-"+milestone),auxCol['stg_notas'])
+    esp_consolidado_corte['NOTE'] = auxCol['stg_notas'].apply(lambda x : x[1:] if x.startswith("-") else x)
+
+
     #Validation: Not null values, and values are just "Sí" or "No"
     file_result_content = "\n\n\n3- Validacion: No debe haber valores Nulos. Los valores deben ser solamente 'Sí' o 'No'"
     output_file_content.write(file_result_content)

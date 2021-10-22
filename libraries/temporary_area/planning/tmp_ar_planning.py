@@ -13,23 +13,35 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     planning_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_notas')]
     
     #print(planning_dataset['stg_notas'].unique())
-    milestones_set=['IV','IP','IC','IE','DC','GAS','AC','EL','SP']
+
+    client = bigquery.Client()
+
+    query ="""
+        SELECT tvh_sigla,
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_VALORES_HITOS + """`
+            WHERE tvh_estado = TRUE
+            order by tvh_sigla desc
+        """
+
+    #print(query)        
+    milestones_set= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))['tvh_sigla'].unique()
     
-    planning_dataset_filtered=planning_dataset[planning_dataset['stg_notas'].str.contains('GASUE')]
-    #planning_dataset_filtered['stg_notas']='GASUE'
-    planning_dataset_filtered['stg_notas']='GASUE'
+    first_time_loop=True
     for milestone in milestones_set:
         planning_dataset_filtered_set = planning_dataset[planning_dataset['stg_notas'].str.contains(milestone)]
-        #planning_dataset_filtered_set['stg_notas']=milestone
         planning_dataset_filtered_set['stg_notas']=milestone
-        planning_dataset_filtered = planning_dataset_filtered.append(planning_dataset_filtered_set, ignore_index=True)
+        if first_time_loop:
+            planning_dataset_filtered = planning_dataset_filtered_set
+            first_time_loop = False
+        else:
+            planning_dataset_filtered = planning_dataset_filtered.append(planning_dataset_filtered_set, ignore_index=True)
     planning_dataset=planning_dataset_filtered
     
     #print(planning_dataset.head(30))
     #print(planning_dataset['stg_notas'].unique())
     planning_dataset['key']=planning_dataset['stg_codigo_proyecto']+'_'+planning_dataset['stg_etapa_proyecto']+'_'+planning_dataset['stg_notas']
     planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']=='PN']
-    planning_dataset=planning_dataset[planning_dataset['stg_notas']!='-']
+    #planning_dataset=planning_dataset[planning_dataset['stg_notas']!='-']
     planning_dataset=planning_dataset.dropna(subset=['stg_notas'])
 
     #Then define the report DataSet `tmp_proyectos_planeacion`, by setting its first three columns: 
