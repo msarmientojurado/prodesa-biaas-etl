@@ -105,6 +105,8 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     auxCol=pd.merge(auxCol,auxCol3.loc[:, ('key', 'fin_proyectada')], on='key', how="left",)
 
     auxCol['delta_days']=(auxCol['stg_fecha_fin']-auxCol['fin_proyectada']).dt.days
+    #Dropping all the rows with zero value at 'stg_duracion_cantidad' column, to avoid division by zero at the next step. 
+    auxCol=auxCol[auxCol['stg_duracion_cantidad']!=0]
     auxCol['tpp_consumo_buffer']=100*(auxCol['stg_duracion_cantidad']-(auxCol['delta_days']-(auxCol['delta_days']/4.5)))/auxCol['stg_duracion_cantidad']
 
     tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,auxCol.loc[:, ('key', 'tpp_consumo_buffer')], on='key', how="left",)
@@ -275,6 +277,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
 
     
     tmp_proyectos_planeacion = tmp_proyectos_planeacion.dropna(subset=['tpp_avance_cc'])
+    tmp_proyectos_planeacion = tmp_proyectos_planeacion.dropna(subset=['tpp_consumo_buffer'])
     tmp_proyectos_planeacion['tpp_avance_cc']=np.where(tmp_proyectos_planeacion['tpp_avance_cc']<0,0,tmp_proyectos_planeacion['tpp_avance_cc'])
 
     tmp_proyectos_planeacion=tmp_proyectos_planeacion.reindex(columns=['tpp_regional',

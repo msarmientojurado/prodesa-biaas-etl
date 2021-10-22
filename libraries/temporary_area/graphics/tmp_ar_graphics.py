@@ -96,6 +96,8 @@ def tmp_ar_graphics(stg_consolidado_corte, tbl_proyectos, current_bash):
     auxCol=pd.merge(auxCol,auxCol3.loc[:, ('key', 'fin_proyectada')], on='key', how="left",)
 
     auxCol['delta_days']=(auxCol['stg_fecha_fin']-auxCol['fin_proyectada']).dt.days
+    #Dropping all the rows with zero value at 'stg_duracion_cantidad' column, to avoid division by zero at the next step. 
+    auxCol=auxCol[auxCol['stg_duracion_cantidad']!=0]
     auxCol['tgabt_consumo_buffer']=(auxCol['stg_duracion_cantidad']-(auxCol['delta_days']-(auxCol['delta_days']/4.5)))/auxCol['stg_duracion_cantidad']
 
     tbl_graficos_tiempo_avance_buffer=pd.merge(tbl_graficos_tiempo_avance_buffer,auxCol.loc[:, ('key', 'tgabt_consumo_buffer')], on='key', how="left",)
