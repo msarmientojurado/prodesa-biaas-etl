@@ -6,20 +6,7 @@ def mdl_ar_graphics(tbl_graficos_tiempo_avance_buffer):
 
     print("  *Model -tbl_graficos_tiempo_avance_buffer- Starting")
     
-    
     client = bigquery.Client()
-    cut_date = pd.to_datetime((tbl_graficos_tiempo_avance_buffer.tgabt_fecha_corte.unique())[0])
-    query ="""
-        DELETE
-            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER + """`
-            WHERE tgabt_fecha_corte >= DATE '""" + cut_date.strftime("%Y-%m-%d") +"""'
-            """
-
-    #print(query)        
-    client.query(query)
-
-
-    #client = bigquery.Client()
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[

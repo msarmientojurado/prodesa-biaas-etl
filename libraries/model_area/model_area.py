@@ -5,6 +5,7 @@ from libraries.model_area.commercial.mdl_ar_commercial import mdl_ar_commercial
 from libraries.model_area.deliveries.mdl_ar_deliveries import mdl_ar_deliveries
 from libraries.model_area.graphics.mdl_ar_graphics import mdl_ar_graphics
 from libraries.model_area.loading_control.loading_control import loading_control
+from libraries.model_area.mdl_ar_cleaning_db import mdl_ar_cleaning_db
 from libraries.model_area.planning.mdl_ar_planning import mdl_ar_planning
 from libraries.model_area.milestones.mdl_ar_milestones import model_milestones
 from libraries.various.store_process_result import store_process_result
@@ -31,8 +32,12 @@ def model(tbl_inicio_venta,
         ):
 
     print(" *Model Starting...")
+
+    #Cleaning Tables Before persisiting new data
+    cut_date = pd.to_datetime(tbl_graficos_tiempo_avance_buffer.tgabt_fecha_corte.unique()[0])
+    mdl_ar_cleaning_db(cut_date.strftime("%Y-%m-%d"))
     
-    #
+    #"Grafico Tiempo VS Avance & Avance VS Consumo Buffer"
     mdl_ar_graphics(tbl_graficos_tiempo_avance_buffer)
 
     #"Consolidado de Proyectos de Construccion"

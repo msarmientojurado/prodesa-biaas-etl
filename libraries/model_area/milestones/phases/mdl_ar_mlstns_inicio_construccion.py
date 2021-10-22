@@ -10,18 +10,6 @@ def mdl_ar_mlstns_inicio_construccion(tbl_inicio_construccion):
     print("  *Model -tbl_inicio_construccion- Starting")
 
     client = bigquery.Client()
-    cut_date = pd.to_datetime(tbl_inicio_construccion.tic_fecha_corte.unique()[0])
-    query ="""
-        DELETE
-            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_INICIO_CONSTRUCCION + """`
-            WHERE tic_fecha_corte >= DATE '""" + cut_date.strftime("%Y-%m-%d") +"""'
-            """
-
-    #print(query)        
-    client.query(query)
-
-
-    #client = bigquery.Client()
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
     job_config = bigquery.LoadJobConfig(schema=[
