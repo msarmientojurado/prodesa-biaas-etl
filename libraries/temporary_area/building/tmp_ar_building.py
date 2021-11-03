@@ -63,7 +63,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     #Lets calculate `% Avance CC`
 
     auxCol= pd.merge(auxCol,auxCol2, on='key', how="inner",)
-    auxCol['tpc_avance_cc']=(1-(auxCol['stg_indicador_cantidad'].astype(float)/auxCol['stg_duracion_critica_cantidad'].astype(float)))*100
+    auxCol['tpc_avance_cc']=1-(auxCol['stg_indicador_cantidad'].astype(float)/auxCol['stg_duracion_critica_cantidad'].astype(float))
 
     #Adding `tpc_avance_cc` column to the report
 
@@ -98,8 +98,10 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     #    * Group the result Data Set by the column key
     #    * Thake the value of the column `fin_proyectada` if it exists, otherwise, take the value in the column `stg_fecha_final_actual`: this is the value of the variable `FinProyectada`
 
-    auxCol3=construction_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
+    auxCol3=construction_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_duracion_cantidad')]
     auxCol3=auxCol3[auxCol3['stg_ind_buffer']=='No']
+    auxCol3=auxCol3[auxCol3['stg_duracion_cantidad']==0]
+    
     auxCol3.sort_values(by=['key',"stg_project_id"],ascending=False, inplace=True)
     auxCol3=auxCol3.groupby(by=["key"]).first().reset_index()
     auxCol3['fin_proyectada']=np.where(auxCol3['stg_fecha_fin_planeada'].isna(), auxCol3['stg_fecha_final_actual'], auxCol3['stg_fecha_fin_planeada'])
@@ -112,7 +114,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     auxCol['delta_days']=(auxCol['stg_fecha_fin']-auxCol['fin_proyectada']).dt.days
     #Dropping all the rows with zero value at 'stg_duracion_cantidad' column, to avoid division by zero at the next step. 
     auxCol=auxCol[auxCol['stg_duracion_cantidad']!=0]
-    auxCol['tpc_consumo_buffer']=100*(auxCol['stg_duracion_cantidad']-(auxCol['delta_days']-(auxCol['delta_days']/4.5)))/auxCol['stg_duracion_cantidad']
+    auxCol['tpc_consumo_buffer']=(auxCol['stg_duracion_cantidad']-(auxCol['delta_days']-(auxCol['delta_days']/4.5)))/auxCol['stg_duracion_cantidad']
 
     tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('key', 'tpc_consumo_buffer')], on='key', how="left",)
 
@@ -124,7 +126,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     #    * Group the result Data Set by the column key
 
     auxCol=construction_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
-    #auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
+    auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
     auxCol.sort_values(by=['key','stg_fecha_fin_planeada', 'stg_fecha_final_actual'],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 
@@ -148,7 +150,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
 
     #Proceed with calculations of the equation above
 
-    auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-(auxCol['tpc_avance_cc']/100))).astype(int)
+    auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-auxCol['tpc_avance_cc'])).astype(int)
     auxCol['delta_days'] = auxCol['delta'].apply(np.ceil).apply(lambda x: pd.Timedelta(x, unit='D'))
     auxCol['tpc_fin_proyectado_pesimista']=auxCol['tpc_fin_proyectado_optimista']+auxCol['delta_days']
 
@@ -199,7 +201,6 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
-    auxCol['tpc_avance_cc']=auxCol['tpc_avance_cc']*100
     tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_avance_ultimo_mes'}), on='key', how="left",)
     tmp_proyectos_construccion['tpc_ultimo_mes']= tmp_proyectos_construccion['tpc_avance_cc']-tmp_proyectos_construccion['tpc_avance_ultimo_mes']
 
@@ -223,8 +224,6 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     #print(auxCol.head(5))
-    auxCol['tpc_consumo_buffer']=auxCol['tpc_consumo_buffer']*100
-    auxCol['tpc_avance_cc']=auxCol['tpc_avance_cc']*100
     tmp_proyectos_construccion=pd.merge(tmp_proyectos_construccion,auxCol.loc[:, ('tpc_consumo_buffer', 'tpc_avance_cc','key')].rename(columns={'tpc_avance_cc':'tpc_avance_ultima_semana', 'tpc_consumo_buffer' : 'tpc_consumo_buffer_ultima_semana'}), on='key', how="left",)
     tmp_proyectos_construccion['tpc_ultima_semana']= tmp_proyectos_construccion['tpc_avance_cc']-tmp_proyectos_construccion['tpc_avance_ultima_semana']
 
@@ -251,20 +250,15 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     tmp_proyectos_construccion['tpc_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
     tmp_proyectos_construccion['tpc_lote_proceso']=current_bash
 
-    tmp_proyectos_construccion['tpc_tarea_consume_buffer']=np.where(tmp_proyectos_construccion['tpc_avance_cc']==100,"TERMINADO",tmp_proyectos_construccion['tpc_tarea_consume_buffer'])
+    tmp_proyectos_construccion['tpc_tarea_consume_buffer']=np.where(tmp_proyectos_construccion['tpc_avance_cc']==1,"TERMINADO",tmp_proyectos_construccion['tpc_tarea_consume_buffer'])
 
-    conditions = [(tmp_proyectos_construccion['tpc_consumo_buffer']) < (0.2*tmp_proyectos_construccion['tpc_avance_cc']+20),
-                (0.8*tmp_proyectos_construccion['tpc_avance_cc']+20 > tmp_proyectos_construccion['tpc_consumo_buffer']) & (tmp_proyectos_construccion['tpc_consumo_buffer'] > 0.2*tmp_proyectos_construccion['tpc_avance_cc']+20),
-                (tmp_proyectos_construccion['tpc_consumo_buffer'] > 0.8*tmp_proyectos_construccion['tpc_avance_cc']+20)]
+    conditions = [(tmp_proyectos_construccion['tpc_consumo_buffer']) < (0.2*tmp_proyectos_construccion['tpc_avance_cc']+0.2),
+                (0.8*tmp_proyectos_construccion['tpc_avance_cc']+0.2 > tmp_proyectos_construccion['tpc_consumo_buffer']) & (tmp_proyectos_construccion['tpc_consumo_buffer'] > 0.2*tmp_proyectos_construccion['tpc_avance_cc']+0.2),
+                (tmp_proyectos_construccion['tpc_consumo_buffer'] > 0.8*tmp_proyectos_construccion['tpc_avance_cc']+0.2)]
     
     choices = [1,0,-1]
 
     tmp_proyectos_construccion['tpc_consumo_buffer_color'] = np.select(conditions, choices, default= 1 )
-
-    tmp_proyectos_construccion['tpc_avance_cc'] = tmp_proyectos_construccion['tpc_avance_cc'].div(100)
-    tmp_proyectos_construccion['tpc_consumo_buffer'] = tmp_proyectos_construccion['tpc_consumo_buffer'].div(100)
-    tmp_proyectos_construccion['tpc_ultima_semana'] = tmp_proyectos_construccion['tpc_ultima_semana'].div(100)
-    tmp_proyectos_construccion['tpc_ultimo_mes'] = tmp_proyectos_construccion['tpc_ultimo_mes'].div(100)
 
     tmp_proyectos_construccion = tmp_proyectos_construccion.dropna(subset=['tpc_avance_cc'])
     tmp_proyectos_construccion = tmp_proyectos_construccion.dropna(subset=['tpc_consumo_buffer'])

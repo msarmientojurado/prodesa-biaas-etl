@@ -106,8 +106,10 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     #    * Sort registers by the `stg_project_id` column
     #    * Group the result Data Set by the column key
     #    * Thake the value of the column `fin_proyectada` if it exists, otherwise, take the value in the column `stg_fecha_final_actual`: this is the value of the variable `FinProyectada`
-    auxCol3=planning_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
+    auxCol3=planning_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_duracion_cantidad')]
     auxCol3=auxCol3[auxCol3['stg_ind_buffer']=='No']
+    auxCol3=auxCol3[auxCol3['stg_duracion_cantidad']==0]
+
     auxCol3.sort_values(by=['key',"stg_project_id"],ascending=False, inplace=True)
     auxCol3=auxCol3.groupby(by=["key"]).first().reset_index()
     auxCol3['fin_proyectada']=np.where(auxCol3['stg_fecha_fin_planeada'].isna(), auxCol3['stg_fecha_final_actual'], auxCol3['stg_fecha_fin_planeada'])
@@ -129,7 +131,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     #    * Sort register descending by column `stg_fecha_fin_planeada`
     #    * Group the result Data Set by the column key
     auxCol=planning_dataset.loc[:, ('key', 'stg_duracion_cantidad', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual')]
-    #auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
+    auxCol=auxCol[auxCol['stg_duracion_cantidad']==0]
     auxCol.sort_values(by=['key',"stg_fecha_fin_planeada","stg_fecha_final_actual"],ascending=False, inplace=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 
