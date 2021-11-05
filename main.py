@@ -12,6 +12,7 @@ __copyright__   = "Copyright 2021, ProCibernetica"
 from libraries.mirror_area.mirror_area import mirror_area
 from libraries.model_area.parametrization.parametrization import parametrization
 from libraries.pre_process_area.pre_process_area import pre_process_area
+from libraries.report_area.report_area import report_area
 from libraries.staging_area.staging_area import staging_area
 from libraries.temporary_area.temporary_area import temporary_area
 from libraries.model_area.model_area import model
@@ -69,6 +70,7 @@ def main():
             current_bash,
             stg_consolidado_corte
         )
+        report_area(tmp_proyectos_construccion)
     else:
         print("Proceso no pudo ser terminado por resultado de la malla de Validacion")
 
