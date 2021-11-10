@@ -212,13 +212,11 @@ def rpt_ar_building_file(tmp_proyectos_construccion, region, cut_date):
                 elif iteration == 6 or iteration == 8:
                     if col==1:
                         cell=ws.cell(row=r_idx+ stage_counter, column=c_idx, value="Aumentó")
-                        cell.style = table_body_green
                     elif col ==-1:
                         cell=ws.cell(row=r_idx+ stage_counter, column=c_idx, value="Disminuyó")
-                        cell.style = table_body_red
                     else:
                         cell=ws.cell(row=r_idx+ stage_counter, column=c_idx, value="No Cambió")
-                        cell.style = table_body_yellow
+                    cell.style = table_body
                 elif iteration == 7:
                     buffer_average.append(round(col,2)*100)
                     cell=ws.cell(row=r_idx + stage_counter, column=c_idx, value=round(col,2)*100)
@@ -262,7 +260,7 @@ def rpt_ar_building_file(tmp_proyectos_construccion, region, cut_date):
     cells_to_merge="A"+str(project_group_row_start)+":A"+str(len(tmp_proyectos_construccion_excel)+stage_counter+4)
     cell=ws.merge_cells(cells_to_merge)
     cells_to_merge="B"+str(stage_group_row_start+stage_counter)+":B"+str(len(tmp_proyectos_construccion_excel)+stage_counter+3)
-    cell=ws.cell(row=len(tmp_proyectos_construccion_excel)+stage_counter+4, column=2, value="Promedio")
+    cell=ws.cell(row=len(tmp_proyectos_construccion_excel)+stage_counter+4, column=2, value="Total")
     cell.style = table_body
     cell=ws.cell(row=len(tmp_proyectos_construccion_excel)+stage_counter+4, column=5, value=np.mean(advance_average))
     cell.style = table_body

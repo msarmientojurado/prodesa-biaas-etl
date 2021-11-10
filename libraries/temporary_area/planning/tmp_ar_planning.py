@@ -10,7 +10,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     # registers which have the word `PN` in their `stg_area_prodesa` 
     # column
 
-    planning_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_notas')]
+    planning_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_notas', 'stg_duracion_restante_cantidad')]
     
     #print(planning_dataset['stg_notas'].unique())
 
@@ -54,9 +54,15 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     tmp_proyectos_planeacion= planning_dataset.loc[:, ('key', 'stg_fecha_corte', 'stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_notas')]
     tmp_proyectos_planeacion=tmp_proyectos_planeacion.rename(columns={'stg_codigo_proyecto': 'tpp_codigo_proyecto', 'stg_etapa_proyecto': 'tpp_etapa', 'stg_notas': 'tpp_hito', 'stg_fecha_corte':'tpp_fecha_corte'})
     tmp_proyectos_planeacion=tmp_proyectos_planeacion.groupby(by=["key"]).first().reset_index()
-
-    auxCol=planning_dataset.loc[:, ('key', 'stg_ind_tarea', 'stg_fecha_inicio_planeada', 'stg_nombre_actividad')]
+    
+    #Column 'tpp_tarea_consume_buffer'
+    #   *   Step 1: Filter by column 'stg_ind_tarea', selecting those equals to 'Sí'.
+    #   *   Step 2: Filter those columns whose value in the column "duracion Restante" is different from zero 
+    #   *   Step 3: Order by column 'stg_fecha_inicio_planeada' ascending
+    #   *   Step 4: Take the first item
+    auxCol=planning_dataset.loc[:, ('key', 'stg_ind_tarea', 'stg_fecha_inicio_planeada', 'stg_nombre_actividad', 'stg_duracion_restante_cantidad')]
     auxCol=auxCol[auxCol['stg_ind_tarea']=='Sí']
+    auxCol=auxCol[auxCol['stg_duracion_restante_cantidad'] > 0]
     auxCol=auxCol.sort_values(by=['stg_fecha_inicio_planeada'],ascending=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 

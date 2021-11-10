@@ -12,7 +12,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
 
     #Lets start by building the dataset to work, which includes those registers which have the word CS in their stg_area_prodesa column
 
-    construction_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
+    construction_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_duracion_restante_cantidad')]
     construction_dataset['key']=construction_dataset['stg_codigo_proyecto']+'_'+construction_dataset['stg_etapa_proyecto']+'_'+construction_dataset['stg_programacion_proyecto']
     construction_dataset=construction_dataset[construction_dataset['stg_area_prodesa']=='CS']
 
@@ -30,12 +30,14 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
     tmp_proyectos_construccion=tmp_proyectos_construccion.groupby(by=["key"]).first().reset_index()
     
     #Column 'tpc_tarea_consume_buffer'
-    #   *   Step 1: Filter by column 'stg_ind_tarea', selecting those equals to 'Sí'. 
-    #   *   Step 2: Order by column 'stg_fecha_inicio_planeada' ascending
-    #   *   Step 3: Take the first item
+    #   *   Step 1: Filter by column 'stg_ind_tarea', selecting those equals to 'Sí'.
+    #   *   Step 2: Filter those columns whose value in the column "duracion Restante" is different from zero 
+    #   *   Step 3: Order by column 'stg_fecha_inicio_planeada' ascending
+    #   *   Step 4: Take the first item
     
-    auxCol=construction_dataset.loc[:, ('key', 'stg_ind_tarea', 'stg_fecha_inicio_planeada', 'stg_nombre_actividad')]
+    auxCol=construction_dataset.loc[:, ('key', 'stg_ind_tarea', 'stg_fecha_inicio_planeada', 'stg_nombre_actividad', 'stg_duracion_restante_cantidad')]
     auxCol=auxCol[auxCol['stg_ind_tarea']=='Sí']
+    auxCol=auxCol[auxCol['stg_duracion_restante_cantidad'] > 0]
     auxCol=auxCol.sort_values(by=['stg_fecha_inicio_planeada'],ascending=True)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
 

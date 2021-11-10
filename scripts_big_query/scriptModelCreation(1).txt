@@ -338,4 +338,22 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_graficos_tiempo_avance_buffer
     tgabt_fecha_corte   DATE NOT NULL,
     tgabt_fecha_proceso     DATE NOT NULL,
     tgabt_lote_proceso  INT64 NOT NULL,
-); 
+);
+
+DROP TABLE IF EXISTS modelo_biaas.tbl_descarga_reportes;
+CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_descarga_reportes
+(
+    tdr_enlace_descarga  STRING NOT NULL,
+    tdr_fecha_corte   DATE NOT NULL,
+    tdr_fecha_proceso     DATE NOT NULL,
+    tdr_lote_proceso  INT64 NOT NULL,
+);
+
+--INSERT INTO `production-prodesa-biaas.modelo_biaas.tbl_descarga_reportes`
+--VALUES ("https://storage.googleapis.com/production-prodesa-biaas-descargables/corte_05-11-2021_construccion.zip", DATE "2021-11-05", DATE "2021-11-05", 1)
+
+--INSERT INTO `production-prodesa-biaas.modelo_biaas.tbl_descarga_reportes`
+--VALUES ("https://storage.googleapis.com/production-prodesa-biaas-descargables/corte_03-09-2021_construccion.zip", DATE "2021-09-03", DATE "2021-09-03", 1)
+
+--INSERT INTO `production-prodesa-biaas.modelo_biaas.tbl_descarga_reportes`
+--VALUES ("https://storage.googleapis.com/production-prodesa-biaas-descargables/test_1.xlsx", DATE "2020-12-31", DATE "2020-12-31", 1)
