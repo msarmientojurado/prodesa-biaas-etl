@@ -270,10 +270,10 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
         first_iteration=False
         iteration=1
     cells_to_merge="A"+str(project_group_row_start)+":A"+str(len(tmp_proyectos_planeacion_excel)+4)
-    #cell=ws.merge_cells(cells_to_merge)
+    cell=ws.merge_cells(cells_to_merge)
     cells_to_merge="C"+str(stage_group_row_start)+":C"+str(len(tmp_proyectos_planeacion_excel)+4)
     
-    #ws.merge_cells(cells_to_merge)
+    ws.merge_cells(cells_to_merge)
 
     with NamedTemporaryFile() as tmp:
         wb.save(tmp.name)
