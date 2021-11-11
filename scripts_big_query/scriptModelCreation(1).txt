@@ -357,3 +357,13 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_descarga_reportes
 
 --INSERT INTO `production-prodesa-biaas.modelo_biaas.tbl_descarga_reportes`
 --VALUES ("https://storage.googleapis.com/production-prodesa-biaas-descargables/test_1.xlsx", DATE "2020-12-31", DATE "2020-12-31", 1)
+
+
+DROP TABLE IF EXISTS modelo_biaas.tbl_mapeo_programacion;
+CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_mapeo_programacion
+(
+    tmp_codigo              STRING NOT NULL,
+    tmp_nombre              STRING NOT NULL,
+    tmp_estado              BOOL NOT NULL,
+    tmp_fecha_actualizacion DATE NOT NULL,
+);
