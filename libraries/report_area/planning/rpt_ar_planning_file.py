@@ -19,7 +19,7 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
     hitos = pd.DataFrame(data)
 
     tmp_proyectos_planeacion=pd.merge(tmp_proyectos_planeacion,hitos, on='tpp_hito', how="left",)
-    tmp_proyectos_planeacion.sort_values(by=['tpp_proyecto',"tpp_order_hito"],ascending=True, inplace=True)
+    tmp_proyectos_planeacion.sort_values(by=['tpp_proyecto','tpp_etapa', "tpp_order_hito"],ascending=True, inplace=True)
 
     tmp_proyectos_planeacion_excel=tmp_proyectos_planeacion.reindex(columns=[
                                                             'tpp_proyecto',
