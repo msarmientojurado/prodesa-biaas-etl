@@ -51,7 +51,15 @@ def main():
         tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial, tbl_reporte_por_entregas, tbl_graficos_tiempo_avance_buffer, building_report_excecution, planning_report_excecution, commercial_report_excecution = temporary_area(stg_consolidado_corte, current_bash);
         
         #print(stg_consolidado_corte.columns)
-        #TODO Implementation of Model Area
+        
+        #Report Area
+        report_area(tmp_proyectos_construccion, 
+            tmp_proyectos_planeacion, 
+            building_report_excecution, 
+            planning_report_excecution,
+            commercial_report_excecution)
+
+        #Model Area
         model(tbl_inicio_venta, 
             tbl_inicio_promesa, 
             tbl_inicio_construccion, 
@@ -70,7 +78,7 @@ def main():
             current_bash,
             stg_consolidado_corte
         )
-        report_area(tmp_proyectos_construccion)
+        
     else:
         print("Proceso no pudo ser terminado por resultado de la malla de Validacion")
 
