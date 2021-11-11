@@ -279,7 +279,7 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
         wb.save(tmp.name)
         storage_client = storage.Client()
     
-        object_name = "corte_" +  cut_date.strftime('%d-%m-%Y') + "_planeacion_" + region + ".xlsx"
+        object_name = "corte_" +  cut_date.strftime('%d-%m-%Y') + "_planeaciont_" + region + ".xlsx"
         bucket = storage_client.bucket(BUCKET_NAME_DOWNLOAD_REPORT)
 
         blob = storage.Blob(object_name, bucket)
