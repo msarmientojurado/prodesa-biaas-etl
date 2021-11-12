@@ -109,12 +109,10 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
     table_body_text_green.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
     bd=Side(style='thin', color='000000')
     table_body_text_green.border = Border(left=bd, top=bd, right=bd, bottom=bd)
-
-
-
-
-
     
+    bd_thick=Side(style='thick', color='000000')
+    bd_thin=Side(style='thin', color='000000')
+
     ws['A1'].style = chart_title
     ws['A2'].style = chart_date
     ws['B2'].style = chart_date
@@ -184,8 +182,23 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
             if first_iteration!=True:
                 if iteration == 1:
                     if project_name != col:
-
                         cells_to_merge="A"+str(project_group_row_start)+":A"+str(r_idx-1)
+                        #####
+                        cell=ws.cell(row=project_group_row_start, column=1)
+                        cell.border = Border(left=bd_thick, top=bd_thick, right=bd_thin, bottom=bd_thick)
+                        for bold_column in range(2,14):
+                            cell=ws.cell(row=project_group_row_start, column=bold_column)
+                            cell.border = Border(left=bd_thin, top=bd_thick, right=bd_thin, bottom=bd_thin)
+                        for bold_row in range(project_group_row_start,r_idx + 1):
+                            cell=ws.cell(row=bold_row, column=14)
+                            
+                            if bold_row==project_group_row_start :
+                                cell.border = Border(left=bd_thin, top=bd_thick, right=bd_thick, bottom=bd_thin)
+                            elif bold_row == r_idx:
+                                cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thick, bottom = bd_thick)
+                            else:
+                                cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thick, bottom=bd_thin)
+                        #####
                         cell=ws.merge_cells(cells_to_merge)
                         new_project=True
                         project_name = col
@@ -197,16 +210,6 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
                     cell.style = table_body_centered
                 elif iteration == 3:
                     if stage != col or new_project==True:
-                        #if  == 0:
-                        #    cell=ws.cell(row=r_idx+ , column=5, value=0)
-                        #    cell.style = table_body
-                        #    cell=ws.cell(row=r_idx+ , column=7, value=0)
-                        #    cell.style = table_body
-                        #    cell=ws.cell(row=r_idx+ , column=13, value=0)
-                        #    cell.style = table_body
-                        #    cell=ws.cell(row=r_idx+ , column=14, value=0)
-                        #    cell.style = table_body
-
                         cells_to_merge="C"+str(stage_group_row_start)+":C"+str(r_idx-1)
 
                         ws.merge_cells(cells_to_merge)
@@ -269,10 +272,30 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
             
         first_iteration=False
         iteration=1
+    cell=ws.cell(row=project_group_row_start, column=1)
+    cell.border = Border(left=bd_thick, top=bd_thick, right=bd_thin, bottom=bd_thick)
+    for bold_column in range(2,14):
+        cell=ws.cell(row=project_group_row_start, column=bold_column)
+        cell.border = Border(left=bd_thin, top=bd_thick, right=bd_thin, bottom=bd_thin)
+    for bold_row in range(project_group_row_start,len(tmp_proyectos_planeacion_excel)+4):
+        cell=ws.cell(row=bold_row, column=14)
+        if bold_row==project_group_row_start :
+            cell.border = Border(left=bd_thin, top=bd_thick, right=bd_thick, bottom=bd_thin)
+        elif bold_row == r_idx:
+            cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thick, bottom = bd_thin)
+        else:
+            cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thick, bottom=bd_thin)
     cells_to_merge="A"+str(project_group_row_start)+":A"+str(len(tmp_proyectos_planeacion_excel)+4)
     cell=ws.merge_cells(cells_to_merge)
     cells_to_merge="C"+str(stage_group_row_start)+":C"+str(len(tmp_proyectos_planeacion_excel)+4)
     
+    for bold_column in range(2,15):
+        cell=ws.cell(row=len(tmp_proyectos_planeacion_excel)+4, column=bold_column)
+        if bold_column < 14:
+            cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thin, bottom = bd_thick)
+        else:
+            cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thick, bottom = bd_thick)
+    #####
     ws.merge_cells(cells_to_merge)
 
     with NamedTemporaryFile() as tmp:
