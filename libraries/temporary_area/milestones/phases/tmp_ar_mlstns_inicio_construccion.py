@@ -9,41 +9,41 @@ def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos, current
     start_building=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
     tbl_inicio_construccion=pd.DataFrame()
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "1.INICIO DE CONSTRUCCION"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "1.INICIO DE CONSTRUCCION"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_inicio_construccion_programado', 'total':'tic_inicio_construccion_proyectado'})
+    tbl_inicio_construccion=auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_inicio_construccion_programado', 'total':'tic_inicio_construccion_proyectado'})
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "11.Compras y contrataciones 80% act"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "11.Compras y contrataciones 80% act"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_proc_contratacion_programado', 'total':'tic_proc_contratacion_proyectado'}), on='key', how="outer",)
+    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_proc_contratacion_programado', 'total':'tic_proc_contratacion_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "10.Kit 2 Construcciones"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "10.Kit 2 Construcciones"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_entrega_kit2_programado', 'total':'tic_entrega_kit2_proyectado'}), on='key', how="outer",)
+    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_entrega_kit2_programado', 'total':'tic_entrega_kit2_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "9.Kit 1 Construcciones"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "9.Kit 1 Construcciones"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_entrega_kit1_programado', 'total':'tic_entrega_kit1_proyectado'}), on='key', how="outer",)
+    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_entrega_kit1_programado', 'total':'tic_entrega_kit1_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "8.Aprobacion de FIC en CIP"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "8.Aprobacion de FIC en CIP"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_factib_inic_constru_programado', 'total':'tic_factib_inic_constru_proyectado'}), on='key', how="outer",)
+    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_factib_inic_constru_programado', 'total':'tic_factib_inic_constru_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "Ppto Definitivo (Tipo FIC)"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "Ppto Definitivo (Tipo FIC)"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_ppto_definitivo_programado', 'total':'tic_ppto_definitivo_proyectado'}), on='key', how="outer",)
+    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_ppto_definitivo_programado', 'total':'tic_ppto_definitivo_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "7.Presupuesto SIPRO"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "7.Presupuesto SIPRO"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_ppto_sipro_programado', 'total':'tic_ppto_sipro_proyectado'}), on='key', how="outer",)
+    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_ppto_sipro_programado', 'total':'tic_ppto_sipro_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "Entrega de documentos para elaboración de presupuesto de inicio de construcción"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "Entrega de documentos para elaboración de presupuesto de inicio de construcción"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_docs_inic_constru_programado', 'total':'tic_docs_inic_constru_proyectado'}), on='key', how="outer",)
+    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_docs_inic_constru_programado', 'total':'tic_docs_inic_constru_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_building[start_building['stg_nombre_actividad'] == "Diseño para inicio de construcción"].loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
+    auxCol=start_building[start_building['stg_nombre_actividad'] == "Diseño para inicio de construcción"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fecha_fin', 'total')].rename(columns={'stg_fecha_fin':'tic_diseno_inic_constru_programado', 'total':'tic_diseno_inic_constru_proyectado'}), on='key', how="outer",)
+    tbl_inicio_construccion=pd.merge(tbl_inicio_construccion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tic_diseno_inic_constru_programado', 'total':'tic_diseno_inic_constru_proyectado'}), on='key', how="outer",)
 
 
     tbl_inicio_construccion['tic_dias_atraso']=(tbl_inicio_construccion['tic_inicio_construccion_programado']-tbl_inicio_construccion['tic_inicio_construccion_proyectado']).dt.days

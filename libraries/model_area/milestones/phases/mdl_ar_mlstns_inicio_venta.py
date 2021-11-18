@@ -35,6 +35,7 @@ def mdl_ar_mlstns_inicio_venta(tbl_inicio_venta):
         bigquery.SchemaField("tiv_const_sv_model_programado",   "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tiv_aprobac_lc_proyectado",       "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tiv_aprobacion_lc_programado",    "DATE",     mode="NULLABLE"),
+        bigquery.SchemaField("tiv_radicacion_lc_proyectado",    "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tiv_radicacion_lc_programado",    "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tiv_salida_ventas_proyectado",    "DATE",     mode="NULLABLE"),
         bigquery.SchemaField("tiv_salida_ventas_programado",    "DATE",     mode="NULLABLE"),
