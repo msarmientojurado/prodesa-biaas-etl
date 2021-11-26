@@ -6,7 +6,9 @@ def tmp_ar_mlstns_inicio_construccion(milestones_dataset, tbl_proyectos, current
 
     print("   *Inicio Construccion Starting")
 
-    start_building=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
+    #start_building=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
+    start_building=milestones_dataset
+    
     tbl_inicio_construccion=pd.DataFrame()
 
     auxCol=start_building[start_building['stg_nombre_actividad'] == "1.INICIO DE CONSTRUCCION"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]

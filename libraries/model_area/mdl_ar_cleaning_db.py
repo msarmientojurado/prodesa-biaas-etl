@@ -1,4 +1,4 @@
-from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER, TBL_INICIO_CONSTRUCCION, TBL_INICIO_ESCRITURACION, TBL_INICIO_PROMESA, TBL_INICIO_VENTA, TBL_PROYECTOS_COMERCIAL, TBL_PROYECTOS_CONSTRUCCION, TBL_PROYECTOS_PLANEACION, TBL_REPORTE_POR_ENTREGAS
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_DESCARGA_REPORTES, TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER, TBL_INICIO_CONSTRUCCION, TBL_INICIO_ESCRITURACION, TBL_INICIO_PROMESA, TBL_INICIO_VENTA, TBL_PROYECTOS_COMERCIAL, TBL_PROYECTOS_CONSTRUCCION, TBL_PROYECTOS_PLANEACION, TBL_REPORTE_POR_ENTREGAS
 
 from google.cloud import bigquery
 import pandas as pd
@@ -85,6 +85,14 @@ def mdl_ar_cleaning_db(cut_date):
         DELETE
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_INICIO_ESCRITURACION + """`
             WHERE tie_fecha_corte >= DATE '""" + cut_date +"""'
+            """
+    #print(query)
+    
+    #Cleaning table tbl_descarga_reportes
+    query ="""
+        DELETE
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_DESCARGA_REPORTES + """`
+            WHERE tdr_fecha_corte >= DATE '""" + cut_date +"""'
             """
     #print(query)        
     client.query(query)

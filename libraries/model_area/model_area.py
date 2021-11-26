@@ -3,6 +3,7 @@ from libraries.model_area.backup_builder.backup_builder import backup_builder
 from libraries.model_area.building.mdl_ar_building import mdl_ar_building
 from libraries.model_area.commercial.mdl_ar_commercial import mdl_ar_commercial
 from libraries.model_area.deliveries.mdl_ar_deliveries import mdl_ar_deliveries
+from libraries.model_area.download_reports.download_reports import download_reports
 from libraries.model_area.graphics.mdl_ar_graphics import mdl_ar_graphics
 from libraries.model_area.loading_control.loading_control import loading_control
 from libraries.model_area.mdl_ar_cleaning_db import mdl_ar_cleaning_db
@@ -28,7 +29,8 @@ def model(tbl_inicio_venta,
             source_file_name,
             data_bytes,
             bash,
-            stg_consolidado_corte
+            stg_consolidado_corte,
+            report_url
         ):
 
     print(" *Model Starting...")
@@ -66,9 +68,10 @@ def model(tbl_inicio_venta,
     #Loading Control
     loading_control(source_file_name, backup_filename, bash, len(stg_consolidado_corte))
 
-    #Complete and Close the ETL result process
+    #Loading Download Excel Report link
+    download_reports(report_url, cut_date, bash)
 
-    
+    #Complete and Close the ETL result process
 
     file_result_content = "\n\n\t\t-- RESUMEN DEL PROCESO --\n\nArchivo Fuente: "+source_file_name+"\nArchivo Historico:"+backup_filename+"\nResultado Final del Proceso: Conforme\nFecha de Corte:" + (pd.to_datetime((stg_consolidado_corte.stg_fecha_corte.unique())[0])).strftime('%d-%m-%Y')
     output_file_content.write(file_result_content)

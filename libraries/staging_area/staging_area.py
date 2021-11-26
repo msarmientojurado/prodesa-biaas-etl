@@ -279,8 +279,27 @@ def staging_area(esp_consolidado_corte):
     #    |-----|----|
     #    |stg_fin_linea_base_estimado|date|
 
+    month_mapping={
+        'enero':'1',
+        'febrero':'2',
+        'marzo':'3',
+        'abril':'4',
+        'mayo':'5',
+        'junio':'6',
+        'julio':'7',
+        'agosto':'8',
+        'septiembre':'9',
+        'octubre':'10',
+        'noviembre':'11',
+        'diciembre':'12'
+    }
+
     esp_consolidado_corte['FIN_LINEA_BASE_EST']=esp_consolidado_corte['FIN_LINEA_BASE_EST'].replace("NOD", "")
-    stg_consolidado_corte['stg_fin_linea_base_estimado']=pd.to_datetime(esp_consolidado_corte['FIN_LINEA_BASE_EST'], dayfirst=True)
+    #stg_consolidado_corte['stg_fin_linea_base_estimado']=pd.to_datetime(esp_consolidado_corte['FIN_LINEA_BASE_EST'], dayfirst=True)
+    auxCol=esp_consolidado_corte["FIN_LINEA_BASE_EST"].str.split(" ", n=5,expand=True)
+    auxCol['month']=auxCol[1].map(month_mapping)
+    auxCol['date']=auxCol[0] + '-' + auxCol['month'] + '-' + auxCol[2]
+    stg_consolidado_corte['stg_fin_linea_base_estimado']=pd.to_datetime(auxCol['date'], dayfirst=True)
 
     # Indexing columns that will be used to generate reports, so it can be used faster.
 

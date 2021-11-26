@@ -10,11 +10,13 @@ from tempfile import NamedTemporaryFile
 from google.cloud import storage
 from libraries.settings import BUCKET_NAME_DOWNLOAD_REPORT
 
+
 def rpt_ar_milestones_file(tbl_inicio_venta, 
             tbl_inicio_promesa, 
             tbl_inicio_construccion, 
             tbl_inicio_escrituracion,
-            cut_date):
+            cut_date,
+            region):
     
     tbl_inicio_venta_excel=tbl_inicio_venta.reindex(columns=[
                                                     'tiv_proyecto',
@@ -183,7 +185,7 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
 
 
 
-    ws['A8']='CUADRO DE HITOS DE PLANEACION REGIONAL '
+    ws['A8']='CUADRO DE HITOS DE PLANEACION REGIONAL '+ region
     ws['A9']='FECHA'
     ws['B9']=cut_date.strftime('%d-%m-%Y')
     ws['A11']='INICIO VENTAS'
@@ -601,14 +603,15 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
         acumulator=acumulator + 1
         first_iteration = False
 
-    with NamedTemporaryFile() as tmp:
-        wb.save(tmp.name)
-        storage_client = storage.Client()
-    
-        object_name = "milestones.xlsx"
-        bucket = storage_client.bucket(BUCKET_NAME_DOWNLOAD_REPORT)
+    tmp = NamedTemporaryFile()
+    wb.save(tmp.name)
+    #storage_client = storage.Client()
 
-        blob = storage.Blob(object_name, bucket)
-        #blob.upload_from_file(archive, content_type='application/xlsx')
-        blob.upload_from_string(tmp.read(), content_type='xlsx')
-    return
+    #object_name = "corte_" +  cut_date.strftime('%d-%m-%Y') + "_hitos_" + region + ".xlsx"
+    #bucket = storage_client.bucket(BUCKET_NAME_DOWNLOAD_REPORT)
+
+    #blob = storage.Blob(object_name, bucket)
+    #blob.upload_from_file(archive, content_type='application/xlsx')
+    #blob.upload_from_string(tmp.read(), content_type='xlsx')
+
+    return tmp

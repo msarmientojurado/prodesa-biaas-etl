@@ -6,7 +6,9 @@ def tmp_ar_mlstns_inicio_promesa(milestones_dataset, tbl_proyectos, current_bash
 
     print("   *Inicio Promesas Starting")
 
-    start_promise=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
+    #start_promise=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
+    start_promise=milestones_dataset
+    
     tbl_inicio_promesa=pd.DataFrame()
 
     auxCol=start_promise[start_promise['stg_nombre_actividad'] == "1.FIN INICIO PROMESAS"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]

@@ -298,17 +298,17 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
     #####
     ws.merge_cells(cells_to_merge)
 
-    with NamedTemporaryFile() as tmp:
-        wb.save(tmp.name)
-        storage_client = storage.Client()
-    
-        object_name = "corte_" +  cut_date.strftime('%d-%m-%Y') + "_planeacion_" + region + ".xlsx"
-        bucket = storage_client.bucket(BUCKET_NAME_DOWNLOAD_REPORT)
+    tmp = NamedTemporaryFile()
+    wb.save(tmp.name)
+    #storage_client = storage.Client()
 
-        blob = storage.Blob(object_name, bucket)
-        #blob.upload_from_file(archive, content_type='application/xlsx')
-        blob.upload_from_string(tmp.read(), content_type='xlsx')
+    #object_name = "corte_" +  cut_date.strftime('%d-%m-%Y') + "_planeacion_" + region + ".xlsx"
+    #bucket = storage_client.bucket(BUCKET_NAME_DOWNLOAD_REPORT)
+
+    #blob = storage.Blob(object_name, bucket)
+    #blob.upload_from_file(archive, content_type='application/xlsx')
+    #blob.upload_from_string(tmp.read(), content_type='xlsx')
 
     #wb.save('test_1.xlsx')
 
-    return
+    return tmp

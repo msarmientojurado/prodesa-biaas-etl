@@ -6,7 +6,9 @@ def tmp_ar_mlstns_inicio_escrituracion(milestones_dataset,tbl_proyectos, current
 
     print("   *Inicio Escrituracion Starting")
 
-    start_registration=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
+    #start_registration=milestones_dataset[milestones_dataset['stg_programacion_proyecto'] == "PL"]
+    start_registration=milestones_dataset
+    
     tbl_inicio_escrituracion=pd.DataFrame()
 
     auxCol=start_registration[start_registration['stg_nombre_actividad'] == "1.INICIO ESCRITURACION"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]

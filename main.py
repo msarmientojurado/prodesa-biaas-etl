@@ -53,16 +53,17 @@ def main():
         #print(stg_consolidado_corte.columns)
         
         #Report Area
-        report_area(tbl_inicio_venta, 
-            tbl_inicio_promesa, 
-            tbl_inicio_construccion, 
-            tbl_inicio_escrituracion, 
-            tmp_proyectos_construccion, 
-            tmp_proyectos_planeacion,
-            tmp_proyectos_comercial, 
-            building_report_excecution, 
-            planning_report_excecution,
-            commercial_report_excecution)
+        report_url = report_area(tbl_inicio_venta, 
+                                    tbl_inicio_promesa, 
+                                    tbl_inicio_construccion, 
+                                    tbl_inicio_escrituracion, 
+                                    tmp_proyectos_construccion, 
+                                    tmp_proyectos_planeacion,
+                                    tmp_proyectos_comercial,
+                                    tbl_reporte_por_entregas, 
+                                    building_report_excecution, 
+                                    planning_report_excecution,
+                                    commercial_report_excecution)
 
         #Model Area
         model(tbl_inicio_venta, 
@@ -81,7 +82,8 @@ def main():
             source_file_name,
             data_bytes,
             current_bash,
-            stg_consolidado_corte
+            stg_consolidado_corte,
+            report_url
         )
         
     else:

@@ -63,6 +63,10 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos, current_bash):
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_visto_bueno_programado', 'total':'tiv_visto_bueno_proyectado'}), on='key', how="outer",)
 
+    #TODO
+        #El campo Kit Desarrollos debe crearse en la BD
+        #La información que actualmente se muestra para Elaboracion de Alternativas, corresponde a Kit de Desarrollos
+        #El nombre de la actividad que debe buscarse en los datos para el campo es: "Elaboración de Alternativas".
     auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Kit Desarrollos"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_elab_alternativ_programado', 'total':'tiv_elab_alternativ_proyectado'}), on='key', how="outer",)
