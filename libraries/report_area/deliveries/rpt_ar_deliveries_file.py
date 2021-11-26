@@ -130,14 +130,16 @@ def rpt_ar_deliveries_file(tbl_reporte_por_entregas_filter):
                 if iteration == 1:
                     programming=col
                 elif iteration == 2:
-                    ws.cell(row=row_counter, column=1, value= col)
+                    cell_bordered = ws.cell(row=row_counter, column=1, value= col)
+                    cell_bordered.style=table_body_centered
                     cells_to_merge="A"+str(row_counter)+":A"+str(row_counter+1)
                     ws.merge_cells(cells_to_merge)
                 elif iteration ==3:
                     col_counter=2
                     cell=ws.cell(row=4, column=col_counter)
                     while cell.value != None:
-                        print(cell.value)
+                        cell_bordered = ws.cell(row = row_counter, column= col_counter)
+                        cell_bordered.style=table_body_centered
                         if cell.value == programming:
                             try:
                                 info=col.strftime('%d-%m-%Y')
@@ -150,7 +152,8 @@ def rpt_ar_deliveries_file(tbl_reporte_por_entregas_filter):
                     col_counter=2
                     cell=ws.cell(row=4, column=col_counter)
                     while cell.value != None:
-                        print(cell.value)
+                        cell_bordered = ws.cell(row = row_counter+1, column= col_counter)
+                        cell_bordered.style=table_body_centered
                         if cell.value == programming:
                             try:
                                 info=col.strftime('%d-%m-%Y')
