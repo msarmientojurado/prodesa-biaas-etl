@@ -191,12 +191,14 @@ def tmp_ar_graphics(stg_consolidado_corte,
     auxCol5 = building_and_commercial_dataset.loc[:, ('key', 'stg_ind_buffer','stg_fecha_fin')]
     auxCol5 = auxCol5[auxCol5['stg_ind_buffer']=='Sí']
     auxCol5 = (auxCol5.loc[:, ('key','stg_fecha_fin')]).sort_values(by=['key',"stg_fecha_fin"],ascending=False,)
+    auxCol5 = auxCol5.groupby(by=["key"]).first().reset_index()
     auxCol5 = auxCol5.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_buffer_linea_base_cargue'})
 
     #Column tgabt_fecha_fin_linea_base_cargue
     auxCol6 = building_and_commercial_dataset.loc[:, ('key', 'stg_duracion_cantidad' ,'stg_fecha_fin')]
     auxCol6 = auxCol6[auxCol6['stg_duracion_cantidad']==0]
     auxCol6 = (auxCol6.loc[:, ('key','stg_fecha_fin')]).sort_values(by=['key',"stg_fecha_fin"],ascending=False,)
+    auxCol6 = auxCol6.groupby(by=["key"]).first().reset_index()
     auxCol6 = auxCol6.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_linea_base_cargue'})
 
     #Appending dates calculated for commercial and construction reports
