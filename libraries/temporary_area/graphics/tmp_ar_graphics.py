@@ -163,6 +163,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
     endBufferDate = planning_dataset.loc[:, ('key', 'stg_ind_buffer','stg_fecha_fin')]
     endBufferDate = endBufferDate[endBufferDate['stg_ind_buffer']=='Sí']
     endBufferDate = (endBufferDate.loc[:, ('key','stg_fecha_fin')]).sort_values(by=['key',"stg_fecha_fin"],ascending=False,)
+    endBufferDate=endBufferDate.groupby(by=["key"]).first().reset_index()
     endBufferDate = endBufferDate.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_buffer_linea_base_cargue'})
 
     
@@ -170,6 +171,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
     endDate = planning_dataset.loc[:, ('key', 'stg_duracion_cantidad' ,'stg_fecha_fin')]
     endDate = endDate[endDate['stg_duracion_cantidad']==0]
     endDate = (endDate.loc[:, ('key','stg_fecha_fin')]).sort_values(by=['key',"stg_fecha_fin"],ascending=False,)
+    endDate=endDate.groupby(by=["key"]).first().reset_index()
     endDate = endDate.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_linea_base_cargue'})
 
     
