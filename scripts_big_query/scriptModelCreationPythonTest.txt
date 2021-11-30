@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_inicio_venta
     tiv_prod_objetivo_programado DATE,
     tiv_lluvia_ideas_proyectado DATE,
     tiv_lluvia_ideas_programado DATE,
+    tiv_kit_desarrollos_proyectado DATE,
+    tiv_kit_desarrollos_programado DATE,
     tiv_fecha_corte DATE NOT NULL,
     tiv_fecha_proceso DATE NOT NULL,
     tiv_lote_proceso INT64 NOT NULL

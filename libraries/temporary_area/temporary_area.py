@@ -15,9 +15,6 @@ def temporary_area(stg_consolidado_corte, current_bash):
 
     #Executing Parametrization Script
     tbl_proyectos, building_report_excecution, planning_report_excecution, commercial_report_excecution=tmp_ar_parametrization(stg_consolidado_corte);
-
-    #Graficos
-    tbl_graficos_tiempo_avance_buffer = tmp_ar_graphics(stg_consolidado_corte, tbl_proyectos, current_bash)
     
     #Hitos
     tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion = tmp_ar_milestones(stg_consolidado_corte, tbl_proyectos, current_bash)
@@ -43,7 +40,17 @@ def temporary_area(stg_consolidado_corte, current_bash):
     else:
         tmp_proyectos_comercial= pd.DataFrame()
 
-    #TODO Implement "Reporte por Entregas"
+    #Graficos
+    tbl_graficos_tiempo_avance_buffer = tmp_ar_graphics(stg_consolidado_corte, 
+                                                        tbl_proyectos, 
+                                                        current_bash,
+                                                        tmp_proyectos_construccion, 
+                                                        tmp_proyectos_planeacion, 
+                                                        tmp_proyectos_comercial,
+                                                        building_report_excecution, 
+                                                        planning_report_excecution,
+                                                        commercial_report_excecution
+                                                        )
     
     print(" -Temporary Area ending")
     return tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion, tmp_proyectos_construccion, tmp_proyectos_planeacion, tmp_proyectos_comercial, tbl_reporte_por_entregas, tbl_graficos_tiempo_avance_buffer, building_report_excecution, planning_report_excecution, commercial_report_excecution

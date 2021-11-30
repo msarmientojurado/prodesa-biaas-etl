@@ -63,11 +63,7 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos, current_bash):
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_visto_bueno_programado', 'total':'tiv_visto_bueno_proyectado'}), on='key', how="outer",)
 
-    #TODO
-        #El campo Kit Desarrollos debe crearse en la BD
-        #La información que actualmente se muestra para Elaboracion de Alternativas, corresponde a Kit de Desarrollos
-        #El nombre de la actividad que debe buscarse en los datos para el campo es: "Elaboración de Alternativas".
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Kit Desarrollos"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Elaboración de alternativas"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_elab_alternativ_programado', 'total':'tiv_elab_alternativ_proyectado'}), on='key', how="outer",)
 
@@ -78,6 +74,10 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos, current_bash):
     auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Lluvia de ideas"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_lluvia_ideas_programado', 'total':'tiv_lluvia_ideas_proyectado'}), on='key', how="outer",)
+
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Kit Desarrollos"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
+    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_kit_desarrollos_programado', 'total':'tiv_kit_desarrollos_proyectado'}), on='key', how="outer",)
 
     tbl_inicio_venta['tiv_dias_atraso']=(tbl_inicio_venta['tiv_inicio_ventas_programado']-tbl_inicio_venta['tiv_inicio_ventas_proyectado']).dt.days
     tbl_inicio_venta=pd.merge(tbl_inicio_venta,start_selling.loc[:, ('key','stg_codigo_proyecto','stg_etapa_proyecto')].groupby(by=["key"]).first().reset_index(), on='key', how="left",)
@@ -126,6 +126,8 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos, current_bash):
                                                     'tiv_prod_objetivo_programado',
                                                     'tiv_lluvia_ideas_proyectado',
                                                     'tiv_lluvia_ideas_programado',
+                                                    'tiv_kit_desarrollos_proyectado',
+                                                    'tiv_kit_desarrollos_programado',
                                                     'tiv_fecha_corte',
                                                     'tiv_fecha_proceso',
                                                     'tiv_lote_proceso'])

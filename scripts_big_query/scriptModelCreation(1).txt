@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_inicio_venta
     tiv_prod_objetivo_programado DATE,
     tiv_lluvia_ideas_proyectado DATE,
     tiv_lluvia_ideas_programado DATE,
+    tiv_kit_desarrollos_proyectado DATE,
+    tiv_kit_desarrollos_programado DATE,
     tiv_fecha_corte DATE NOT NULL,
     tiv_fecha_proceso DATE NOT NULL,
     tiv_lote_proceso INT64 NOT NULL
@@ -262,7 +264,7 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_control_cargue
     tcc_cantidad_registros INT64 NOT NULL
 );
 INSERT INTO `proyecto-prodesa.modelo_biaas.tbl_control_cargue`
-VALUES ("ghost", "ghost", DATE "2020-12-12", 0, 0)
+VALUES ("ghost", "ghost", DATE "2020-12-12", 0, 0);
 
 DROP TABLE IF EXISTS modelo_biaas.tbl_area_prodesa;
 CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_area_prodesa

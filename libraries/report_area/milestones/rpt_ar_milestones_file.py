@@ -53,7 +53,9 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
                                                     'tiv_prod_objetivo_proyectado',
                                                     'tiv_prod_objetivo_programado',
                                                     'tiv_lluvia_ideas_proyectado',
-                                                    'tiv_lluvia_ideas_programado'])
+                                                    'tiv_lluvia_ideas_programado',
+                                                    'tiv_kit_desarrollos_proyectado',
+                                                    'tiv_kit_desarrollos_programado'])
     
     wb=Workbook()
     ws=wb.active
