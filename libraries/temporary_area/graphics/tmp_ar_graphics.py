@@ -223,7 +223,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
         else:
             text=text+", '"+project_code+"'"
     query ="""
-        SELECT distinct CONCAT(tt.tgabt_codigo_proyecto, '_', tt.tgabt_etapa, '_',tgabt_programacion) key, tgabt_fecha_inicio_linea_base, tgabt_fecha_fin_linea_base, tgabt_fecha_fin_buffer_linea_base
+        SELECT distinct CONCAT(tgabt_area_prodesa, '_', tt.tgabt_codigo_proyecto, '_', tt.tgabt_etapa, '_',tgabt_programacion) key, tgabt_fecha_inicio_linea_base, tgabt_fecha_fin_linea_base, tgabt_fecha_fin_buffer_linea_base
         FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER + """` tt 
         inner JOIN (SELECT CONCAT(tgabt_codigo_proyecto, '_', tgabt_etapa, '_',tgabt_programacion) key, MIN(tgabt_fecha_corte) AS MinDate
             FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER + """
