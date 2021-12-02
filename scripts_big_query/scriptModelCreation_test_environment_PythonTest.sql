@@ -272,8 +272,8 @@ CREATE TABLE IF NOT EXISTS modelo_biaas_python_test.tbl_area_prodesa
 (
     tap_nombre_area STRING NOT NULL,
     tap_sigla_area STRING NOT NULL,
-    tpr_estado BOOL NOT NULL,
-    tpr_fecha_actualizacion DATE NOT NULL
+    tap_estado BOOL NOT NULL,
+    tap_fecha_actualizacion DATE NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas_python_test.tbl_consolidado_corte;

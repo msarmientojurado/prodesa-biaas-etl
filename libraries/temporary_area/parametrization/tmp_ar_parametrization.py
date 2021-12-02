@@ -2,7 +2,7 @@
 
 import pandas as pd
 from google.cloud import bigquery
-from libraries.settings import TBL_PROYECTOS, BIGQUERY_ENVIRONMENT_NAME, ENVIRONMENT
+from libraries.settings import PRODESA_AREA_BUILDING, PRODESA_AREA_COMMERCIAL, PRODESA_AREA_PLANNING, TBL_PROYECTOS, BIGQUERY_ENVIRONMENT_NAME, ENVIRONMENT
 
 def tmp_ar_parametrization(stg_consolidado_corte):
     print("  *Parametrization Script Starting...");
@@ -33,7 +33,7 @@ def tmp_ar_parametrization(stg_consolidado_corte):
 
     # Verification: Is there information related to Building
     construction_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
-    construction_dataset=construction_dataset[construction_dataset['stg_area_prodesa']=='CS']
+    construction_dataset=construction_dataset[construction_dataset['stg_area_prodesa']==PRODESA_AREA_BUILDING]
     building_report=False
     if construction_dataset[construction_dataset.columns[0]].count() == 0:
         building_report=False
@@ -43,7 +43,7 @@ def tmp_ar_parametrization(stg_consolidado_corte):
     #print (building_report)
     # Verification: Is there information related to Planning
     planning_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
-    planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']=='PN']
+    planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']==PRODESA_AREA_PLANNING]
     planning_report=False
     if planning_dataset[planning_dataset.columns[0]].count() == 0:
         planning_report=False
@@ -53,7 +53,7 @@ def tmp_ar_parametrization(stg_consolidado_corte):
     #print (planning_report)
     # Verification: Is there information related to Commercial
     commercial_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
-    commercial_dataset=commercial_dataset[commercial_dataset['stg_area_prodesa']=='CL']
+    commercial_dataset=commercial_dataset[commercial_dataset['stg_area_prodesa']==PRODESA_AREA_COMMERCIAL]
     commercial_report=False
     if commercial_dataset[commercial_dataset.columns[0]].count() == 0:
         commercial_report=False

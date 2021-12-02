@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 from google.cloud import bigquery
-from libraries.settings import TBL_PROYECTOS_PLANEACION, BIGQUERY_ENVIRONMENT_NAME, TBL_VALORES_HITOS
+from libraries.settings import PRODESA_AREA_PLANNING, TBL_PROYECTOS_PLANEACION, BIGQUERY_ENVIRONMENT_NAME, TBL_VALORES_HITOS
 
 def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     print("  *Planning Starting")
@@ -20,7 +20,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
         SELECT tvh_sigla,
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_VALORES_HITOS + """`
             WHERE tvh_estado = TRUE
-            order by tvh_sigla desc
+            order by length(tvh_sigla) desc
         """
 
     #print(query)        
@@ -40,7 +40,7 @@ def tmp_ar_planning(stg_consolidado_corte, tbl_proyectos, current_bash):
     #print(planning_dataset.head(30))
     #print(planning_dataset['stg_notas'].unique())
     planning_dataset['key']=planning_dataset['stg_codigo_proyecto']+'_'+planning_dataset['stg_etapa_proyecto']+'_'+planning_dataset['stg_notas']
-    planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']=='PN']
+    planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']==PRODESA_AREA_PLANNING]
     #planning_dataset=planning_dataset[planning_dataset['stg_notas']!='-']
     planning_dataset=planning_dataset.dropna(subset=['stg_notas'])
 

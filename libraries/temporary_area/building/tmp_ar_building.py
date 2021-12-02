@@ -1,5 +1,5 @@
 
-from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_CONSTRUCCION
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, PRODESA_AREA_BUILDING, TBL_PROYECTOS_CONSTRUCCION
 import pandas as pd
 import numpy as np
 
@@ -14,7 +14,7 @@ def tmp_ar_building(stg_consolidado_corte, tbl_proyectos, current_bash):
 
     construction_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_duracion_restante_cantidad')]
     construction_dataset['key']=construction_dataset['stg_codigo_proyecto']+'_'+construction_dataset['stg_etapa_proyecto']+'_'+construction_dataset['stg_programacion_proyecto']
-    construction_dataset=construction_dataset[construction_dataset['stg_area_prodesa']=='CS']
+    construction_dataset=construction_dataset[construction_dataset['stg_area_prodesa'] == PRODESA_AREA_BUILDING]
 
     #Then define the report DataSet `tmp_proyectos_construccion`, by setting its first three columns: 
 

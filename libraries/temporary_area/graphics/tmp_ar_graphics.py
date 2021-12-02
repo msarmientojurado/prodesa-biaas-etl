@@ -1,12 +1,11 @@
 
-from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER, TBL_PROYECTOS_CONSTRUCCION, TBL_VALORES_HITOS
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, PRODESA_AREA_BUILDING, PRODESA_AREA_COMMERCIAL, PRODESA_AREA_PLANNING, TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER, TBL_PROYECTOS_CONSTRUCCION, TBL_VALORES_HITOS
 import pandas as pd
 import numpy as np
 
 from google.cloud import bigquery
 
 def tmp_ar_graphics(stg_consolidado_corte, 
-                        tbl_proyectos, 
                         current_bash,
                         tmp_proyectos_construccion, 
                         tmp_proyectos_planeacion, 
@@ -50,7 +49,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
                                                                         'tpp_consumo_buffer':'tgabt_consumo_buffer',
                                                                         'tpp_fecha_corte':'tgabt_fecha_corte'
                                                                         })
-        auxCol['tgabt_area_prodesa'] = 'PN'
+        auxCol['tgabt_area_prodesa'] = PRODESA_AREA_PLANNING
         #print (auxCol)
         tbl_graficos_tiempo_avance_buffer=tbl_graficos_tiempo_avance_buffer.append(auxCol)
     if commercial_report_excecution == True:
@@ -73,7 +72,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
                                                                         'tpcm_consumo_buffer':'tgabt_consumo_buffer',
                                                                         'tpcm_fecha_corte':'tgabt_fecha_corte'
                                                                         })
-        auxCol2['tgabt_area_prodesa'] = 'CL'
+        auxCol2['tgabt_area_prodesa'] = PRODESA_AREA_COMMERCIAL
         #print (auxCol2)
         tbl_graficos_tiempo_avance_buffer=tbl_graficos_tiempo_avance_buffer.append(auxCol2)
 
@@ -97,13 +96,13 @@ def tmp_ar_graphics(stg_consolidado_corte,
                                                                         'tpc_consumo_buffer':'tgabt_consumo_buffer',
                                                                         'tpc_fecha_corte':'tgabt_fecha_corte'
                                                                         })
-        auxCol3['tgabt_area_prodesa'] = 'CS'
+        auxCol3['tgabt_area_prodesa'] = PRODESA_AREA_BUILDING
         #tbl_graficos_tiempo_avance_buffer += auxCol3
         #tbl_graficos_tiempo_avance_buffer=pd.concat(tbl_graficos_tiempo_avance_buffer, auxCol3)
         #print (auxCol3)
         tbl_graficos_tiempo_avance_buffer=tbl_graficos_tiempo_avance_buffer.append(auxCol3)
 
-    
+    print(tbl_graficos_tiempo_avance_buffer)
     
     tbl_graficos_tiempo_avance_buffer['key']=tbl_graficos_tiempo_avance_buffer['tgabt_area_prodesa']+'_'+tbl_graficos_tiempo_avance_buffer['tgabt_codigo_proyecto']+'_'+ tbl_graficos_tiempo_avance_buffer['tgabt_etapa'] +'_'+tbl_graficos_tiempo_avance_buffer['tgabt_programacion']
 
@@ -121,7 +120,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
         SELECT tvh_sigla,
             FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_VALORES_HITOS + """`
             WHERE tvh_estado = TRUE
-            order by tvh_sigla desc
+            order by length(tvh_sigla) desc
         """
 
     #print(query)        
@@ -141,7 +140,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
     #print(planning_dataset.head(30))
     #print(planning_dataset['stg_notas'].unique())
     planning_dataset['key']=planning_dataset['stg_area_prodesa']+'_'+planning_dataset['stg_codigo_proyecto']+'_'+planning_dataset['stg_etapa_proyecto']+'_'+planning_dataset['stg_notas']
-    planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']=='PN']
+    planning_dataset=planning_dataset[planning_dataset['stg_area_prodesa']==PRODESA_AREA_PLANNING]
     #planning_dataset=planning_dataset[planning_dataset['stg_notas']!='-']
     planning_dataset=planning_dataset.dropna(subset=['stg_notas'])
     
@@ -180,7 +179,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
 
     building_and_commercial_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_fecha_inicial')]
     building_and_commercial_dataset['key']=building_and_commercial_dataset['stg_area_prodesa']+'_'+building_and_commercial_dataset['stg_codigo_proyecto']+'_'+building_and_commercial_dataset['stg_etapa_proyecto']+'_'+building_and_commercial_dataset['stg_programacion_proyecto']
-    list_of_areas = ["CS", "CL"]
+    list_of_areas = [PRODESA_AREA_BUILDING, PRODESA_AREA_COMMERCIAL]
     building_and_commercial_dataset=building_and_commercial_dataset[building_and_commercial_dataset['stg_area_prodesa'].isin(list_of_areas)]
     #print(building_and_commercial_dataset)
 
@@ -227,9 +226,9 @@ def tmp_ar_graphics(stg_consolidado_corte,
         else:
             text=text+", '"+project_code+"'"
     query ="""
-        SELECT distinct CONCAT(tgabt_area_prodesa, '_', tt.tgabt_codigo_proyecto, '_', tt.tgabt_etapa, '_',tgabt_programacion) key, tgabt_fecha_inicio_linea_base, tgabt_fecha_fin_linea_base, tgabt_fecha_fin_buffer_linea_base
+        SELECT distinct CONCAT(tt.tgabt_area_prodesa, '_', tt.tgabt_codigo_proyecto, '_', tt.tgabt_etapa, '_',tgabt_programacion) key, tgabt_fecha_inicio_linea_base, tgabt_fecha_fin_linea_base, tgabt_fecha_fin_buffer_linea_base
         FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER + """` tt 
-        inner JOIN (SELECT CONCAT(tgabt_codigo_proyecto, '_', tgabt_etapa, '_',tgabt_programacion) key, MIN(tgabt_fecha_corte) AS MinDate
+        inner JOIN (SELECT CONCAT(tgabt_area_prodesa, '_', tgabt_codigo_proyecto, '_', tgabt_etapa, '_',tgabt_programacion) key, MIN(tgabt_fecha_corte) AS MinDate
             FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER + """
             WHERE tgabt_codigo_proyecto in ("""+text+""")
             GROUP BY key) groupedtt

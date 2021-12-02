@@ -263,16 +263,14 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_control_cargue
     tcc_lote_proceso INT64 NOT NULL,
     tcc_cantidad_registros INT64 NOT NULL
 );
-INSERT INTO `proyecto-prodesa.modelo_biaas.tbl_control_cargue`
-VALUES ("ghost", "ghost", DATE "2020-12-12", 0, 0);
 
 DROP TABLE IF EXISTS modelo_biaas.tbl_area_prodesa;
 CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_area_prodesa
 (
     tap_nombre_area STRING NOT NULL,
     tap_sigla_area STRING NOT NULL,
-    tpr_estado BOOL NOT NULL,
-    tpr_fecha_actualizacion DATE NOT NULL
+    tap_estado BOOL NOT NULL,
+    tap_fecha_actualizacion DATE NOT NULL
 );
 
 DROP TABLE IF EXISTS modelo_biaas.tbl_consolidado_corte;
@@ -351,16 +349,6 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_descarga_reportes
     tdr_lote_proceso  INT64 NOT NULL,
 );
 
---INSERT INTO `production-prodesa-biaas.modelo_biaas.tbl_descarga_reportes`
---VALUES ("https://storage.googleapis.com/production-prodesa-biaas-descargables/corte_05-11-2021_construccion.zip", DATE "2021-11-05", DATE "2021-11-05", 1)
-
---INSERT INTO `production-prodesa-biaas.modelo_biaas.tbl_descarga_reportes`
---VALUES ("https://storage.googleapis.com/production-prodesa-biaas-descargables/corte_03-09-2021_construccion.zip", DATE "2021-09-03", DATE "2021-09-03", 1)
-
---INSERT INTO `production-prodesa-biaas.modelo_biaas.tbl_descarga_reportes`
---VALUES ("https://storage.googleapis.com/production-prodesa-biaas-descargables/test_1.xlsx", DATE "2020-12-31", DATE "2020-12-31", 1)
-
-
 DROP TABLE IF EXISTS modelo_biaas.tbl_mapeo_programacion;
 CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_mapeo_programacion
 (
@@ -369,3 +357,149 @@ CREATE TABLE IF NOT EXISTS modelo_biaas.tbl_mapeo_programacion
     tmp_estado              BOOL NOT NULL,
     tmp_fecha_actualizacion DATE NOT NULL,
 );
+
+INSERT INTO modelo_biaas.tbl_control_cargue(tcc_nombre_fuente,tcc_nombre_backup,tcc_fecha_proceso, tcc_lote_proceso, tcc_cantidad_registros
+)
+VALUES ("ghost", "ghost", DATE "2020-12-12", 0, 0);
+
+-------------------------------------------------------------------
+---                             TABLA PROGRAMACIONES
+-------------------------------------------------------------------
+INSERT INTO modelo_biaas.tbl_mapeo_programacion(tmp_codigo,tmp_nombre,tmp_estado,tmp_fecha_actualizacion
+)
+VALUES
+('CA','CASA',true,'2021-11-11'),
+('DOTACION','DOTACION',true,'2021-11-11'),
+('EDF-PARQUEADEROS','PAQUEADEROS',true,'2021-11-11'),
+('PARQUEADERO','PAQUEADEROS',true,'2021-11-11'),
+('PARQU','PAQUEADEROS',true,'2021-11-11'),
+('PORTERIA','PORTERIA',true,'2021-11-11'),
+('TANQUE','TANQUE',true,'2021-11-11'),
+('TO','TORRE',true,'2021-11-11'),
+('UI','URBANISMO INTERNO',true,'2021-11-11'),
+('UE','URBANISMO EXTERNO',true,'2021-11-11'),
+('ZC','ZONAS COMUNES',true,'2021-11-11'),
+('ZC-BASURAS','CUARTO DE BASURAS',true,'2021-11-11'),
+('ZC-CLUB','CLUB HOUSE',true,'2021-11-11'),
+('ZC-CUARTOEL','CUARTO ELECTRICO',true,'2021-11-11'),
+('ZC-ESTRUCTURA','ESTRUCTURA DE DISIPACION',true,'2021-11-11'),
+('ZC-PUENTE','PUENTE',true,'2021-11-11');
+
+------------------------------------
+---                             TABLA DE PROYECTOS
+-----------------------------------------------------------------
+INSERT INTO modelo_biaas.tbl_proyectos(tpr_regional,tpr_codigo_proyecto,
+tpr_macroproyecto,
+tpr_proyecto,
+tpr_estado,
+tpr_fecha_actualizacion)
+VALUES
+('CALI','PINTURAS','PINTURAS','PINTURAS COLORS',true,'2021-08-27'),
+('CALI','SANTABARB','SANTABARBARA','SANTABARBARA',true,'2021-08-27'),
+('CALI','PASCUAL','PASCUAL','PASCUAL',true,'2021-08-27'),
+('CALI','TRIANGULO','TRIANGULO','ATRIO DE  PANCE',true,'2021-08-27'),
+('BOGOTA','MADNV','ALTOS DE MADELENA','MADELENA',true,'2021-08-27'),
+('BOGOTA','AMERICAN-PIPE-NOVIS','AMERICAN PIPE','AMERICAN PIPE NOVIS',true,'2021-08-27'),
+('BOGOTA','AMERICAN-PIPE-VIP','AMERICAN PIPE','AMERICAN PIPE VIP',true,'2021-08-27'),
+('BOGOTA','AMERICAN-PIPE-VIS','AMERICAN PIPE','AMERICAN PIPE VIS',true,'2021-08-27'),
+('BOGOTA','CALLE13','CALLE13','CALLE13',true,'2021-08-27'),
+('BOGOTA','CHANCO','CHANCO','CHANCO',true,'2021-08-27'),
+('BOGOTA','URDECO','CIPRES DE LA FLORIDA','CIPRES DE LA FLORIDA',true,'2021-08-27'),
+('BOGOTA','CVM55TV1','CIUDAD VERDE','YERBABUENA',true,'2021-08-27'),
+('BOGOTA','SMART2','EQUILIBRIUM','EQUILIBRIUM',true,'2021-08-27'),
+('BOGOTA','BELLAFLORA','BELLAFLORA','BELLAFLORA',true,'2021-08-27'),
+('BOGOTA','SNJORLCER','HACIENDA ALCALA','CEREZO',true,'2021-08-27'),
+('BOGOTA','SNJORROB','HACIENDA ALCALA','ROBLE',true,'2021-08-27'),
+('BOGOTA','SNJORL','HACIENDA ALCALA','SAUCE',true,'2021-08-27'),
+('BOGOTA','SNJORLT1','HACIENDA ALCALA','SAUCE TO1',true,'2021-08-27'),
+('BOGOTA','SNJORLT4','HACIENDA ALCALA','SAUCE TO4',true,'2021-08-27'),
+('BOGOTA','SNJORLT9','HACIENDA ALCALA','SAUCE TO9',true,'2021-08-27'),
+('BOGOTA','SNJORLSAM','HACIENDA ALCALA','SAMAN',true,'2021-08-27'),
+('BOGOTA','PDAW2TW','PALO DE AGUA','KATIOS',true,'2021-08-27'),
+('BOGOTA','PDAAISB','PALO DE AGUA','IGUAQUE B',true,'2021-08-27'),
+('BOGOTA','PDAPAW','PALO DE AGUA','MACARENA',true,'2021-08-27'),
+('BOGOTA','PDASWTW','PALO DE AGUA','PALO DE AGUA',true,'2021-08-27'),
+('BOGOTA','PRAFU-MZ10','CIUDADELA FORESTA','MILANO',true,'2021-08-27'),
+('BOGOTA','PRAFU-MZ7','CIUDADELA FORESTA','IBIZ',true,'2021-08-27'),
+('BOGOTA','PRAFU-MZ2','CIUDADELA FORESTA','AMAZILIA',true,'2021-08-27'),
+('BOGOTA','PRAFU-MZ8','CIUDADELA FORESTA','ANDARRIOS',true,'2021-08-27'),
+('BOGOTA','PRAFU-MZ4','CIUDADELA FORESTA','CIUDADELA FORESTA MZ4',true,'2021-08-27'),
+('BOGOTA','PRAFU-MZ5','CIUDADELA FORESTA','TANGARA',true,'2021-08-27'),
+('BOGOTA','PRAFU-MZ3','CIUDADELA FORESTA','CIUDADELA FORESTA MZ3',true,'2021-08-27'),
+('BOGOTA','PRAFU-UE','CIUDADELA FORESTA','CIUDADELA FORESTA UE',true,'2021-08-27'),
+('BOGOTA','RECREO','RECREO','RECREO',true,'2021-08-27'),
+('BOGOTA','SOLEM5','RESERVA DE MADRID','PALERMO',true,'2021-08-27'),
+('BOGOTA','SOLEM8','RESERVA DE MADRID','PAMPLONA',true,'2021-08-27'),
+('BOGOTA','SNHILARIO','SAN HILARIO','SAN HILARIO',true,'2021-08-27'),
+('BOGOTA','SNLUIS','SAN LUIS','SAN LUIS',true,'2021-08-27'),
+('BOGOTA','VINCULO','EL VINCULO','EL VINCULO',true,'2021-08-27'),
+('BOGOTA','TECHONOVIS','TECHO','TECHONOVIS',true,'2021-08-27'),
+('BOGOTA','TECHOVIP','TECHO','TECHOVIP',true,'2021-08-27'),
+('BOGOTA','TECHOVIS','TECHO','TECHOVIS',true,'2021-08-27'),
+('BOGOTA','MADPINE','MADRID PI„EROS','MADRID PI„EROS',true,'2021-08-27'),
+('BOGOTA','TUCANES','TUCANES','BALCONES DEL SOL',true,'2021-08-27'),
+('CARIBE','SANPABLO','VILLAS DE SAN PABLO','SAN PABLO',true,'2021-08-27'),
+('CARIBE','ALAM3','ALAMEDA DEL RIO','PELICANO',true,'2021-08-27'),
+('CARIBE','ALAMNO','ALAMEDA DEL RIO','PARDELA',true,'2021-08-27'),
+('CARIBE','ALAMVIS','ALAMEDA DEL RIO','PERDIZ',true,'2021-08-27'),
+('CARIBE','ALAMZ2','ALAMEDA DEL RIO','ALAMEDA MZ2',true,'2021-08-27'),
+('CARIBE','CDSALEGRIA','CIUDAD DE LOS SUE„OS','ALEGRIA',true,'2021-08-27'),
+('CARIBE','FELICIDAD','CIUDAD DE LOS SUE„OS','FELICIDAD',true,'2021-08-27'),
+('CARIBE','CDSMZ4-CAS','CIUDAD DE LOS SUE„OS','ARMONIA CASAS',true,'2021-08-27'),
+('CARIBE','CDSMZ4-TO','CIUDAD DE LOS SUE„OS','ARMONIA TORRES',true,'2021-08-27'),
+('CARIBE','CDSMZ5','CIUDAD DE LOS SUEÑOS','VENTURA',true,'2021-08-27'),
+('CARIBE','CDSMZ3','CIUDAD DE LOS SUEÑOS','CIUDAD DE LOS SUEÑOS MZ3',true,'2021-08-27'),
+('CARIBE','HASANT','HACIENDA SAN ANTONIO','CAOBA',true,'2021-08-27'),
+('CARIBE','LOMA','LA LOMA','LA LOMA',true,'2021-08-27'),
+('CARIBE','MARBELLA','MARBELLA','MARBELLA',true,'2021-08-27'),
+('CARIBE','SITUM','IRATI','IRATI',true,'2021-08-27'),
+('CARIBE','SDM','SERENA DEL MAR','PORTELO',true,'2021-08-27'),
+('CARIBE','SERMAR','SERENA DEL MAR','PORTANOVA',true,'2021-08-27'),
+('CARIBE','SDMMZ4','SERENA DEL MAR','CASTELO',true,'2021-08-27'),
+('CARIBE','SDMMZ6','SERENA DEL MAR','SERENISIMA MZ6',true,'2021-08-27'),
+('CARIBE','CORAL11','CORAL','CORAL 11',true,'2021-08-27'),
+('CARIBE','CORAL6','CORAL','CORAL 6',true,'2021-08-27'),
+('CARIBE','BURECHE','BURECHE','BURECHE',true,'2021-08-27'),
+('CENTRO','GIRARDOT-MZ3','CIUDAD ESPLENDOR','INDIGO GIRARDOT MZ3',true,'2021-08-27'),
+('CENTRO','GIRARDOT-VIP','CIUDAD ESPLENDOR','TURQUESA',true,'2021-08-27'),
+('CENTRO','GIRARDOT-VIS','CIUDAD ESPLENDOR','CELESTE',true,'2021-08-27'),
+('CENTRO','IBAGUE-VIPMZ14','ECOCIUDADES','CARMESI',true,'2021-08-27'),
+('CENTRO','IBAGUE-VIS','ECOCIUDADES','GRANATE',true,'2021-08-27'),
+('CENTRO','IBAGUE-VIP','ECOCIUDADES','CARMIN',true,'2021-08-27'),
+('CENTRO','IBAGUE-VIPMZ11','ECOCIUDADES','ESCARLATA',true,'2021-08-27'),
+('CENTRO','IBAGUE-VIPMZ12','ECOCIUDADES','BERMELLON',true,'2021-08-27'),
+('CENTRO','VILLETA-VIS','CIUDAD CRISTALES','OPALO',true,'2021-08-27'),
+('CENTRO','VILLETA-VIP','CIUDAD CRISTALES','ZAFIRO',true,'2021-08-27'),
+('CENTRO','VILLETA-NOVIS','CIUDAD CRISTALES','AMBAR',true,'2021-08-27'),
+('CENTRO','CIUDADCRISTALES','CIUDAD CRISTALES','CIUDADCRISTALES',true,'2021-08-27'),
+('CENTRO','ECOCIUDADES','ECOCIUDADES','ECOCIUDADES',true,'2021-08-27');
+
+----------------------------------------------------------
+---                             TABLA DE HITOS
+----------------------------------------------------------
+
+INSERT INTO modelo_biaas.tbl_valores_hitos(tvh_sigla,tvh_hito,tvh_estado,tvh_fecha_actualizacion
+)
+VALUES
+('IV','Inicio Ventas',true,'2021-08-26'),
+('IP','Inicio Promesas',true,'2021-08-26'),
+('IC','Inicio Construccion',true,'2021-08-28'),
+('IE','Inicio de Escrituracion',true,'2021-08-28'),
+('DC','Desenglobe Catastral',true,'2021-08-28'),
+('SP','Servicio Publico',true,'2021-08-28'),
+('GAS','GAS',true,'2021-08-28'),
+('AC','ACUEDUCTO',true,'2021-08-28'),
+('EL','ELECTRICIDAD',true,'2021-08-28'),
+('GASUE','GASODUCTO',true,'2021-08-28');
+
+----------------------------------------------------------
+---                             TABLA DE AREAS
+----------------------------------------------------------
+INSERT INTO modelo_biaas.tbl_area_prodesa(tap_nombre_area, tap_sigla_area,tap_estado, tap_fecha_actualizacion
+)
+VALUES
+('PLANEACION','PN',true,'2021-08-21'),
+('COMERCIAL','CL',true,'2021-08-21'),
+('CONSTRUCCION','CS',true,'2021-08-21');
+
+------------------------------------------------------------

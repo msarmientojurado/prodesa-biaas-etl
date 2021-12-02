@@ -1,7 +1,9 @@
 
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_AREA_PRODESA, TBL_MAPEO_PROGRAMACION
 from libraries.staging_area.information_consistency import information_consistency
 import pandas as pd
 import numpy as np
+from google.cloud import bigquery
 
 def staging_area(esp_consolidado_corte):
 
@@ -212,16 +214,71 @@ def staging_area(esp_consolidado_corte):
     #Splitting Project Column into Five:
     #   * PROJECT_STATUS
     #   * PROJECT_NAME
-    #   * PROJECT STAGE
-    #   * PROJECT_COMPONENT
+    #   * PROJECT_STAGE
+    #   * PROJECT_COMPONENT_CODE
     #   * PROJECT_CUTOFF_DATE
 
-    auxCol=esp_consolidado_corte["PROJECT"].str.split("_", n=5,expand=True)
-    stg_consolidado_corte['stg_area_prodesa']=auxCol[0]
-    stg_consolidado_corte['stg_codigo_proyecto']=auxCol[1]
-    stg_consolidado_corte['stg_etapa_proyecto']=auxCol[2]
-    stg_consolidado_corte['stg_programacion_proyecto']=auxCol[3]
-    stg_consolidado_corte['stg_fecha_corte']=pd.to_datetime(auxCol[4], dayfirst=True)
+    #df[['stg_area_prodesa', 'stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_codigo_programacion_proyecto', 'stg_fecha_corte']]
+    auxCol[['stg_area_prodesa', 'stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_codigo_programacion_proyecto', 'stg_fecha_corte']]=esp_consolidado_corte["PROJECT"].str.split("_", n=5,expand=True)
+
+    client = bigquery.Client()
+
+    query ="""
+        SELECT (tap_sigla_area) as stg_area_prodesa, UPPER(tap_nombre_area) as stg_nombre_area,
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_AREA_PRODESA + """`
+            WHERE tap_estado = TRUE;
+        """
+
+    #print(query)        
+    prodesa_areas= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))
+    print(pd.merge(auxCol.loc[:, ('stg_area_prodesa')],prodesa_areas, on = 'stg_area_prodesa', how ="left"))
+    stg_consolidado_corte['stg_area_prodesa']=(pd.merge(auxCol.loc[:, ('stg_area_prodesa')],prodesa_areas, on = 'stg_area_prodesa', how ="left"))['stg_nombre_area']
+    stg_consolidado_corte['stg_codigo_proyecto']=auxCol['stg_codigo_proyecto']
+    stg_consolidado_corte['stg_etapa_proyecto']=auxCol['stg_etapa_proyecto'].str.replace("ET","Etapa ")
+    stg_consolidado_corte['stg_codigo_programacion_proyecto']=auxCol['stg_codigo_programacion_proyecto']
+    stg_consolidado_corte['stg_fecha_corte']=pd.to_datetime(auxCol['stg_fecha_corte'], dayfirst=True)
+
+    print(stg_consolidado_corte['stg_area_prodesa'])
+    #Now continue with the column
+    #    |Column|Data Type|
+    #    |-----|----|
+    #    |stg_programacion_proyecto|string|
+    #
+    #Which consists of a mapping process: It is risky because mapping process is not one on one. Customer approved the process
+
+
+    client = bigquery.Client()
+
+    query ="""
+        SELECT tmp_codigo, tmp_nombre
+            FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_MAPEO_PROGRAMACION + """`
+            WHERE tmp_estado = TRUE
+            order by length(tmp_codigo) desc
+        """
+
+    #print(query)        
+    schedules= client.query(query).result().to_dataframe(create_bqstorage_client=True,)
+    schedules=schedules.rename(columns={'tmp_codigo': 'stg_programacion_proyecto', 
+                                        'tmp_nombre': 'stg_programacion_proyecto_mostrar'
+                                        })
+
+    #print(schedules)
+
+    #stg_consolidado_corte['stg_programacion_proyecto_mostrar'] = stg_consolidado_corte['stg_programacion_proyecto']
+    res = pd.DataFrame()
+    res['stg_programacion_proyecto_mostrar']= stg_consolidado_corte['stg_codigo_programacion_proyecto']
+    res['origin']=stg_consolidado_corte['stg_codigo_programacion_proyecto']
+    for index, schedule in schedules.iterrows():
+        res['rows_to_edit']=res['origin'].str.contains(schedule['stg_programacion_proyecto'])
+        res['result'] = res['origin'].str.replace(schedule['stg_programacion_proyecto'],schedule['stg_programacion_proyecto_mostrar'])
+        res['origin'] = res['origin'].str.replace(schedule['stg_programacion_proyecto'],'-')
+        res['stg_programacion_proyecto_mostrar'] = np.where(res['rows_to_edit']==True,res['result'],res['stg_programacion_proyecto_mostrar'])
+    
+    stg_consolidado_corte['stg_programacion_proyecto'] = res['stg_programacion_proyecto_mostrar']
+
+
+    ######################################
+
 
     #Now continue with the column
     # |Column|Data Type|

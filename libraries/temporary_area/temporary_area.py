@@ -42,7 +42,6 @@ def temporary_area(stg_consolidado_corte, current_bash):
 
     #Graficos
     tbl_graficos_tiempo_avance_buffer = tmp_ar_graphics(stg_consolidado_corte, 
-                                                        tbl_proyectos, 
                                                         current_bash,
                                                         tmp_proyectos_construccion, 
                                                         tmp_proyectos_planeacion, 

@@ -3,7 +3,7 @@ import numpy as np
 
 from google.cloud import bigquery
 
-from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_PROYECTOS_COMERCIAL
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, PRODESA_AREA_COMMERCIAL, TBL_PROYECTOS_COMERCIAL
 
 def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
     print("  *Commercial Starting")
@@ -11,7 +11,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
 
     commercial_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_duracion_restante_cantidad')]
     commercial_dataset['key']=commercial_dataset['stg_codigo_proyecto']+'_'+commercial_dataset['stg_etapa_proyecto']+'_'+commercial_dataset['stg_programacion_proyecto']
-    commercial_dataset=commercial_dataset[commercial_dataset['stg_area_prodesa']=='CL']
+    commercial_dataset=commercial_dataset[commercial_dataset['stg_area_prodesa']==PRODESA_AREA_COMMERCIAL]
 
     #Then define the report DataSet `tmp_proyectos_comercial`, by setting its first three columns: 
 

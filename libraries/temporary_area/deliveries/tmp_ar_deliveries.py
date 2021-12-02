@@ -2,12 +2,14 @@
 import pandas as pd
 import numpy as np
 
+from libraries.settings import PRODESA_AREA_BUILDING
+
 def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos, current_bash):
     print("  *Deliveries Starting")
     
     deliveries_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
     deliveries_dataset['key']=deliveries_dataset['stg_codigo_proyecto']+'_'+deliveries_dataset['stg_etapa_proyecto']+'_'+deliveries_dataset['stg_programacion_proyecto']+'_'+deliveries_dataset['stg_nombre_actividad']
-    deliveries_dataset=deliveries_dataset[deliveries_dataset['stg_area_prodesa']=='CS']
+    deliveries_dataset=deliveries_dataset[deliveries_dataset['stg_area_prodesa']==PRODESA_AREA_BUILDING]
     #Fecha_final_actual en vez de fecha_fin_planeada
     cols_list = ['stg_nombre_actividad']
     search_values = ['ENTREGA']
