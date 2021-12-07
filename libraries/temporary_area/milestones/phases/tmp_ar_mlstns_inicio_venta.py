@@ -11,72 +11,72 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos, current_bash):
     
     tbl_inicio_venta=pd.DataFrame()
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "1.FIN INICIO DE VENTAS"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "1.FIN INICIO DE VENTAS"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_inicio_ventas_programado', 'total':'tiv_inicio_ventas_proyectado'})
 
-    auxCol= start_selling[start_selling['stg_nombre_actividad'] == "2.Aprobacion FIV"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol= start_selling[start_selling['stg_nombre_actividad'] == "2.Aprobacion FIV"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_fiv_programado', 'total':'tiv_fiv_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "3.Presupuesto Tipo FIV"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "3.Presupuesto Tipo FIV"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_ppto_revisado_programado', 'total':'tiv_ppto_revisado_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Entrega de Documentos para elaboración del presupuesto IV"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Entrega de Documentos para elaboración del presupuesto IV"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_docs_ppto_programado', 'total':'tiv_docs_ppto_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "4.Encargo Fiduciario"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "4.Encargo Fiduciario"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_encargo_fiduciario_programado', 'total':'tiv_encargo_fiduciario_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "5. Kit Entrega 1 a comercial"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "5. Kit Entrega 1 a comercial"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_kit_comercial_programado', 'total':'tiv_kit_comercial_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "8.Validacion de Sala de Ventas y Modelos"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "8.Validacion de Sala de Ventas y Modelos"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_val_sv_model_programado', 'total':'tiv_val_sv_model_proyectado'}), on='key', how="outer",)
 
-    auxCol= start_selling[start_selling['stg_nombre_actividad'] == "9.Construcción de sala de ventas y modelos"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol= start_selling[start_selling['stg_nombre_actividad'] == "9.Construcción de sala de ventas y modelos"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_const_sv_model_programado', 'total':'tiv_const_sv_model_proyectado'}), on='key', how="outer",)
 
-    auxCol= start_selling[start_selling['stg_nombre_actividad'] == "10. Aprobación LC"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol= start_selling[start_selling['stg_nombre_actividad'] == "10. Aprobación LC"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_aprobacion_lc_programado', 'total':'tiv_aprobac_lc_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "11. Radicación de LC"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "11. Radicación de LC"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_radicacion_lc_programado', 'total':'tiv_radicacion_lc_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Diseño para salida a ventas"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Diseño para salida a ventas"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_salida_ventas_programado', 'total':'tiv_salida_ventas_proyectado'}), on='key', how="outer",)
 
-    auxCol= start_selling[start_selling['stg_nombre_actividad'] == "Acta de Constitución - (Kit 0 Comercial)"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol= start_selling[start_selling['stg_nombre_actividad'] == "Acta de Constitución - (Kit 0 Comercial)"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_acta_constituc_programado', 'total':'tiv_acta_constituc_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "VoBo Comité de proyectos - Presentación Esquema Básico"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "VoBo Comité de proyectos - Presentación Esquema Básico"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_visto_bueno_programado', 'total':'tiv_visto_bueno_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Elaboración de alternativas"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Elaboración de alternativas"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_elab_alternativ_programado', 'total':'tiv_elab_alternativ_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Definición de producto objetivo"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Definición de producto objetivo"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_prod_objetivo_programado', 'total':'tiv_prod_objetivo_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Lluvia de ideas"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Lluvia de ideas"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_lluvia_ideas_programado', 'total':'tiv_lluvia_ideas_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Kit Desarrollos"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_selling[start_selling['stg_nombre_actividad'] == "Kit Desarrollos"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_venta=pd.merge(tbl_inicio_venta, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tiv_kit_desarrollos_programado', 'total':'tiv_kit_desarrollos_proyectado'}), on='key', how="outer",)
 
     tbl_inicio_venta['tiv_dias_atraso']=(tbl_inicio_venta['tiv_inicio_ventas_programado']-tbl_inicio_venta['tiv_inicio_ventas_proyectado']).dt.days

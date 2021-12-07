@@ -11,32 +11,32 @@ def tmp_ar_mlstns_inicio_escrituracion(milestones_dataset,tbl_proyectos, current
     
     tbl_inicio_escrituracion=pd.DataFrame()
 
-    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "1.INICIO ESCRITURACION"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "1.INICIO ESCRITURACION"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_escrituracion= auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tie_inicio_escrituracion_programado', 'total':'tie_inicio_escrituracion_proyectado'})
 
-    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "2.Poder firma de escrituras"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "2.Poder firma de escrituras"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_escrituracion=pd.merge(tbl_inicio_escrituracion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tie_poder_fiduciaria_programado', 'total':'tie_poder_fiduciaria_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "3.Salida de Registro RPH y Entrega de Folios"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "3.Salida de Registro RPH y Entrega de Folios"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_escrituracion=pd.merge(tbl_inicio_escrituracion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tie_salida_rph_programado', 'total':'tie_salida_rph_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_registration[(start_registration['stg_nombre_actividad'] == "4.Cierre y numeracion de escritura de RPH") | (start_registration['stg_nombre_actividad'] == "4.Cierre y numeración de escritura de RPH")].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_registration[(start_registration['stg_nombre_actividad'] == "4.Cierre y numeracion de escritura de RPH") | (start_registration['stg_nombre_actividad'] == "4.Cierre y numeración de escritura de RPH")].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_escrituracion=pd.merge(tbl_inicio_escrituracion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tie_cierre_rph_programado', 'total':'tie_cierre_rph_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "5.Ejecutoria y entrega de licencia PH"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "5.Ejecutoria y entrega de licencia PH"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_escrituracion=pd.merge(tbl_inicio_escrituracion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tie_licencia_ph_programado', 'total':'tie_licencia_ph_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "6.Modificación LC"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "6.Modificación LC"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_escrituracion=pd.merge(tbl_inicio_escrituracion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tie_modificacion_lc_programado', 'total':'tie_modificacion_lc_proyectado'}), on='key', how="outer",)
 
-    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "7.Radicacion Modificación Licencia de Construcción"].loc[:,('key','stg_fecha_fin_planeada','stg_fin_linea_base_estimado', 'stg_fecha_final_actual')]
-    auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
+    auxCol=start_registration[start_registration['stg_nombre_actividad'] == "7.Radicacion Modificación Licencia de Construcción"].loc[:,('key','stg_fecha_final_actual','stg_fin_linea_base_estimado', 'stg_fecha_fin_planeada')]
+    auxCol['total']=np.where(auxCol['stg_fecha_final_actual'].isna(),auxCol['stg_fecha_fin_planeada'],auxCol['stg_fecha_final_actual'])
     tbl_inicio_escrituracion=pd.merge(tbl_inicio_escrituracion, auxCol.loc[:,('key','stg_fin_linea_base_estimado', 'total')].rename(columns={'stg_fin_linea_base_estimado':'tie_radic_modif_lc_programado', 'total':'tie_radic_modif_lc_proyectado'}), on='key', how="outer",)
 
 
