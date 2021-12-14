@@ -15,9 +15,10 @@ def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos, current_bash):
     search_values = ['ENTREGA']
     deliveries_dataset=deliveries_dataset[deliveries_dataset[cols_list].stack().str.contains('|'.join(search_values),case=False,na=False).groupby(level=0).any()]
 
-    auxCol=deliveries_dataset.loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual')]
-    tbl_reporte_por_entregas=auxCol.loc[:,('key','stg_fecha_final_actual', 'stg_fecha_fin_planeada')].rename(columns={'stg_fecha_final_actual':'trpe_entrega_real', 'stg_fecha_fin_planeada':'trpe_entrega_programada'})
-    tbl_reporte_por_entregas=tbl_reporte_por_entregas.sort_values(by=['key'],ascending=True)
+    auxCol=deliveries_dataset.loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual', 'stg_project_id')]
+    tbl_reporte_por_entregas=auxCol.loc[:,('key','stg_fecha_final_actual', 'stg_fecha_fin_planeada', 'stg_project_id')].rename(columns={'stg_fecha_final_actual':'trpe_entrega_real', 'stg_fecha_fin_planeada':'trpe_entrega_programada'})
+    tbl_reporte_por_entregas=tbl_reporte_por_entregas.sort_values(by=['key', 'stg_project_id'],ascending=True)
+    tbl_reporte_por_entregas = tbl_reporte_por_entregas.groupby(by=["key"]).first().reset_index()
 
     tbl_reporte_por_entregas=pd.merge(tbl_reporte_por_entregas,deliveries_dataset.loc[:, ('key','stg_codigo_proyecto','stg_etapa_proyecto', 'stg_programacion_proyecto', 'stg_nombre_actividad')].groupby(by=["key"]).first().reset_index(), on='key', how="left",)
     tbl_reporte_por_entregas = tbl_reporte_por_entregas.rename(columns={'stg_codigo_proyecto': 'tpr_codigo_proyecto', 'stg_programacion_proyecto':'trpe_programacion', 'stg_nombre_actividad':'trpe_tarea_entrega'})

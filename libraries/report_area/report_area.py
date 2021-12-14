@@ -21,7 +21,7 @@ def report_area(tbl_inicio_venta,
     excel_report_array=[]
     if building_report_excecution==True:
         excel_report_array +=rpt_building(tmp_proyectos_construccion)
-        rpt_ar_deliveries(tbl_reporte_por_entregas)
+        excel_report_array +=rpt_ar_deliveries(tbl_reporte_por_entregas)
     if planning_report_excecution == True:
         excel_report_array += rpt_planning(tmp_proyectos_planeacion)
         excel_report_array += rpt_ar_milestones(tbl_inicio_venta, 

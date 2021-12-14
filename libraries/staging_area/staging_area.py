@@ -231,14 +231,14 @@ def staging_area(esp_consolidado_corte):
 
     #print(query)        
     prodesa_areas= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))
-    print(pd.merge(auxCol.loc[:, ('stg_area_prodesa')],prodesa_areas, on = 'stg_area_prodesa', how ="left"))
+    #print(pd.merge(auxCol.loc[:, ('stg_area_prodesa')],prodesa_areas, on = 'stg_area_prodesa', how ="left"))
     stg_consolidado_corte['stg_area_prodesa']=(pd.merge(auxCol.loc[:, ('stg_area_prodesa')],prodesa_areas, on = 'stg_area_prodesa', how ="left"))['stg_nombre_area']
     stg_consolidado_corte['stg_codigo_proyecto']=auxCol['stg_codigo_proyecto']
     stg_consolidado_corte['stg_etapa_proyecto']=auxCol['stg_etapa_proyecto'].str.replace("ET","Etapa ")
     stg_consolidado_corte['stg_codigo_programacion_proyecto']=auxCol['stg_codigo_programacion_proyecto']
     stg_consolidado_corte['stg_fecha_corte']=pd.to_datetime(auxCol['stg_fecha_corte'], dayfirst=True)
 
-    print(stg_consolidado_corte['stg_area_prodesa'])
+    #print(stg_consolidado_corte['stg_area_prodesa'])
     #Now continue with the column
     #    |Column|Data Type|
     #    |-----|----|
