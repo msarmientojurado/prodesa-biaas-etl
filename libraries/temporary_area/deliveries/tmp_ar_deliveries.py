@@ -7,7 +7,7 @@ from libraries.settings import PRODESA_AREA_BUILDING
 def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos, current_bash):
     print("  *Deliveries Starting")
     
-    deliveries_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte')]
+    deliveries_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fin_linea_base_estimado', 'stg_fecha_final_actual', 'stg_fecha_corte')]
     deliveries_dataset['key']=deliveries_dataset['stg_codigo_proyecto']+'_'+deliveries_dataset['stg_etapa_proyecto']+'_'+deliveries_dataset['stg_programacion_proyecto']+'_'+deliveries_dataset['stg_nombre_actividad']
     deliveries_dataset=deliveries_dataset[deliveries_dataset['stg_area_prodesa']==PRODESA_AREA_BUILDING]
     #Fecha_final_actual en vez de fecha_fin_planeada
@@ -15,8 +15,8 @@ def tmp_ar_deliveries(stg_consolidado_corte, tbl_proyectos, current_bash):
     search_values = ['ENTREGA']
     deliveries_dataset=deliveries_dataset[deliveries_dataset[cols_list].stack().str.contains('|'.join(search_values),case=False,na=False).groupby(level=0).any()]
 
-    auxCol=deliveries_dataset.loc[:,('key','stg_fecha_fin_planeada','stg_fecha_fin', 'stg_fecha_final_actual', 'stg_project_id')]
-    tbl_reporte_por_entregas=auxCol.loc[:,('key','stg_fecha_final_actual', 'stg_fecha_fin_planeada', 'stg_project_id')].rename(columns={'stg_fecha_final_actual':'trpe_entrega_real', 'stg_fecha_fin_planeada':'trpe_entrega_programada'})
+    auxCol=deliveries_dataset.loc[:,('key','stg_fin_linea_base_estimado','stg_fecha_fin', 'stg_fecha_final_actual', 'stg_project_id')]
+    tbl_reporte_por_entregas=auxCol.loc[:,('key','stg_fecha_final_actual', 'stg_fin_linea_base_estimado', 'stg_project_id')].rename(columns={'stg_fecha_final_actual':'trpe_entrega_real', 'stg_fin_linea_base_estimado':'trpe_entrega_programada'})
     tbl_reporte_por_entregas=tbl_reporte_por_entregas.sort_values(by=['key', 'stg_project_id'],ascending=True)
     tbl_reporte_por_entregas = tbl_reporte_por_entregas.groupby(by=["key"]).first().reset_index()
 
