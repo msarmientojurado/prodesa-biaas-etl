@@ -1,20 +1,19 @@
+from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, PRODESA_AREA_COMMERCIAL, TBL_PROYECTOS_COMERCIAL
 import pandas as pd
 import numpy as np
-
 from google.cloud import bigquery
-
-from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, PRODESA_AREA_COMMERCIAL, TBL_PROYECTOS_COMERCIAL
+from datetime import date
 
 def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
+    
     print("  *Commercial Starting")
-    #Lets start by building the dataset to work, which includes those registers which have the word `CL` in their `stg_area_prodesa` column
 
+    #Lets start by building the dataset to work, which includes those registers which have the word `CL` in their `stg_area_prodesa` column
     commercial_dataset=stg_consolidado_corte.loc[:, ('stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto','stg_area_prodesa', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual', 'stg_fecha_corte', 'stg_duracion_restante_cantidad')]
     commercial_dataset['key']=commercial_dataset['stg_codigo_proyecto']+'_'+commercial_dataset['stg_etapa_proyecto']+'_'+commercial_dataset['stg_programacion_proyecto']
     commercial_dataset=commercial_dataset[commercial_dataset['stg_area_prodesa']==PRODESA_AREA_COMMERCIAL]
 
     #Then define the report DataSet `tmp_proyectos_comercial`, by setting its first three columns: 
-
     #    |Column|Data Type|
     #    |-----|----|
     #    |key| string|
@@ -60,6 +59,9 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
     #Adding `tpcm_avance_cc` column to the report
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:,('key', 'tpcm_avance_cc')], on='key', how="left",)
 
+    #Customer request: 'tpcm_avance_cc' column values cannot be negative. Negative values should be mapped to zero 
+    tmp_proyectos_comercial['tpcm_avance_cc']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']<0,0,tmp_proyectos_comercial['tpcm_avance_cc'])
+
     #Column 'tpcm_consumo_buffer'
     auxCol=commercial_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_duracion_cantidad')]
 
@@ -93,13 +95,22 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
     #Now lets calculate `%ConsumoBuffer` Based on the given formula
     auxCol=pd.merge(auxCol,auxCol2.loc[:, ('key', 'stg_fecha_fin')], on='key', how="left",)
     auxCol=pd.merge(auxCol,auxCol3.loc[:, ('key', 'fin_proyectada')], on='key', how="left",)
-
     auxCol['delta_days']=(auxCol['stg_fecha_fin']-auxCol['fin_proyectada']).dt.days
+
     #Dropping all the rows with zero value at 'stg_duracion_cantidad' column, to avoid division by zero at the next step. 
     auxCol=auxCol[auxCol['stg_duracion_cantidad']!=0]
-    auxCol['tpcm_consumo_buffer']=100*(auxCol['stg_duracion_cantidad']-(auxCol['delta_days']-(auxCol['delta_days']/4.5)))/auxCol['stg_duracion_cantidad']
-
+    auxCol['tpcm_consumo_buffer']=(auxCol['stg_duracion_cantidad']-(auxCol['delta_days']-(auxCol['delta_days']/4.5)))/auxCol['stg_duracion_cantidad']
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('key', 'tpcm_consumo_buffer')], on='key', how="left",)
+
+    #Customer request: 'tpcm_consumo_buffer' column values cannot be negative. Negative values should be mapped to zero 
+    tmp_proyectos_comercial['tpcm_consumo_buffer']=np.where(tmp_proyectos_comercial['tpcm_consumo_buffer']<0,0,tmp_proyectos_comercial['tpcm_consumo_buffer'])
+
+    #Column tpc_consumo_buffer_color
+    conditions = [(tmp_proyectos_comercial['tpcm_consumo_buffer']) < (0.2*tmp_proyectos_comercial['tpcm_avance_cc']+0.2),
+                (0.8*tmp_proyectos_comercial['tpcm_avance_cc']+0.2 > tmp_proyectos_comercial['tpcm_consumo_buffer']) & (tmp_proyectos_comercial['tpcm_consumo_buffer'] > 0.2*tmp_proyectos_comercial['tpcm_avance_cc']+0.2),
+                (tmp_proyectos_comercial['tpcm_consumo_buffer'] > 0.8*tmp_proyectos_comercial['tpcm_avance_cc']+0.2)]
+    choices = [1,0,-1]
+    tmp_proyectos_comercial['tpcm_consumo_buffer_color'] = np.select(conditions, choices, default= 1 )
 
     #Column `tpc_fin_proyectado_optimista`
     #Lets find the dates for the `tpcm_fin_proyectado_optimista` column by followinfg the procedure bellow:
@@ -113,26 +124,24 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
 
     #Now Attach column `tpc_fin_proyectado_optimista` to `tmp_proyectos_construccion` Dataset
     auxCol['total']=np.where(auxCol['stg_fecha_fin_planeada'].isna(),auxCol['stg_fecha_final_actual'],auxCol['stg_fecha_fin_planeada'])
-    tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('stg_fecha_fin_planeada','key')], on='key', how="left",)
-    tmp_proyectos_comercial = tmp_proyectos_comercial.rename(columns={'stg_fecha_fin_planeada': 'tpcm_fin_proyectado_optimista'})
+    tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('total','key')], on='key', how="left",)
+    tmp_proyectos_comercial = tmp_proyectos_comercial.rename(columns={'total': 'tpcm_fin_proyectado_optimista'})
 
     #Column `tpc_fin_proyectado_pesimista`
     #Lets start by calculating `TamanoBuffer`
     auxCol=commercial_dataset.loc[:, ('key', 'stg_ind_buffer', 'stg_duracion_cantidad')]
-
     auxCol=auxCol[auxCol['stg_ind_buffer']=='Sí']
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
     auxCol=auxCol.loc[:, ('key','stg_duracion_cantidad')]
 
-    #Now merge columns `tpc_avance_cc` y `tpc_fin_proyectado_optimista` from the `tmp_proyectos_construccion` DataSet into the `auxCol` in order to have the complete information to calculate the equation above
+    #Now merge columns `tpc_avance_cc` y `tpc_fin_proyectado_optimista` 
+    # from the `tmp_proyectos_construccion` DataSet into the `auxCol` 
+    # in order to have the complete information to calculate the equation above
     auxCol=pd.merge(auxCol,tmp_proyectos_comercial.loc[:, ('tpcm_avance_cc','tpcm_fin_proyectado_optimista','key')], on='key', how="left",)
 
     #Proceed with calculations of the equation above
     auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-(auxCol['tpcm_avance_cc']/100))).astype(int)
     auxCol['delta_days'] = auxCol['delta'].apply(np.ceil).apply(lambda x: pd.Timedelta(x, unit='D'))
-
-    #-------------------------------------------------------------------------
-
     auxCol['tpcm_fin_proyectado_pesimista']=auxCol['tpcm_fin_proyectado_optimista']+auxCol['delta_days']
 
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_fin_proyectado_pesimista','key')], on='key', how="left",)
@@ -148,13 +157,12 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
     #Column `tpcm_dias_atraso`
     tmp_proyectos_comercial['tpcm_dias_atraso']=(tmp_proyectos_comercial['tpcm_fin_programada']-tmp_proyectos_comercial['tpcm_fin_proyectado_optimista']).dt.days
 
+    #Columns `tpcm_regional`, `tpcm_macroproyecto`, `tpcm_proyecto`
     tmp_proyectos_comercial = tmp_proyectos_comercial.rename(columns={'stg_codigo_proyecto': 'tpr_codigo_proyecto'})
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,tbl_proyectos.loc[:, ('tpr_codigo_proyecto','tpr_regional','tpr_macroproyecto','tpr_proyecto')], on='tpr_codigo_proyecto', how="left",)
     tmp_proyectos_comercial = tmp_proyectos_comercial.rename(columns={'tpr_codigo_proyecto' : 'tpcm_codigo_proyecto','tpr_regional' : 'tpcm_regional','tpr_macroproyecto' : 'tpcm_macroproyecto', 'stg_etapa_proyecto' : 'tpcm_etapa', 'stg_programacion_proyecto' : 'tpcm_programacion', 'tpr_proyecto' : 'tpcm_proyecto', 'stg_fecha_corte' : 'tpcm_fecha_corte'})
 
-    #------------------------------
     #Column tpc_ultimo_mes
-
     client = bigquery.Client()
     project_codes=tmp_proyectos_comercial.tpcm_codigo_proyecto.unique()
     cut_date = pd.to_datetime(tmp_proyectos_comercial.tpcm_fecha_corte.unique()[0])
@@ -177,16 +185,14 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
         AND tt.tpcm_fecha_corte = groupedtt.MaxDate
         order by key, tt.tpcm_fecha_corte desc 
         """
-
-    #print(query)
     auxCol=client.query(query).result().to_dataframe(create_bqstorage_client=True,)
-    #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
-    auxCol['tpcm_avance_cc']=auxCol['tpcm_avance_cc']*100
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_avance_cc','key')].rename(columns={'tpcm_avance_cc':'tpcm_avance_ultimo_mes'}), on='key', how="left",)
     tmp_proyectos_comercial['tpcm_ultimo_mes']= tmp_proyectos_comercial['tpcm_avance_cc']-tmp_proyectos_comercial['tpcm_avance_ultimo_mes']
 
-    #-----------------------------
+    #Customer request: 'tpcm_ultimo_mes' column values cannot be negative. Negative values should be mapped to zero 
+    tmp_proyectos_comercial['tpcm_ultimo_mes']=np.where(tmp_proyectos_comercial['tpcm_ultimo_mes']<0,0,tmp_proyectos_comercial['tpcm_ultimo_mes'])
+
     #Column tpc_ultima_semana
     query ="""
         SELECT distinct CONCAT(tt.tpcm_codigo_proyecto, '_', tt.tpcm_etapa, '_',tpcm_programacion) key, tt.tpcm_fecha_corte, tt.tpcm_avance_cc, tt.tpcm_consumo_buffer
@@ -200,60 +206,41 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
         AND tt.tpcm_fecha_corte = groupedtt.MaxDate
         order by key, tt.tpcm_fecha_corte desc 
         """
-
-    #print(query)
     auxCol= client.query(query).result().to_dataframe(create_bqstorage_client=True,) 
-    #print(auxCol.columns)
     auxCol=auxCol.groupby(by=["key"]).first().reset_index()
-    #print(auxCol.head(5))
-    auxCol['tpcm_consumo_buffer']=auxCol['tpcm_consumo_buffer']*100
-    auxCol['tpcm_avance_cc']=auxCol['tpcm_avance_cc']*100
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:, ('tpcm_consumo_buffer', 'tpcm_avance_cc','key')].rename(columns={'tpcm_avance_cc':'tpcm_avance_ultima_semana', 'tpcm_consumo_buffer' : 'tpcm_consumo_buffer_ultima_semana'}), on='key', how="left",)
     tmp_proyectos_comercial['tpcm_ultima_semana']= tmp_proyectos_comercial['tpcm_avance_cc']-tmp_proyectos_comercial['tpcm_avance_ultima_semana']
+
+    #Customer request: 'tpc_ultima_semana' column values cannot be negative. Negative values should be mapped to zero 
+    tmp_proyectos_comercial['tpcm_ultima_semana']=np.where(tmp_proyectos_comercial['tpcm_ultima_semana']<0,0,tmp_proyectos_comercial['tpcm_ultima_semana'])
 
     #Column tpc_avance_comparativo_semana
     conditions = [(tmp_proyectos_comercial['tpcm_avance_ultima_semana'] < tmp_proyectos_comercial['tpcm_avance_cc']),
                 (tmp_proyectos_comercial['tpcm_avance_ultima_semana'] == tmp_proyectos_comercial['tpcm_avance_cc']),
                 (tmp_proyectos_comercial['tpcm_avance_ultima_semana'] > tmp_proyectos_comercial['tpcm_avance_cc'])]
-    
     choices = [1,0,-1]
-
     tmp_proyectos_comercial['tpcm_avance_comparativo_semana'] = np.select(conditions, choices, default= 0 )
 
     #Column tpc_consumo_buffer_comparativo
     conditions = [(tmp_proyectos_comercial['tpcm_consumo_buffer_ultima_semana'] < tmp_proyectos_comercial['tpcm_consumo_buffer']),
                 (tmp_proyectos_comercial['tpcm_consumo_buffer_ultima_semana'] == tmp_proyectos_comercial['tpcm_consumo_buffer']),
                 (tmp_proyectos_comercial['tpcm_consumo_buffer_ultima_semana'] > tmp_proyectos_comercial['tpcm_consumo_buffer'])]
-    
     choices = [1,0,-1]
-
     tmp_proyectos_comercial['tpcm_consumo_buffer_comparativo'] = np.select(conditions, choices, default= 0 )
 
-    #------------------------------
+    #Customer Request: Column 'tpc_tarea_consume_buffer' equals 'TERMINADO' for programmings that has been finished (column 'tpc_avance_cc' = 1)
+    tmp_proyectos_comercial['tpcm_tarea_consume_buffer']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']==1,"TERMINADO",tmp_proyectos_comercial['tpcm_tarea_consume_buffer'])
 
-    tmp_proyectos_comercial['tpcm_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
-    tmp_proyectos_comercial['tpcm_lote_proceso']=current_bash
-
-    tmp_proyectos_comercial['tpcm_tarea_consume_buffer']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']==100,"TERMINADO",tmp_proyectos_comercial['tpcm_tarea_consume_buffer'])
-
-    conditions = [(tmp_proyectos_comercial['tpcm_consumo_buffer']) < (0.2*tmp_proyectos_comercial['tpcm_avance_cc']+20),
-                (0.8*tmp_proyectos_comercial['tpcm_avance_cc']+20 > tmp_proyectos_comercial['tpcm_consumo_buffer']) & (tmp_proyectos_comercial['tpcm_consumo_buffer'] > 0.2*tmp_proyectos_comercial['tpcm_avance_cc']+20),
-                (tmp_proyectos_comercial['tpcm_consumo_buffer'] > 0.8*tmp_proyectos_comercial['tpcm_avance_cc']+20)]
-    
-    choices = [1,0,-1]
-
-    tmp_proyectos_comercial['tpcm_consumo_buffer_color'] = np.select(conditions, choices, default= 1 )
-
-    tmp_proyectos_comercial['tpcm_avance_cc'] = tmp_proyectos_comercial['tpcm_avance_cc'].div(100)
-    tmp_proyectos_comercial['tpcm_consumo_buffer'] = tmp_proyectos_comercial['tpcm_consumo_buffer'].div(100)
-    tmp_proyectos_comercial['tpcm_ultima_semana'] = tmp_proyectos_comercial['tpcm_ultima_semana'].div(100)
-    tmp_proyectos_comercial['tpcm_ultimo_mes'] = tmp_proyectos_comercial['tpcm_ultimo_mes'].div(100)
-
+    #Cleaning tmp_proyectos_construccion DataFrame: Deleting rows which columns tpc_avance_cc or tpc_consumo_buffer equals NULL
     tmp_proyectos_comercial = tmp_proyectos_comercial.dropna(subset=['tpcm_avance_cc'])
     tmp_proyectos_comercial = tmp_proyectos_comercial.dropna(subset=['tpcm_consumo_buffer'])
-    
-    tmp_proyectos_comercial['tpcm_avance_cc']=np.where(tmp_proyectos_comercial['tpcm_avance_cc']<0,0,tmp_proyectos_comercial['tpcm_avance_cc'])
 
+    #Column tpcm_fecha_proceso
+    tmp_proyectos_comercial['tpcm_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
+    
+    #Column tpc_lote_proceso
+    tmp_proyectos_comercial['tpcm_lote_proceso']=current_bash  
+    
     tmp_proyectos_comercial=tmp_proyectos_comercial.reindex(columns=['tpcm_regional',
                                                             'tpcm_codigo_proyecto',
                                                             'tpcm_macroproyecto',
@@ -275,14 +262,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
                                                             'tpcm_fecha_corte',
                                                             'tpcm_fecha_proceso',
                                                             'tpcm_lote_proceso'])
-
-    #print(tmp_proyectos_comercial.head(10))
-
-
-    #------------------------------------------------------------------------------
-
     
     print("  *Commercial ending")
-
     return tmp_proyectos_comercial
 

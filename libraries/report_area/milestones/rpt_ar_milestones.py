@@ -13,6 +13,9 @@ def rpt_ar_milestones(tbl_inicio_venta,
             tbl_inicio_promesa, 
             tbl_inicio_construccion, 
             tbl_inicio_escrituracion):
+
+    print("  *Milestones Starting")
+
     cut_date = pd.to_datetime(tbl_inicio_venta.tiv_fecha_corte.unique()[0])
     regions = tbl_inicio_venta['tiv_regional'].unique()
     excel_report_array=[]
@@ -25,5 +28,7 @@ def rpt_ar_milestones(tbl_inicio_venta,
                 cut_date,
                 region)
         excel_report_array.append([tmp, "Hitos","corte_" +  cut_date.strftime('%d-%m-%Y') + "_hitos_" + region + ".xlsx", cut_date])
+
+    print("  -Milestones Starting")
 
     return excel_report_array

@@ -102,7 +102,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
         #print (auxCol3)
         tbl_graficos_tiempo_avance_buffer=tbl_graficos_tiempo_avance_buffer.append(auxCol3)
 
-    print(tbl_graficos_tiempo_avance_buffer)
+    #print(tbl_graficos_tiempo_avance_buffer)
     
     tbl_graficos_tiempo_avance_buffer['key']=tbl_graficos_tiempo_avance_buffer['tgabt_area_prodesa']+'_'+tbl_graficos_tiempo_avance_buffer['tgabt_codigo_proyecto']+'_'+ tbl_graficos_tiempo_avance_buffer['tgabt_etapa'] +'_'+tbl_graficos_tiempo_avance_buffer['tgabt_programacion']
 
@@ -128,7 +128,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
     
     first_time_loop=True
     for milestone in milestones_set:
-        planning_dataset_filtered_set = planning_dataset[planning_dataset['stg_notas'].str.contains(milestone)]
+        planning_dataset_filtered_set = (planning_dataset[planning_dataset['stg_notas'].str.contains(milestone)]).copy(deep=True)
         planning_dataset_filtered_set['stg_notas']=milestone
         if first_time_loop:
             planning_dataset_filtered = planning_dataset_filtered_set

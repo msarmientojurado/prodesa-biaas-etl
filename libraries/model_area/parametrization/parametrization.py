@@ -1,7 +1,8 @@
 
 from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, TBL_CONTROL_CARGUE
 from google.cloud import bigquery
-import pandas as pd
+
+from datetime import date
 
 def parametrization():
     client = bigquery.Client()
@@ -17,7 +18,7 @@ def parametrization():
         """
     last_bash= (client.query(query).result().to_dataframe(create_bqstorage_client=True,))
     
-    if last_bash.ultima_fecha_cargue[0] != pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y")):
+    if last_bash.ultima_fecha_cargue[0] != date.today():
         current_bash=1
     else:
         current_bash = last_bash.ultimo_lote_cargue[0] + 1

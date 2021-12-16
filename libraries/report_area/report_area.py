@@ -18,6 +18,7 @@ def report_area(tbl_inicio_venta,
             building_report_excecution, 
             planning_report_excecution,
             commercial_report_excecution):
+    print(" *Report Area Starting")
     excel_report_array=[]
     if building_report_excecution==True:
         excel_report_array +=rpt_building(tmp_proyectos_construccion)
@@ -32,5 +33,7 @@ def report_area(tbl_inicio_venta,
         excel_report_array +=rpt_ar_commercial(tmp_proyectos_comercial)
     
     report_url = rpt_file_creation(excel_report_array)
+
+    print(" -Report Area ending")
 
     return report_url
