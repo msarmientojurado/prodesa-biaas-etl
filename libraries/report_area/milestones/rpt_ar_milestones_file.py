@@ -1,15 +1,10 @@
 from openpyxl.drawing.image import Image
 from openpyxl.workbook import Workbook
-from openpyxl.styles import Font, colors, Color, Alignment, PatternFill, GradientFill, Border, Side
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.styles import NamedStyle
 from openpyxl.utils.dataframe import dataframe_to_rows
-import numpy as np
-
 from tempfile import NamedTemporaryFile
-
-from google.cloud import storage
 from libraries.settings import BUCKET_NAME_DOWNLOAD_REPORT
-
 
 def rpt_ar_milestones_file(tbl_inicio_venta, 
             tbl_inicio_promesa, 
@@ -61,83 +56,62 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
     ws=wb.active
 
     chart_title = NamedStyle(name= 'title')
-    chart_title.font=Font(bold=True, color='0000FF', size=14)
+    chart_title.font=Font(bold=True, color='000080', size=24)
     chart_title.alignment=Alignment(horizontal='left', vertical='center')
 
     chart_subtitle = NamedStyle(name= 'char_subtitle')
-    chart_subtitle.font=Font(bold=True, color='0000FF', size=24)
+    chart_subtitle.font=Font(bold=True, color='000000', size=22)
     chart_subtitle.alignment=Alignment(horizontal='left', vertical='center')
 
     chart_date =NamedStyle(name='chart_date')
-    chart_date.font=Font(bold=True, color='000000', size=12)
+    chart_date.font=Font(bold=True, color='000080', size=20)
     chart_date.alignment=Alignment(horizontal='left', vertical='center')
 
     column_title =NamedStyle(name='column_title')
-    column_title.font=Font(bold=True, color='000000', size=10)
+    column_title.font=Font(bold=True, color='000000', size=14)
     column_title.alignment=Alignment(horizontal='center', vertical='center', wrap_text=True)
     column_title.fill= PatternFill('solid',fgColor='D3BC5F')
     bd=Side(style='thick', color='000000')
     column_title.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body =NamedStyle(name='table_body')
-    table_body.font=Font(color='000000', size=10)
+    table_body.font=Font(color='000000', size=14)
     table_body.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
     bd=Side(style='thin', color='000000')
     table_body.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
+    table_body_days_overdue =NamedStyle(name='table_body_days_overdue')
+    table_body_days_overdue.font=Font(bold=True, color='000000', size=22)
+    table_body_days_overdue.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
+    bd=Side(style='thin', color='000000')
+    table_body_days_overdue.border = Border(left=bd, top=bd, right=bd, bottom=bd)
+
     table_body_centered =NamedStyle(name='table_body_centered')
-    table_body_centered.font=Font(color='000000', size=10)
+    table_body_centered.font=Font(color='000000', size=14)
     table_body_centered.alignment=Alignment(horizontal='center', vertical='center', wrap_text=True)
     bd=Side(style='thin', color='000000')
     table_body_centered.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body_red=NamedStyle(name='table_body_red')
-    table_body_red.font=Font(color='000000', size=10)
-    table_body_red.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
+    table_body_red.font=Font(color='000000', size=14)
+    table_body_red.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
     table_body_red.fill= PatternFill('solid',fgColor='FF0000')
     bd=Side(style='thin', color='000000')
     table_body_red.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body_yellow=NamedStyle(name='table_body_yellow')
-    table_body_yellow.font=Font(color='000000', size=10)
-    table_body_yellow.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
+    table_body_yellow.font=Font(color='000000', size=14)
+    table_body_yellow.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
     table_body_yellow.fill= PatternFill('solid',fgColor='FFFF00')
     bd=Side(style='thin', color='000000')
     table_body_yellow.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body_green=NamedStyle(name='table_body_green')
-    table_body_green.font=Font(color='000000', size=10)
-    table_body_green.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
+    table_body_green.font=Font(color='000000', size=14)
+    table_body_green.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
     table_body_green.fill= PatternFill('solid',fgColor='008000')
     bd=Side(style='thin', color='000000')
     table_body_green.border = Border(left=bd, top=bd, right=bd, bottom=bd)
-
-    table_body_text_red=NamedStyle(name='table_body_text_red')
-    table_body_text_red.font=Font(color='FF0000', size=10)
-    table_body_text_red.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
-    bd=Side(style='thin', color='000000')
-    table_body_text_red.border = Border(left=bd, top=bd, right=bd, bottom=bd)
-
-    table_body_text_yellow=NamedStyle(name='table_body_text_yellow')
-    table_body_text_yellow.font=Font(color='FFFF00', size=10)
-    table_body_text_yellow.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
-    bd=Side(style='thin', color='000000')
-    table_body_text_yellow.border = Border(left=bd, top=bd, right=bd, bottom=bd)
-
-    table_body_text_green=NamedStyle(name='table_body_text_green')
-    table_body_text_green.font=Font(color='008000', size=10)
-    table_body_text_green.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
-    bd=Side(style='thin', color='000000')
-    table_body_text_green.border = Border(left=bd, top=bd, right=bd, bottom=bd)
-
-    bd_thick=Side(style='thick', color='000000')
-    bd_thin=Side(style='thin', color='000000')
-
-    table_body_total =NamedStyle(name='table_body_total')
-    table_body_total.font=Font(color='000000', size=10)
-    table_body_total.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
-    bd=Side(style='thin', color='000000')
-    table_body_total.border = Border(left=bd_thin, top=bd_thin, right=bd_thin, bottom=bd_thick)
 
     ws['A8'].style = chart_title
     ws['A9'].style = chart_date
@@ -187,7 +161,7 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
 
 
 
-    ws['A8']='CUADRO DE HITOS DE PLANEACION REGIONAL '+ region
+    ws['A8']='CUADRO DE HITOS DE PLANEACIÓN REGIONAL '+ region
     ws['A9']='FECHA'
     ws['B9']=cut_date.strftime('%d-%m-%Y')
     ws['A11']='INICIO VENTAS'
@@ -197,13 +171,13 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
     ws['D12']='Inicio de Ventas'
     ws['E12']='Factibilidad de Inicio de Ventas'
     ws['F12']='Ppto Definitivo (Tipo FIV)'
-    ws['G12']='Entrega de Documentos para elaboracion del presupuesto'
+    ws['G12']='Entrega de Documentos para elaboración del presupuesto'
     ws['H12']='Encargo Fiduciario'
     ws['I12']='Entrega 1 a Comercial'
-    ws['J12']='Validacion SV y Modelos'
-    ws['K12']='Construccion SV y Modelos'
-    ws['L12']='Aprobaci[on LC'
-    ws['M12']='Radicacion LC'
+    ws['J12']='Validación SV y Modelos'
+    ws['K12']='Construcción SV y Modelos'
+    ws['L12']='Aprobación LC'
+    ws['M12']='Radicación LC'
     ws['N12']='Diseño para salida a ventas'
     ws['O12']='Acta de Constitución'
     ws['P12']='VoBo (Visto Bueno)-Unidad estratégica y vicepresidente'
@@ -242,16 +216,14 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
                     cell=ws.cell(row=r_idx+acumulator, column=c_idx, value=col)
                     if iteration == 2:
                         cells_to_merge="B"+str(r_idx+acumulator)+":B"+str(r_idx+acumulator +1)
+                        cell.style = table_body_centered
                     elif iteration == 3:
                         cells_to_merge="C"+str(r_idx+acumulator)+":C"+str(r_idx+acumulator +1)
-                    cell.style = table_body_centered
+                        cell.style = table_body_days_overdue
                     ws.merge_cells(cells_to_merge)
 
                 else:
-                    try:
-                        info=col.strftime('%d-%m-%Y')
-                    except:
-                        info=""
+                    info = date_format(col)
                     if iteration %2 ==0:
                         cell=ws.cell(row=r_idx+acumulator, column=c_idx-(iteration-4)/2, value=info)
                         if col < cut_date:
@@ -276,6 +248,10 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
         iteration=1
         acumulator=acumulator + 1
         first_iteration = False
+
+    cells_to_merge="A"+str(project_group_row_start)+":A"+str((len(tbl_inicio_venta_excel)*2)+12)
+    #print(cells_to_merge)
+    ws.merge_cells(cells_to_merge)
 
     #Inicio Promesa Section
 
@@ -353,16 +329,14 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
                     cell=ws.cell(row=r_idx+acumulator, column=c_idx, value=col)
                     if iteration == 2:
                         cells_to_merge="B"+str(r_idx+acumulator)+":B"+str(r_idx+acumulator +1)
+                        cell.style = table_body_centered
                     elif iteration == 3:
                         cells_to_merge="C"+str(r_idx+acumulator)+":C"+str(r_idx+acumulator +1)
-                    cell.style = table_body_centered
+                        cell.style = table_body_days_overdue
                     ws.merge_cells(cells_to_merge)
 
                 else:
-                    try:
-                        info=col.strftime('%d-%m-%Y')
-                    except:
-                        info=""
+                    info = date_format(col)
                     if iteration %2 ==0:
                         cell=ws.cell(row=r_idx+acumulator, column=c_idx-(iteration-4)/2, value=info)
                         if col < cut_date:
@@ -387,6 +361,9 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
         iteration=1
         acumulator=acumulator + 1
         first_iteration = False
+    cells_to_merge="A"+str(project_group_row_start)+":A"+str(row_promise_start + (len(tbl_inicio_promesa_excel)*2)+1)
+    #print(cells_to_merge)
+    ws.merge_cells(cells_to_merge)
 
     #Inicio Construccion Section
 
@@ -465,16 +442,14 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
                     cell=ws.cell(row=r_idx+acumulator, column=c_idx, value=col)
                     if iteration == 2:
                         cells_to_merge="B"+str(r_idx+acumulator)+":B"+str(r_idx+acumulator +1)
+                        cell.style = table_body_centered
                     elif iteration == 3:
                         cells_to_merge="C"+str(r_idx+acumulator)+":C"+str(r_idx+acumulator +1)
-                    cell.style = table_body_centered
+                        cell.style = table_body_days_overdue
                     ws.merge_cells(cells_to_merge)
 
                 else:
-                    try:
-                        info=col.strftime('%d-%m-%Y')
-                    except:
-                        info=""
+                    info = date_format(col)
                     if iteration %2 ==0:
                         cell=ws.cell(row=r_idx+acumulator, column=c_idx-(iteration-4)/2, value=info)
                         if col < cut_date:
@@ -499,6 +474,9 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
         iteration=1
         acumulator=acumulator + 1
         first_iteration = False
+    cells_to_merge="A"+str(project_group_row_start)+":A"+str(row_building_start + (len(tbl_inicio_construccion_excel)*2)+1)
+    #print(cells_to_merge)
+    ws.merge_cells(cells_to_merge)
 
     #Inicio Escrituración Section
 
@@ -570,16 +548,14 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
                     cell=ws.cell(row=r_idx+acumulator, column=c_idx, value=col)
                     if iteration == 2:
                         cells_to_merge="B"+str(r_idx+acumulator)+":B"+str(r_idx+acumulator +1)
+                        cell.style = table_body_centered
                     elif iteration == 3:
                         cells_to_merge="C"+str(r_idx+acumulator)+":C"+str(r_idx+acumulator +1)
-                    cell.style = table_body_centered
+                        cell.style = table_body_days_overdue
                     ws.merge_cells(cells_to_merge)
 
                 else:
-                    try:
-                        info=col.strftime('%d-%m-%Y')
-                    except:
-                        info=""
+                    info = date_format(col)
                     if iteration %2 ==0:
                         cell=ws.cell(row=r_idx+acumulator, column=c_idx-(iteration-4)/2, value=info)
                         if col < cut_date:
@@ -604,16 +580,35 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
         iteration=1
         acumulator=acumulator + 1
         first_iteration = False
+    cells_to_merge="A"+str(project_group_row_start)+":A"+str(row_registration_start + (len(tbl_inicio_escrituracion_excel)*2)+1)
+    #print(cells_to_merge)
+    ws.merge_cells(cells_to_merge)
 
     tmp = NamedTemporaryFile()
     wb.save(tmp.name)
-    #storage_client = storage.Client()
-
-    #object_name = "corte_" +  cut_date.strftime('%d-%m-%Y') + "_hitos_" + region + ".xlsx"
-    #bucket = storage_client.bucket(BUCKET_NAME_DOWNLOAD_REPORT)
-
-    #blob = storage.Blob(object_name, bucket)
-    #blob.upload_from_file(archive, content_type='application/xlsx')
-    #blob.upload_from_string(tmp.read(), content_type='xlsx')
-
     return tmp
+
+def date_format(date_to_format):
+    info=""
+    try:
+        info=date_to_format.strftime('%d-%m-%Y')
+        month_mapping={
+            '01':'ene',
+            '02':'feb',
+            '03':'mar',
+            '04':'abr',
+            '05':'may',
+            '06':'jun',
+            '07':'jul',
+            '08':'ago',
+            '09':'sep',
+            '10':'oct',
+            '11':'nov',
+            '12':'dic'
+        }
+        auxCol=info.split("-")
+        month=month_mapping[auxCol[1]]
+        info = auxCol[0]+"-"+month+"-"+auxCol[2]
+    except:
+        info=""
+    return info

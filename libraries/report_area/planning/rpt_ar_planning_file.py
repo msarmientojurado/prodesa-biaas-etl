@@ -1,6 +1,6 @@
 
 from openpyxl.workbook import Workbook
-from openpyxl.styles import Font, colors, Color, Alignment, PatternFill, GradientFill, Border, Side
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.styles import NamedStyle
 from openpyxl.utils.dataframe import dataframe_to_rows
 import pandas as pd
@@ -45,7 +45,7 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
     ws=wb.active
 
     chart_title = NamedStyle(name= 'title')
-    chart_title.font=Font(bold=True, color='0000FF', size=14)
+    chart_title.font=Font(bold=True, color='000080', size=14)
     chart_title.alignment=Alignment(horizontal='left', vertical='center')
 
     chart_date =NamedStyle(name='chart_date')
@@ -60,58 +60,59 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
     column_title.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body =NamedStyle(name='table_body')
-    table_body.font=Font(color='000000', size=10)
+    table_body.font=Font(color='000000', size=12)
     table_body.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
     bd=Side(style='thin', color='000000')
     table_body.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
+    table_body_project_name =NamedStyle(name='table_body_project_name')
+    table_body_project_name.font=Font(color='000000', size=10)
+    table_body_project_name.alignment=Alignment(horizontal='center', vertical='center', wrap_text=True)
+    bd=Side(style='thin', color='000000')
+    table_body_project_name.border = Border(left=bd, top=bd, right=bd, bottom=bd)
+
     table_body_centered =NamedStyle(name='table_body_centered')
-    table_body_centered.font=Font(color='000000', size=10)
+    table_body_centered.font=Font(color='000000', size=12)
     table_body_centered.alignment=Alignment(horizontal='center', vertical='center', wrap_text=True)
     bd=Side(style='thin', color='000000')
     table_body_centered.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body_red=NamedStyle(name='table_body_red')
-    table_body_red.font=Font(color='000000', size=10)
-    table_body_red.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
+    table_body_red.font=Font(color='000000', size=12)
+    table_body_red.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
     table_body_red.fill= PatternFill('solid',fgColor='FF0000')
     bd=Side(style='thin', color='000000')
     table_body_red.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body_yellow=NamedStyle(name='table_body_yellow')
-    table_body_yellow.font=Font(color='000000', size=10)
-    table_body_yellow.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
+    table_body_yellow.font=Font(color='000000', size=12)
+    table_body_yellow.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
     table_body_yellow.fill= PatternFill('solid',fgColor='FFFF00')
     bd=Side(style='thin', color='000000')
     table_body_yellow.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body_green=NamedStyle(name='table_body_green')
-    table_body_green.font=Font(color='000000', size=10)
-    table_body_green.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
+    table_body_green.font=Font(color='000000', size=12)
+    table_body_green.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
     table_body_green.fill= PatternFill('solid',fgColor='008000')
     bd=Side(style='thin', color='000000')
     table_body_green.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
     table_body_text_red=NamedStyle(name='table_body_text_red')
-    table_body_text_red.font=Font(color='FF0000', size=10)
-    table_body_text_red.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
+    table_body_text_red.font=Font(color='FF0000', size=12)
+    table_body_text_red.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
     bd=Side(style='thin', color='000000')
     table_body_text_red.border = Border(left=bd, top=bd, right=bd, bottom=bd)
 
-    table_body_text_yellow=NamedStyle(name='table_body_text_yellow')
-    table_body_text_yellow.font=Font(color='FFFF00', size=10)
-    table_body_text_yellow.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
-    bd=Side(style='thin', color='000000')
-    table_body_text_yellow.border = Border(left=bd, top=bd, right=bd, bottom=bd)
-
     table_body_text_green=NamedStyle(name='table_body_text_green')
-    table_body_text_green.font=Font(color='008000', size=10)
-    table_body_text_green.alignment=Alignment(horizontal='left', vertical='center', wrap_text=False)
+    table_body_text_green.font=Font(color='008000', size=12)
+    table_body_text_green.alignment=Alignment(horizontal='center', vertical='center', wrap_text=False)
     bd=Side(style='thin', color='000000')
     table_body_text_green.border = Border(left=bd, top=bd, right=bd, bottom=bd)
     
     bd_thick=Side(style='thick', color='000000')
     bd_thin=Side(style='thin', color='000000')
+    bd_none=Side(style='none', color= '000000')
 
     ws['A1'].style = chart_title
     ws['A2'].style = chart_date
@@ -183,7 +184,6 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
                 if iteration == 1:
                     if project_name != col:
                         cells_to_merge="A"+str(project_group_row_start)+":A"+str(r_idx-1)
-                        #####
                         cell=ws.cell(row=project_group_row_start, column=1)
                         cell.border = Border(left=bd_thick, top=bd_thick, right=bd_thin, bottom=bd_thick)
                         for bold_column in range(2,14):
@@ -191,20 +191,18 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
                             cell.border = Border(left=bd_thin, top=bd_thick, right=bd_thin, bottom=bd_thin)
                         for bold_row in range(project_group_row_start,r_idx + 1):
                             cell=ws.cell(row=bold_row, column=14)
-                            
                             if bold_row==project_group_row_start :
                                 cell.border = Border(left=bd_thin, top=bd_thick, right=bd_thick, bottom=bd_thin)
                             elif bold_row == r_idx:
                                 cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thick, bottom = bd_thick)
                             else:
                                 cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thick, bottom=bd_thin)
-                        #####
                         cell=ws.merge_cells(cells_to_merge)
                         new_project=True
                         project_name = col
                         project_group_row_start=r_idx
                         cell=ws.cell(row=r_idx, column=c_idx, value=col)
-                        cell.style = table_body_centered
+                        cell.style = table_body_project_name
                 elif iteration == 2:
                     cell=ws.cell(row=r_idx, column=c_idx, value=col)
                     cell.style = table_body_centered
@@ -226,7 +224,7 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
                         cell.style = table_body
                 elif iteration == 5:
                     cell=ws.cell(row=r_idx , column=c_idx, value=round(col,2)*100)
-                    cell.style = table_body
+                    cell.style = table_body_centered
                 elif iteration == 6 or iteration == 8:
                     if col==1:
                         cell=ws.cell(row=r_idx , column=c_idx, value="Sube")
@@ -239,10 +237,7 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
                     cell=ws.cell(row=r_idx , column=c_idx, value=round(col,2)*100)
                         
                 elif iteration == 9 or iteration == 10 or iteration == 11:
-                    try:
-                        info=col.strftime('%d-%m-%Y')
-                    except:
-                        info=""
+                    info = date_format(col)
                     cell=ws.cell(row=r_idx, column=c_idx, value=info)
                     cell.style = table_body
                 elif iteration==12:
@@ -253,10 +248,10 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
                         cell.style = table_body_text_green
                 elif iteration == 13:
                     cell=ws.cell(row=r_idx , column=c_idx, value=round(col,2)*100)
-                    cell.style = table_body
+                    cell.style = table_body_centered
                 elif iteration == 14:
                     cell=ws.cell(row=r_idx , column=c_idx, value=round(col,2)*100)
-                    cell.style = table_body
+                    cell.style = table_body_centered
                 elif iteration == 15:
                     cell=ws.cell(row=r_idx, column=7)
                     if col==1:
@@ -277,7 +272,7 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
     for bold_column in range(2,14):
         cell=ws.cell(row=project_group_row_start, column=bold_column)
         cell.border = Border(left=bd_thin, top=bd_thick, right=bd_thin, bottom=bd_thin)
-    for bold_row in range(project_group_row_start,len(tmp_proyectos_planeacion_excel)+4):
+    for bold_row in range(project_group_row_start,len(tmp_proyectos_planeacion_excel)+5):
         cell=ws.cell(row=bold_row, column=14)
         if bold_row==project_group_row_start :
             cell.border = Border(left=bd_thin, top=bd_thick, right=bd_thick, bottom=bd_thin)
@@ -290,25 +285,40 @@ def rpt_ar_planning_file(tmp_proyectos_planeacion, region, cut_date):
     cells_to_merge="C"+str(stage_group_row_start)+":C"+str(len(tmp_proyectos_planeacion_excel)+4)
     
     for bold_column in range(2,15):
-        cell=ws.cell(row=len(tmp_proyectos_planeacion_excel)+4, column=bold_column)
+        cell=ws.cell(row=len(tmp_proyectos_planeacion_excel)+5, column=bold_column)
         if bold_column < 14:
-            cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thin, bottom = bd_thick)
+            cell.border = Border(left=bd_none, top=bd_thick, right=bd_none, bottom = bd_none)
         else:
-            cell.border = Border(left=bd_thin, top=bd_thin, right=bd_thick, bottom = bd_thick)
+            cell.border = Border(left=bd_none, top=bd_thick, right=bd_none, bottom = bd_none)
     #####
     ws.merge_cells(cells_to_merge)
 
     tmp = NamedTemporaryFile()
     wb.save(tmp.name)
-    #storage_client = storage.Client()
-
-    #object_name = "corte_" +  cut_date.strftime('%d-%m-%Y') + "_planeacion_" + region + ".xlsx"
-    #bucket = storage_client.bucket(BUCKET_NAME_DOWNLOAD_REPORT)
-
-    #blob = storage.Blob(object_name, bucket)
-    #blob.upload_from_file(archive, content_type='application/xlsx')
-    #blob.upload_from_string(tmp.read(), content_type='xlsx')
-
-    #wb.save('test_1.xlsx')
 
     return tmp
+
+def date_format(date_to_format):
+    info=""
+    try:
+        info=date_to_format.strftime('%d-%m-%Y')
+        month_mapping={
+            '01':'ene',
+            '02':'feb',
+            '03':'mar',
+            '04':'abr',
+            '05':'may',
+            '06':'jun',
+            '07':'jul',
+            '08':'ago',
+            '09':'sep',
+            '10':'oct',
+            '11':'nov',
+            '12':'dic'
+        }
+        auxCol=info.split("-")
+        month=month_mapping[auxCol[1]]
+        info = auxCol[0]+"-"+month+"-"+auxCol[2]
+    except:
+        info=""
+    return info

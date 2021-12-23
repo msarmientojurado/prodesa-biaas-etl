@@ -54,7 +54,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
 
     #Lets calculate `% Avance CC`
     auxCol= pd.merge(auxCol,auxCol2, on='key', how="inner",)
-    auxCol['tpcm_avance_cc']=(1-(auxCol['stg_indicador_cantidad'].astype(float)/auxCol['stg_duracion_critica_cantidad'].astype(float)))*100
+    auxCol['tpcm_avance_cc']=1-(auxCol['stg_indicador_cantidad'].astype(float)/auxCol['stg_duracion_critica_cantidad'].astype(float))
 
     #Adding `tpcm_avance_cc` column to the report
     tmp_proyectos_comercial=pd.merge(tmp_proyectos_comercial,auxCol.loc[:,('key', 'tpcm_avance_cc')], on='key', how="left",)
@@ -140,7 +140,7 @@ def tmp_ar_commercial(stg_consolidado_corte, tbl_proyectos, current_bash):
     auxCol=pd.merge(auxCol,tmp_proyectos_comercial.loc[:, ('tpcm_avance_cc','tpcm_fin_proyectado_optimista','key')], on='key', how="left",)
 
     #Proceed with calculations of the equation above
-    auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-(auxCol['tpcm_avance_cc']/100))).astype(int)
+    auxCol['delta']=(auxCol['stg_duracion_cantidad']*(1-auxCol['tpcm_avance_cc'])).astype(int)
     auxCol['delta_days'] = auxCol['delta'].apply(np.ceil).apply(lambda x: pd.Timedelta(x, unit='D'))
     auxCol['tpcm_fin_proyectado_pesimista']=auxCol['tpcm_fin_proyectado_optimista']+auxCol['delta_days']
 

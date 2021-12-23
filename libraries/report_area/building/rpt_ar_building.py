@@ -13,6 +13,6 @@ def rpt_building(tmp_proyectos_construccion):
         tmp = rpt_ar_building_file(tmp_proyectos_construccion[tmp_proyectos_construccion['tpc_regional']==region],region,cut_date)
         excel_report_array.append([tmp, "Construccion","corte_" +  cut_date.strftime('%d-%m-%Y') + "_construccion_" + region + ".xlsx", cut_date])
     
-    print("  -Building Starting")
+    print("  -Building Ending")
 
     return excel_report_array

@@ -2,8 +2,8 @@
 from libraries.settings import BIGQUERY_ENVIRONMENT_NAME, PRODESA_AREA_BUILDING, PRODESA_AREA_COMMERCIAL, PRODESA_AREA_PLANNING, TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER, TBL_PROYECTOS_CONSTRUCCION, TBL_VALORES_HITOS
 import pandas as pd
 import numpy as np
-
 from google.cloud import bigquery
+from datetime import date
 
 def tmp_ar_graphics(stg_consolidado_corte, 
                         current_bash,
@@ -156,14 +156,14 @@ def tmp_ar_graphics(stg_consolidado_corte,
     #Column tgabt_fecha_inicio_linea_base_cargue
     startDate=(planning_dataset.loc[:, ('key', 'stg_fecha_inicial')]).sort_values(by=['key',"stg_fecha_inicial"],ascending=True,)
     startDate=startDate.groupby(by=["key"]).first().reset_index()
-    startDate = startDate.rename(columns={'stg_fecha_inicial': 'tgabt_fecha_inicio_linea_base_cargue'})
+    startDate = startDate.rename(columns={'stg_fecha_inicial': 'tgabt_fecha_inicio_linea_base'})
 
     #Column tgabt_fecha_fin_linea_base_buffer_cargue
     endBufferDate = planning_dataset.loc[:, ('key', 'stg_ind_buffer','stg_fecha_fin')]
     endBufferDate = endBufferDate[endBufferDate['stg_ind_buffer']=='Sí']
     endBufferDate = (endBufferDate.loc[:, ('key','stg_fecha_fin')]).sort_values(by=['key',"stg_fecha_fin"],ascending=False,)
     endBufferDate=endBufferDate.groupby(by=["key"]).first().reset_index()
-    endBufferDate = endBufferDate.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_buffer_linea_base_cargue'})
+    endBufferDate = endBufferDate.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_buffer_linea_base'})
 
     
     #Column tgabt_fecha_fin_linea_base_cargue
@@ -171,7 +171,7 @@ def tmp_ar_graphics(stg_consolidado_corte,
     endDate = endDate[endDate['stg_duracion_cantidad']==0]
     endDate = (endDate.loc[:, ('key','stg_fecha_fin')]).sort_values(by=['key',"stg_fecha_fin"],ascending=False,)
     endDate=endDate.groupby(by=["key"]).first().reset_index()
-    endDate = endDate.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_linea_base_cargue'})
+    endDate = endDate.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_linea_base'})
 
     
     ##########################################
@@ -186,21 +186,21 @@ def tmp_ar_graphics(stg_consolidado_corte,
     #Column tgabt_fecha_inicio_linea_base_cargue
     auxCol4=(building_and_commercial_dataset.loc[:, ('key', 'stg_fecha_inicial')]).sort_values(by=['key',"stg_fecha_inicial"],ascending=True,)
     auxCol4=auxCol4.groupby(by=["key"]).first().reset_index()
-    auxCol4 = auxCol4.rename(columns={'stg_fecha_inicial': 'tgabt_fecha_inicio_linea_base_cargue'})
+    auxCol4 = auxCol4.rename(columns={'stg_fecha_inicial': 'tgabt_fecha_inicio_linea_base'})
 
     #Column tgabt_fecha_fin_linea_base_buffer_cargue
     auxCol5 = building_and_commercial_dataset.loc[:, ('key', 'stg_ind_buffer','stg_fecha_fin')]
     auxCol5 = auxCol5[auxCol5['stg_ind_buffer']=='Sí']
     auxCol5 = (auxCol5.loc[:, ('key','stg_fecha_fin')]).sort_values(by=['key',"stg_fecha_fin"],ascending=False,)
     auxCol5 = auxCol5.groupby(by=["key"]).first().reset_index()
-    auxCol5 = auxCol5.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_buffer_linea_base_cargue'})
+    auxCol5 = auxCol5.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_buffer_linea_base'})
 
     #Column tgabt_fecha_fin_linea_base_cargue
     auxCol6 = building_and_commercial_dataset.loc[:, ('key', 'stg_duracion_cantidad' ,'stg_fecha_fin')]
     auxCol6 = auxCol6[auxCol6['stg_duracion_cantidad']==0]
     auxCol6 = (auxCol6.loc[:, ('key','stg_fecha_fin')]).sort_values(by=['key',"stg_fecha_fin"],ascending=False,)
     auxCol6 = auxCol6.groupby(by=["key"]).first().reset_index()
-    auxCol6 = auxCol6.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_linea_base_cargue'})
+    auxCol6 = auxCol6.rename(columns={'stg_fecha_fin': 'tgabt_fecha_fin_linea_base'})
 
     #Appending dates calculated for commercial and construction reports
     startDate = startDate.append(auxCol4)
@@ -212,44 +212,9 @@ def tmp_ar_graphics(stg_consolidado_corte,
     tbl_graficos_tiempo_avance_buffer=pd.merge(tbl_graficos_tiempo_avance_buffer,endBufferDate, on='key', how="left",)
     tbl_graficos_tiempo_avance_buffer=pd.merge(tbl_graficos_tiempo_avance_buffer,endDate, on='key', how="left",)
 
-    #print (tbl_graficos_tiempo_avance_buffer)
-
-    ###########################################################################################
-
-    #Column tgabt_fecha_inicio_linea_base, tgabt_fecha_fin_linea_base, tgabt_fecha_fin_buffer_linea_base
-    client = bigquery.Client()
-    project_codes=tbl_graficos_tiempo_avance_buffer.tgabt_codigo_proyecto.unique()
-    text=""
-    for project_code in project_codes:
-        if text== "":
-            text=text+"'"+project_code+"'"
-        else:
-            text=text+", '"+project_code+"'"
-    query ="""
-        SELECT distinct CONCAT(tt.tgabt_area_prodesa, '_', tt.tgabt_codigo_proyecto, '_', tt.tgabt_etapa, '_',tgabt_programacion) key, tgabt_fecha_inicio_linea_base, tgabt_fecha_fin_linea_base, tgabt_fecha_fin_buffer_linea_base
-        FROM `""" + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER + """` tt 
-        inner JOIN (SELECT CONCAT(tgabt_area_prodesa, '_', tgabt_codigo_proyecto, '_', tgabt_etapa, '_',tgabt_programacion) key, MIN(tgabt_fecha_corte) AS MinDate
-            FROM """ + BIGQUERY_ENVIRONMENT_NAME + """.""" + TBL_GRAFICOS_TIEMPO_AVANCE_BUFFER + """
-            WHERE tgabt_codigo_proyecto in ("""+text+""")
-            GROUP BY key) groupedtt
-        ON key = groupedtt.key 
-        AND tt.tgabt_fecha_corte = groupedtt.MinDate 
-        """
-
-    #print(query)
-    auxCol= client.query(query).result().to_dataframe(create_bqstorage_client=True,) 
-    #print(auxCol.columns)
-    auxCol=auxCol.groupby(by=["key"]).first().reset_index()
-    #print(auxCol.head(5))
-    tbl_graficos_tiempo_avance_buffer=pd.merge(tbl_graficos_tiempo_avance_buffer,auxCol.loc[:, ('tgabt_fecha_inicio_linea_base', 'tgabt_fecha_fin_linea_base', 'tgabt_fecha_fin_buffer_linea_base', 'key')], on='key', how="left",)
-    tbl_graficos_tiempo_avance_buffer['tgabt_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
+    tbl_graficos_tiempo_avance_buffer['tgabt_fecha_proceso']=date.today()
     tbl_graficos_tiempo_avance_buffer['tgabt_lote_proceso']=current_bash
 
-    tbl_graficos_tiempo_avance_buffer['tgabt_fecha_inicio_linea_base_total']=(np.where(tbl_graficos_tiempo_avance_buffer['tgabt_fecha_inicio_linea_base'].isna(),tbl_graficos_tiempo_avance_buffer['tgabt_fecha_inicio_linea_base_cargue'],tbl_graficos_tiempo_avance_buffer['tgabt_fecha_inicio_linea_base'])).astype('datetime64[ns]')
-    tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_linea_base_total']=(np.where(tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_linea_base'].isna(),tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_linea_base_cargue'],tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_linea_base'])).astype('datetime64[ns]')
-    tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_buffer_linea_base_total']=(np.where(tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_buffer_linea_base'].isna(),tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_buffer_linea_base_cargue'],tbl_graficos_tiempo_avance_buffer['tgabt_fecha_fin_buffer_linea_base'])).astype('datetime64[ns]')
-    
-    
     #print (tbl_graficos_tiempo_avance_buffer.columns)
     tbl_graficos_tiempo_avance_buffer=tbl_graficos_tiempo_avance_buffer.reindex(columns=['tgabt_area_prodesa',
                                                             'tgabt_regional',
@@ -260,19 +225,15 @@ def tmp_ar_graphics(stg_consolidado_corte,
                                                             'tgabt_programacion',
                                                             'tgabt_avance_cc',
                                                             'tgabt_consumo_buffer',
-                                                            'tgabt_fecha_inicio_linea_base_total',
-                                                            'tgabt_fecha_fin_linea_base_total',
-                                                            'tgabt_fecha_fin_buffer_linea_base_total',
+                                                            'tgabt_fecha_inicio_linea_base',
+                                                            'tgabt_fecha_fin_linea_base',
+                                                            'tgabt_fecha_fin_buffer_linea_base',
                                                             'tgabt_fecha_corte',
                                                             'tgabt_fecha_proceso',
                                                             'tgabt_lote_proceso'])
     
-    tbl_graficos_tiempo_avance_buffer=tbl_graficos_tiempo_avance_buffer.rename(columns={'tgabt_fecha_inicio_linea_base_total':'tgabt_fecha_inicio_linea_base', 'tgabt_fecha_fin_linea_base_total':'tgabt_fecha_fin_linea_base', 'tgabt_fecha_fin_buffer_linea_base_total':'tgabt_fecha_fin_buffer_linea_base'})
-    #tbl_graficos_tiempo_avance_buffer.rename(columns={'stg_fecha_corte': 'tgabt_fecha_corte', 'stg_area_prodesa': 'tgabt_area_prodesa', 'stg_codigo_proyecto': 'tgabt_codigo_proyecto', 'stg_etapa_proyecto': 'tgabt_etapa', 'stg_programacion_proyecto': 'tgabt_programacion'})
     tbl_graficos_tiempo_avance_buffer.dropna(inplace=True)
-
     #print (tbl_graficos_tiempo_avance_buffer.head(30))
-
 
     print("  -Graphics ending")
     return tbl_graficos_tiempo_avance_buffer
