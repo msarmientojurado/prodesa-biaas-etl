@@ -354,10 +354,12 @@ def staging_area(esp_consolidado_corte):
     esp_consolidado_corte['FIN_LINEA_BASE_EST']=esp_consolidado_corte['FIN_LINEA_BASE_EST'].replace("NOD", "")
     #stg_consolidado_corte['stg_fin_linea_base_estimado']=pd.to_datetime(esp_consolidado_corte['FIN_LINEA_BASE_EST'], dayfirst=True)
     auxCol=esp_consolidado_corte["FIN_LINEA_BASE_EST"].str.split(" ", n=5,expand=True)
-    auxCol['month']=auxCol[1].map(month_mapping)
-    auxCol['date']=auxCol[0] + '-' + auxCol['month'] + '-' + auxCol[2]
-    stg_consolidado_corte['stg_fin_linea_base_estimado']=pd.to_datetime(auxCol['date'], dayfirst=True)
-
+    try:
+        auxCol['month']=auxCol[1].map(month_mapping)
+        auxCol['date']=auxCol[0] + '-' + auxCol['month'] + '-' + auxCol[2]
+        stg_consolidado_corte['stg_fin_linea_base_estimado']=pd.to_datetime(auxCol['date'], dayfirst=True)
+    except:
+        stg_consolidado_corte['stg_fin_linea_base_estimado']=np.nan
     # Indexing columns that will be used to generate reports, so it can be used faster.
 
     stg_consolidado_corte.reindex(columns=['stg_codigo_proyecto', 'stg_etapa_proyecto', 'stg_programacion_proyecto', 'stg_ind_tarea', 'stg_nombre_actividad' ,'stg_fecha_inicio_planeada', 'stg_indicador_cantidad', 'stg_duracion_critica_cantidad','stg_ind_buffer','stg_duracion_cantidad', 'stg_fecha_fin', 'stg_project_id', 'stg_fecha_fin_planeada', 'stg_fecha_final_actual'])
