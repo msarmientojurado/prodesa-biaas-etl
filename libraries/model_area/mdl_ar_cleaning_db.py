@@ -87,6 +87,7 @@ def mdl_ar_cleaning_db(cut_date):
             WHERE tie_fecha_corte >= DATE '""" + cut_date +"""'
             """
     #print(query)
+    client.query(query)
     
     #Cleaning table tbl_descarga_reportes
     query ="""

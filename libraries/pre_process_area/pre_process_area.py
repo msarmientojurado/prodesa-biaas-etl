@@ -6,6 +6,8 @@ from libraries.settings import AFFIRMATIVE, BLOB_NAME_VALIDATION_REPORT, BUCKET_
 from libraries.various.store_process_result import store_process_result
 
 def pre_process_area():
+    ''' This function checks all the GCP environment requirements.'''
+    
     print(" *Pre-Process Area Starting...");
     
     pre_process_result_content = "\t\t\t-- RESULTADO DE PROCESO DE ETL PRODESA --\n\nFecha de Proceso: "+ datetime.today().strftime('%d-%m-%Y') +"\n\n\t\t\t-- Resultado del proceso de Pre-Procesamiento --\n\nNombre del 'Bucket' de entrada configurado: "+ BUCKET_NAME

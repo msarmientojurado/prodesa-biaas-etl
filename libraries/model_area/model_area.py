@@ -53,13 +53,13 @@ def model(tbl_inicio_venta,
     #"Consolidado de Proyectos de Planeacion"
     if planning_report_excecution ==True:
         mdl_ar_planning(tmp_proyectos_planeacion)
+        #"Control de Hitos de Planeacion"
+        model_milestones(tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion)
 
     #"Consolidado de Proyectos de Comercial"
     if commercial_report_excecution ==True:
         mdl_ar_commercial(tmp_proyectos_comercial)
 
-    #"Control de Hitos de Planeacion"
-    model_milestones(tbl_inicio_venta, tbl_inicio_promesa, tbl_inicio_construccion, tbl_inicio_escrituracion)
 
     #Build Backup
     backup_filename = backup_builder(data_bytes, pd.to_datetime((stg_consolidado_corte.stg_fecha_corte.unique())[0]),bash)

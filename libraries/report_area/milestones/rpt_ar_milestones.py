@@ -29,6 +29,6 @@ def rpt_ar_milestones(tbl_inicio_venta,
                 region)
         excel_report_array.append([tmp, "Hitos","corte_" +  cut_date.strftime('%d-%m-%Y') + "_hitos_" + region + ".xlsx", cut_date])
 
-    print("  -Milestones Starting")
+    print("  -Milestones Ending")
 
     return excel_report_array

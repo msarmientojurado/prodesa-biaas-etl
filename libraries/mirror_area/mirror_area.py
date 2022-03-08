@@ -8,10 +8,9 @@ from libraries.various.store_process_result import store_process_result
 
 
 def mirror_area(blob_namne, report_file_content):
+    '''This function implements the extraction process: Loads the excel file into a DataFrame'''
     print(" *Mirror Area Starting...");
-    
-    
-    
+
     bucket_name= BUCKET_NAME
     #blob_namne = BLOB_NAME
     #Taking the File from the Input Bucket

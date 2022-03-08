@@ -9,6 +9,7 @@ from libraries.settings import AFFIRMATIVE, BIGQUERY_ENVIRONMENT_NAME, BLOB_NAME
 from libraries.various.store_process_result import store_process_result
 
 def validation_mesh(esp_consolidado_corte, output_file_content):
+    '''This function checks the integrity of the information before starting the transformation process. Its goal is to "fail safe", instead of broke during execution time'''
     print(" *Validation Mesh Starting...");
 
     #file_result_content="\n\nCantidad de Registros en el archivo de carga: " + str(len(esp_consolidado_corte)) + "\n\nMalla de Validaciones:\n\n\t1- Verificación de Campos Vacíos:"

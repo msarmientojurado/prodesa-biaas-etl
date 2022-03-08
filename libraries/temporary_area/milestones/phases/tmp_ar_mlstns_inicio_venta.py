@@ -88,6 +88,7 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos, current_bash):
     tbl_inicio_venta['tiv_fecha_proceso']=pd.to_datetime(pd.to_datetime("today").strftime("%m/%d/%Y"))
     tbl_inicio_venta['tiv_lote_proceso']=current_bash
 
+    
     tbl_inicio_venta=tbl_inicio_venta.reindex(columns=['tiv_regional',
                                                     'tiv_codigo_proyecto',
                                                     'tiv_macroproyecto',
@@ -131,6 +132,7 @@ def tmp_ar_mlstns_inicio_venta(milestones_dataset, tbl_proyectos, current_bash):
                                                     'tiv_fecha_corte',
                                                     'tiv_fecha_proceso',
                                                     'tiv_lote_proceso'])
+    
     
     print("   -Inicio Ventas Ending")
 

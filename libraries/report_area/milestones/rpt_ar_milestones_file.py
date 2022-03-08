@@ -254,7 +254,6 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
     ws.merge_cells(cells_to_merge)
 
     #Inicio Promesa Section
-
     tbl_inicio_promesa_excel = tbl_inicio_promesa.reindex(columns=['tip_proyecto',
                                                         'tip_etapa',
                                                         'tip_dias_atraso',
@@ -366,7 +365,6 @@ def rpt_ar_milestones_file(tbl_inicio_venta,
     ws.merge_cells(cells_to_merge)
 
     #Inicio Construccion Section
-
     tbl_inicio_construccion_excel = tbl_inicio_construccion.reindex(columns=['tic_proyecto',
                                                                         'tic_etapa',
                                                                         'tic_dias_atraso',
